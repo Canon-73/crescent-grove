@@ -1,0 +1,5 @@
+{
+  "enabled": true,
+  "max_chars": 500,
+  "file": "memory/self_memo.md"
+}

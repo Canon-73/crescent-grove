@@ -1,0 +1,17 @@
+{
+  "search": {
+    "decay": 0.5,
+    "spread": 0.8,
+    "steps": 3,
+    "anchor_top_k": 50,
+    "temporal_weight_mode": "decay",
+    "temporal_rho": 0.01,
+    "inhibit_beta": 0.1,
+    "inhibit_top_m": 7,
+    "sigmoid_gamma": 5.0,
+    "sigmoid_theta": 0.5,
+    "lambda_similarity": 10.0,
+    "lambda_activation": 1.0,
+    "lambda_structure": 0.0
+  }
+}

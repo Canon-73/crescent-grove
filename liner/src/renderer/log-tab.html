@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Server Log</title>
+    <link rel="stylesheet" href="./src/styles/liner.css" />
+  </head>
+  <body>
+    <!-- サーバログ独立タブ。
+         下部ログペインと同じ CSS id（log-pane-header / log-filter /
+         log-module-filters / log-clear-btn / log-body）を再利用して LogView を動かす。
+         ペイン固有の折りたたみボタン（#log-collapse-btn）は持たない。 -->
+    <div id="log-tab">
+      <div id="log-pane-header">
+        <span id="log-pane-title">Server Log</span>
+        <input type="text" id="log-filter" placeholder="filter..." />
+        <div id="log-module-filters"></div>
+        <button id="log-clear-btn" title="クリア">🗑</button>
+      </div>
+      <div id="log-body" class="log-tab-body"></div>
+    </div>
+
+    <script type="module" src="./src/log-tab.ts"></script>
+  </body>
+</html>

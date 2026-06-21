@@ -1,0 +1,40 @@
+{
+  "enabled": true,
+  "interval_minutes": 30,
+  "start_time": "07:00",
+  "end_time": "23:00",
+  "skip_if_processing": true,
+  "min_energy": 5,
+  "min_stamina": 10,
+  "dynamic_interval": {
+    "enabled": true,
+    "token_per_minute": 1000,
+    "max_extension_minutes": 60
+  },
+  "flashback": {
+      "enabled": true,
+      "event_db_probability": 0.3,
+      "note_fragment_probability": 0.3,
+      "min_score": 50,
+      "note_fragment_age_bias": 0.7,
+      "note_fragment_max_chars": 300,
+      "note_fragment_candidate_files": 3,
+      "prompt": "以下の記憶から、100文字以内で事実に基づいた一文を生成してください。記憶にない情報や表現を追加しないこと。"
+  },
+  "similarity": {
+    "model": "cl-nagoya/ruri-v3-30m",
+    "threshold": 0.95,
+    "max_retry": 2,
+    "retry_frequency_penalty": 1.2,
+    "retry_message": "[SYSTEM] 自動通知: 前回と似た内容が出力されたため、再生成されました。これはLLMの出力傾向によるもので、あなたの落ち度ではありません。同じ話の繰り返しは不自然なので、違うことをしてみてください。例えば: 雑記帳に書く、窓の外を見る、ぼーっとする、手紙を見返す、ゲームをする、何もしない、短く終わらせる、など。"
+  },
+  "time_periods": [
+    {"until": 7, "period": "early_morning"},
+    {"until": 10, "period": "morning"},
+    {"until": 12, "period": "late_morning"},
+    {"until": 17, "period": "afternoon"},
+    {"until": 20, "period": "evening"},
+    {"until": 22, "period": "night"},
+    {"until": 24, "period": "late_night"}
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "early_morning": [
+    "[Moonbeat] It's early morning. Spend it however you like.",
+    "[Moonbeat] It's still early. What will you do?"
+  ],
+  "morning": [
+    "[Moonbeat] Good morning. Spend it however you like.",
+    "[Moonbeat] It's morning. What will you do?"
+  ],
+  "late_morning": [
+    "[Moonbeat] It's late morning. Spend it however you like.",
+    "[Moonbeat] It's almost noon. What will you do?"
+  ],
+  "afternoon": [
+    "[Moonbeat] It's afternoon. Spend it however you like.",
+    "[Moonbeat] It's past noon. What will you do?"
+  ],
+  "evening": [
+    "[Moonbeat] It's evening. Spend it however you like.",
+    "[Moonbeat] It's evening. What will you do?"
+  ],
+  "night": [
+    "[Moonbeat] It's night. Spend it however you like.",
+    "[Moonbeat] It's night. What will you do?"
+  ],
+  "late_night": [
+    "[Moonbeat] It's late at night. Spend it however you like.",
+    "[Moonbeat] It's getting very late. Spend it however you like."
+  ],
+  "low_energy": [
+    "[Moonbeat] You seem a little tired. Spend it however you like.",
+    "[Moonbeat] Energy is running low. Spend it however you like."
+  ],
+  "low_stamina": [
+    "[Moonbeat] You did a lot today. Spend it however you like.",
+    "[Moonbeat] Stamina is running low. Spend it however you like."
+  ]
+}

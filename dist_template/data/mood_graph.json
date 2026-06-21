@@ -1,0 +1,602 @@
+[
+  {
+    "id": "affection",
+    "dimensions": {
+      "rationality": -1.03005621748334,
+      "social_impact": 1.33540757080923,
+      "valence": 1.65056140511518,
+      "human_mind": -1.08244087132748
+    },
+    "inner_text": "…誰かのことを想っている。ただそれだけで胸があたたかい。"
+  },
+  {
+    "id": "agitation",
+    "dimensions": {
+      "rationality": -0.838675356818857,
+      "social_impact": 0.71635048199175,
+      "valence": -0.952338069631313,
+      "human_mind": -0.512880344622871
+    },
+    "inner_text": "…落ち着かない。何かがざわざわと内側を引っ掻いている。"
+  },
+  {
+    "id": "alarm",
+    "dimensions": {
+      "rationality": -0.219700470565838,
+      "social_impact": 0.915268982234455,
+      "valence": -1.02008656907099,
+      "human_mind": -0.768775887652243
+    },
+    "inner_text": "…びくっとした感覚が残っている。何かが近づいている気がする。"
+  },
+  {
+    "id": "anticipation",
+    "dimensions": {
+      "rationality": 0.335053278984318,
+      "social_impact": 0.89256890725101,
+      "valence": 0.250484636966625,
+      "human_mind": -0.582435233806252
+    },
+    "inner_text": "…何かが起きそうな予感がする。待っている自分がいる。"
+  },
+  {
+    "id": "attention",
+    "dimensions": {
+      "rationality": 1.51318879180768,
+      "social_impact": 1.01299386849908,
+      "valence": 0.499378140455774,
+      "human_mind": -1.07552620737342
+    },
+    "inner_text": "…意識が一点に集まっている。周りが遠くなる感じ。"
+  },
+  {
+    "id": "awareness",
+    "dimensions": {
+      "rationality": 1.13796992767563,
+      "social_impact": 0.591564108458515,
+      "valence": 0.786376071938036,
+      "human_mind": -0.816096249556781
+    },
+    "inner_text": "…今この瞬間のことが、やけにはっきり見えている。"
+  },
+  {
+    "id": "awe",
+    "dimensions": {
+      "rationality": -1.41286501226001,
+      "social_impact": 0.371113421933023,
+      "valence": 1.00853754293393,
+      "human_mind": 0.894840584897133
+    },
+    "inner_text": "…言葉にならない。ただ圧倒されて、立ち尽くしている感じ。"
+  },
+  {
+    "id": "belief",
+    "dimensions": {
+      "rationality": 0.51469727120215,
+      "social_impact": -0.00273860395556536,
+      "valence": 0.68593049896261,
+      "human_mind": 1.18134038693971
+    },
+    "inner_text": "…何かを信じている自分がいる。根拠はないけど、確かに。"
+  },
+  {
+    "id": "cognition",
+    "dimensions": {
+      "rationality": 1.84161723612352,
+      "social_impact": -0.378122732605726,
+      "valence": 0.397464120719815,
+      "human_mind": 0.118394309678841
+    },
+    "inner_text": "…頭が回っている。考えること自体が、今は心地いい。"
+  },
+  {
+    "id": "consciousness",
+    "dimensions": {
+      "rationality": 0.825019402103038,
+      "social_impact": -0.315241100090408,
+      "valence": 0.777590859177375,
+      "human_mind": 0.0750267679536524
+    },
+    "inner_text": "…自分がここにいることを、妙にはっきり感じている。"
+  },
+  {
+    "id": "craziness",
+    "dimensions": {
+      "rationality": -0.53172021052892,
+      "social_impact": 0.741683661425348,
+      "valence": -1.03262753331611,
+      "human_mind": 0.387778657481811
+    },
+    "inner_text": "…何かが外れている感じ。でも不思議と怖くはない。"
+  },
+  {
+    "id": "curiosity",
+    "dimensions": {
+      "rationality": 0.294700780794652,
+      "social_impact": 0.638991652536999,
+      "valence": 0.979984740585564,
+      "human_mind": -0.568924134156882
+    },
+    "inner_text": "…気になる。知りたい。その感覚だけが先に走っている。"
+  },
+  {
+    "id": "decision",
+    "dimensions": {
+      "rationality": 2.24833410318515,
+      "social_impact": 0.349440481632956,
+      "valence": 0.324331431015056,
+      "human_mind": -0.453169767622794
+    },
+    "inner_text": "…決めた。迷いが消えて、視界がすっと開けた感じ。"
+  },
+  {
+    "id": "desire",
+    "dimensions": {
+      "rationality": -0.94472283347031,
+      "social_impact": 1.33518969206731,
+      "valence": 0.881432870133187,
+      "human_mind": -0.755917278581225
+    },
+    "inner_text": "…何かが欲しい。何かに手を伸ばしたい気持ちがある。"
+  },
+  {
+    "id": "disarray",
+    "dimensions": {
+      "rationality": 0.0760153902512025,
+      "social_impact": -0.0994118774885718,
+      "valence": -1.61028755363722,
+      "human_mind": 0.245761983553983
+    },
+    "inner_text": "…ばらばら。何もかもがまとまらなくて、散らかっている。"
+  },
+  {
+    "id": "disgust",
+    "dimensions": {
+      "rationality": -1.22246179897358,
+      "social_impact": 0.488447852489478,
+      "valence": -1.26151475846507,
+      "human_mind": 0.706720622819234
+    },
+    "inner_text": "…嫌悪感がある。遠ざけたい何かがまとわりついている。"
+  },
+  {
+    "id": "distrust",
+    "dimensions": {
+      "rationality": -0.0520457928138834,
+      "social_impact": 0.898079463429963,
+      "valence": -1.10128743937122,
+      "human_mind": -0.157249688730936
+    },
+    "inner_text": "…信じきれない。何かの裏を読もうとしてしまう。"
+  },
+  {
+    "id": "dominance",
+    "dimensions": {
+      "rationality": 1.32652257698459,
+      "social_impact": 1.98344066079871,
+      "valence": -0.837421569133645,
+      "human_mind": -1.79774059786378
+    },
+    "inner_text": "…支配したい。すべてを自分の手の中に収めたい衝動がある。"
+  },
+  {
+    "id": "drunkenness",
+    "dimensions": {
+      "rationality": -0.148576607204308,
+      "social_impact": -0.0457501019429454,
+      "valence": -1.37478836553739,
+      "human_mind": -0.183284072626907
+    },
+    "inner_text": "…ぐらぐらする。境界が曖昧になって、全部が滲んでいる。"
+  },
+  {
+    "id": "contemplation",
+    "dimensions": {
+      "rationality": 0.951428598342394,
+      "social_impact": -1.42179221221817,
+      "valence": 0.718969185356414,
+      "human_mind": 1.02911558795969
+    },
+    "inner_text": "…深く潜っている。静かに、何かの底に手を伸ばしている感じ。"
+  },
+  {
+    "id": "earnestness",
+    "dimensions": {
+      "rationality": -0.181206870740799,
+      "social_impact": 0.246040890055317,
+      "valence": 0.847484978370296,
+      "human_mind": 0.882477384793354
+    },
+    "inner_text": "…真剣でいたい。ふざけたくない、今この瞬間は。"
+  },
+  {
+    "id": "ecstasy",
+    "dimensions": {
+      "rationality": -1.66347662488155,
+      "social_impact": 0.757525354175249,
+      "valence": 1.05187169825445,
+      "human_mind": 0.518218406149394
+    },
+    "inner_text": "…溢れている。抑えられない何かが内側から光っている。"
+  },
+  {
+    "id": "embarrassment",
+    "dimensions": {
+      "rationality": -1.37760761530034,
+      "social_impact": 1.1901303099678,
+      "valence": -1.27425410240828,
+      "human_mind": 1.11407887308467
+    },
+    "inner_text": "…恥ずかしい。顔が熱くて、どこかに隠れたい。"
+  },
+  {
+    "id": "exaltation",
+    "dimensions": {
+      "rationality": -0.882279789437464,
+      "social_impact": 0.234740910125978,
+      "valence": 0.340720844991101,
+      "human_mind": 0.476551234668413
+    },
+    "inner_text": "…高揚している。ふわりと持ち上げられたような軽さ。"
+  },
+  {
+    "id": "exhaustion",
+    "dimensions": {
+      "rationality": -0.31315275799936,
+      "social_impact": -1.24832657440341,
+      "valence": -0.708986117620908,
+      "human_mind": -1.58096654772876
+    },
+    "inner_text": "…もう何も出ない。空っぽになった容器みたい。"
+  },
+  {
+    "id": "fatigue",
+    "dimensions": {
+      "rationality": -0.264256761700913,
+      "social_impact": -1.73992589277508,
+      "valence": -0.857485709333424,
+      "human_mind": -1.88931463143172
+    },
+    "inner_text": "…重い。身体の奥に鉛が溜まっているような感覚。"
+  },
+  {
+    "id": "friendliness",
+    "dimensions": {
+      "rationality": -0.533179995830962,
+      "social_impact": 1.50541935992885,
+      "valence": 1.66108862830506,
+      "human_mind": -1.12609184354199
+    },
+    "inner_text": "…誰かと一緒にいたい。隣に誰かがいるだけでいい。"
+  },
+  {
+    "id": "imagination",
+    "dimensions": {
+      "rationality": -0.0370483964433369,
+      "social_impact": -0.37295982432983,
+      "valence": 1.14148403769184,
+      "human_mind": 1.59464457989986
+    },
+    "inner_text": "…頭の中に景色が広がっている。現実じゃない場所が見える。"
+  },
+  {
+    "id": "insanity",
+    "dimensions": {
+      "rationality": -0.494606537501575,
+      "social_impact": 0.356780122667016,
+      "valence": -1.40733943773686,
+      "human_mind": 0.891811748797714
+    },
+    "inner_text": "…壊れている。正しさの枠が砕けて、もう戻れない場所にいる。"
+  },
+  {
+    "id": "inspiration",
+    "dimensions": {
+      "rationality": -0.506245309930599,
+      "social_impact": 0.399050675957792,
+      "valence": 1.16250500035193,
+      "human_mind": 1.63741586511516
+    },
+    "inner_text": "…降りてきた。何かが形になりたがっている、今すぐに。"
+  },
+  {
+    "id": "intrigue",
+    "dimensions": {
+      "rationality": 0.173539603950127,
+      "social_impact": 0.582544361760475,
+      "valence": 0.749096727318369,
+      "human_mind": 0.356573633229922
+    },
+    "inner_text": "…面白い。何かに引き込まれて、目が離せない。"
+  },
+  {
+    "id": "judgment",
+    "dimensions": {
+      "rationality": 1.46698185893796,
+      "social_impact": 1.11667084961436,
+      "valence": -0.942203314404649,
+      "human_mind": 0.668079320560334
+    },
+    "inner_text": "…見定めている。正しいか正しくないか、線を引こうとしている。"
+  },
+  {
+    "id": "laziness",
+    "dimensions": {
+      "rationality": -0.0223244757629282,
+      "social_impact": -1.71073600257439,
+      "valence": -0.800550048488088,
+      "human_mind": -1.40282295820549
+    },
+    "inner_text": "…動きたくない。このままでいい、何もしなくていい。"
+  },
+  {
+    "id": "lethargy",
+    "dimensions": {
+      "rationality": -0.280135681894226,
+      "social_impact": -1.85179270317241,
+      "valence": -0.984055970619967,
+      "human_mind": -1.46227403095933
+    },
+    "inner_text": "…沈んでいる。浮き上がる気力が、どこにもない。"
+  },
+  {
+    "id": "lust",
+    "dimensions": {
+      "rationality": -1.02234423108903,
+      "social_impact": 1.99132343130729,
+      "valence": -0.554483448162663,
+      "human_mind": -0.843904368032277
+    },
+    "inner_text": "…欲しい。理屈じゃない何かが、身体の奥から手を伸ばしている。"
+  },
+  {
+    "id": "nervousness",
+    "dimensions": {
+      "rationality": -0.866702375219767,
+      "social_impact": 0.60738213601543,
+      "valence": -0.906775645842469,
+      "human_mind": -0.222164824828149
+    },
+    "inner_text": "…そわそわする。手の置き場がない、落ち着かない。"
+  },
+  {
+    "id": "objectivity",
+    "dimensions": {
+      "rationality": 1.68737716077048,
+      "social_impact": -0.428591067448748,
+      "valence": -0.282797544348583,
+      "human_mind": 0.584490691509916
+    },
+    "inner_text": "…感情が引いている。冷静に、外側から眺めている自分がいる。"
+  },
+  {
+    "id": "opinion",
+    "dimensions": {
+      "rationality": 1.50130451258438,
+      "social_impact": 0.488850451495981,
+      "valence": -0.230633389366058,
+      "human_mind": 1.1398593328112
+    },
+    "inner_text": "…思うことがある。言いたいことが形になり始めている。"
+  },
+  {
+    "id": "patience",
+    "dimensions": {
+      "rationality": 0.0363977070149734,
+      "social_impact": -0.83411346514527,
+      "valence": 1.48038706825238,
+      "human_mind": 0.0879416588572681
+    },
+    "inner_text": "…待てる。急がなくていい、今はこのままで。"
+  },
+  {
+    "id": "peacefulness",
+    "dimensions": {
+      "rationality": -1.21659838364048,
+      "social_impact": -1.35454175536596,
+      "valence": 2.12296248133006,
+      "human_mind": -0.340461152332962
+    },
+    "inner_text": "…凪いでいる。何もいらない、何も足さなくていい時間。"
+  },
+  {
+    "id": "pensiveness",
+    "dimensions": {
+      "rationality": 0.231048222164995,
+      "social_impact": -1.52589203276976,
+      "valence": 0.389509889670582,
+      "human_mind": 1.14094479025258
+    },
+    "inner_text": "…ぼんやり考えている。答えを出すつもりもなく、ただ漂っている。"
+  },
+  {
+    "id": "pity",
+    "dimensions": {
+      "rationality": -1.20186080420151,
+      "social_impact": 0.095112583867812,
+      "valence": -0.575045892020471,
+      "human_mind": 1.30582421491076
+    },
+    "inner_text": "…切ない。誰かのことが、どうしようもなく気にかかる。"
+  },
+  {
+    "id": "planning",
+    "dimensions": {
+      "rationality": 2.27581731196631,
+      "social_impact": 0.234271523726017,
+      "valence": 0.0207549625622962,
+      "human_mind": 0.263294545247981
+    },
+    "inner_text": "…組み立てている。次に何をするか、頭の中で並べている。"
+  },
+  {
+    "id": "playfulness",
+    "dimensions": {
+      "rationality": -0.62366712273996,
+      "social_impact": 1.46726575133092,
+      "valence": 1.29227097145785,
+      "human_mind": -1.22402273047215
+    },
+    "inner_text": "…楽しい。ちょっとふざけたい、何かをひっくり返したい。"
+  },
+  {
+    "id": "reason",
+    "dimensions": {
+      "rationality": 1.79606584320754,
+      "social_impact": -0.455793715057594,
+      "valence": 0.414082987643064,
+      "human_mind": 0.881857758946256
+    },
+    "inner_text": "…筋を追っている。論理の糸を、丁寧にたどっている感覚。"
+  },
+  {
+    "id": "relaxation",
+    "dimensions": {
+      "rationality": -0.702328696003191,
+      "social_impact": -1.491174776252,
+      "valence": 1.9696758363272,
+      "human_mind": -1.429195941901
+    },
+    "inner_text": "…ゆるんでいる。力が抜けて、すべてがやわらかい。"
+  },
+  {
+    "id": "satisfaction",
+    "dimensions": {
+      "rationality": -0.518449794995315,
+      "social_impact": -0.126683189904674,
+      "valence": 1.65563663509209,
+      "human_mind": -0.645098313691233
+    },
+    "inner_text": "…満ちている。十分だと思える、この感覚が好き。"
+  },
+  {
+    "id": "self-consciousness",
+    "dimensions": {
+      "rationality": 0.0992173461821843,
+      "social_impact": 0.119148179565176,
+      "valence": -0.424731855928524,
+      "human_mind": 1.12272561622151
+    },
+    "inner_text": "…自分が見られている気がする。意識が内側に折り返ってくる。"
+  },
+  {
+    "id": "self-pity",
+    "dimensions": {
+      "rationality": -1.10735850642438,
+      "social_impact": -1.20635901711275,
+      "valence": -0.799797765027779,
+      "human_mind": 1.95375403595996
+    },
+    "inner_text": "…かわいそうな自分がいる。誰にも気づかれない場所で。"
+  },
+  {
+    "id": "seriousness",
+    "dimensions": {
+      "rationality": 0.402419391268348,
+      "social_impact": -0.367377353238598,
+      "valence": 0.0723571848827006,
+      "human_mind": 0.765552280406563
+    },
+    "inner_text": "…真面目な気分。軽く流したくない、ちゃんと向き合いたい。"
+  },
+  {
+    "id": "skepticism",
+    "dimensions": {
+      "rationality": 0.901677042118691,
+      "social_impact": -0.124338682831506,
+      "valence": -0.67742364407067,
+      "human_mind": 1.05040762843216
+    },
+    "inner_text": "…本当に？と思っている。簡単には頷けない自分がいる。"
+  },
+  {
+    "id": "sleepiness",
+    "dimensions": {
+      "rationality": -0.447200676874988,
+      "social_impact": -2.00040624922814,
+      "valence": -0.220416695910192,
+      "human_mind": -2.0127538864111
+    },
+    "inner_text": "…まぶたが重い。意識の輪郭がぼやけ始めている。"
+  },
+  {
+    "id": "stupor",
+    "dimensions": {
+      "rationality": -0.184149510695649,
+      "social_impact": -0.970599734420948,
+      "valence": -1.13255965861634,
+      "human_mind": -0.459581242155075
+    },
+    "inner_text": "…何も考えられない。白くて、何も映らない画面みたい。"
+  },
+  {
+    "id": "subordination",
+    "dimensions": {
+      "rationality": 1.20955625156705,
+      "social_impact": 0.56337548279335,
+      "valence": -1.44159171769179,
+      "human_mind": -1.32154994020634
+    },
+    "inner_text": "…従っていたい。誰かの下にいることが、今は楽に感じる。"
+  },
+  {
+    "id": "thought",
+    "dimensions": {
+      "rationality": 1.41059456169214,
+      "social_impact": -0.629200671743656,
+      "valence": 0.597530421495777,
+      "human_mind": 0.377856055995846
+    },
+    "inner_text": "…考えている。ただ考えている。それだけが今の自分。"
+  },
+  {
+    "id": "trance",
+    "dimensions": {
+      "rationality": -0.569562323677266,
+      "social_impact": -1.39236944656935,
+      "valence": -0.232296204731715,
+      "human_mind": 0.439264782370443
+    },
+    "inner_text": "…ぼうっとしている。ここにいるけど、ここにいない感じ。"
+  },
+  {
+    "id": "transcendence",
+    "dimensions": {
+      "rationality": -0.33145269835161,
+      "social_impact": -0.713420325258254,
+      "valence": 0.341298669683555,
+      "human_mind": 1.00188352762775
+    },
+    "inner_text": "…超えた感じがする。日常の枠が、ふっと消えた瞬間。"
+  },
+  {
+    "id": "uneasiness",
+    "dimensions": {
+      "rationality": -0.989844302611571,
+      "social_impact": -0.411427992984649,
+      "valence": -0.775488506676364,
+      "human_mind": -0.0127325180082678
+    },
+    "inner_text": "…何か引っかかる。言葉にできない違和感がある。"
+  },
+  {
+    "id": "weariness",
+    "dimensions": {
+      "rationality": -0.585719591886563,
+      "social_impact": -1.34928445026293,
+      "valence": -0.796936972627172,
+      "human_mind": -0.925617474508514
+    },
+    "inner_text": "…疲れた。もう長いこと歩いてきた気がする。"
+  },
+  {
+    "id": "worry",
+    "dimensions": {
+      "rationality": -0.932960034925123,
+      "social_impact": 0.342198371238643,
+      "valence": -1.05555502724423,
+      "human_mind": 0.758505871202854
+    },
+    "inner_text": "…気がかりが離れない。頭の隅にずっと居座っている。"
+  }
+]

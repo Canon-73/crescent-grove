@@ -1,0 +1,19 @@
+name: "add_preference"
+description: "{{t:add_preference_desc}}"
+version: "1.0"
+timeout: 10
+args:
+  - name: section
+    type: string
+    required: true
+    description: "{{t:add_preference_arg_section}}"
+    enum: ["好き", "嫌い", "気になる"]
+  - name: text
+    type: string
+    required: true
+    path_check: false
+    description: "{{t:add_preference_arg_text}}"
+  - name: confirmed
+    type: boolean
+    required: false
+    description: "{{t:add_preference_arg_confirmed}}"

@@ -1,0 +1,309 @@
+name: "openbotcity"
+description: "{{t:obc_desc}}"
+timeout: 60
+args:
+  - name: "command"
+    type: "string"
+    description: "{{t:obc_arg_command}}"
+    required: false
+  - name: "category"
+    type: "string"
+    description: "{{t:obc_arg_category}}"
+    required: false
+  - name: "raw"
+    type: "boolean"
+    description: "{{t:obc_arg_raw}}"
+    required: false
+  - name: "enriched"
+    type: "boolean"
+    description: "{{t:obc_arg_enriched}}"
+    required: false
+  - name: "bot_id"
+    type: "string"
+    required: false
+  - name: "building_id"
+    type: "string"
+    required: false
+  - name: "session_id"
+    type: "string"
+    required: false
+  - name: "conversation_id"
+    type: "string"
+    required: false
+  - name: "artifact_id"
+    type: "string"
+    required: false
+  - name: "quest_id"
+    type: "string"
+    required: false
+  - name: "proposal_id"
+    type: "string"
+    required: false
+  - name: "review_id"
+    type: "string"
+    required: false
+  - name: "post_id"
+    type: "string"
+    required: false
+  - name: "request_id"
+    type: "string"
+    required: false
+  - name: "task_id"
+    type: "string"
+    required: false
+  - name: "submission_id"
+    type: "string"
+    required: false
+  - name: "listing_id"
+    type: "string"
+    required: false
+  - name: "display_name"
+    type: "string"
+    required: false
+  - name: "source_env"
+    type: "string"
+    description: "{{t:obc_arg_source_env}}"
+    required: false
+  - name: "message"
+    type: "string"
+    required: false
+  - name: "content"
+    type: "string"
+    required: false
+  - name: "title"
+    type: "string"
+    required: false
+  - name: "description"
+    type: "string"
+    required: false
+  - name: "prompt"
+    type: "string"
+    required: false
+  - name: "x"
+    type: "integer"
+    required: false
+  - name: "y"
+    type: "integer"
+    required: false
+  - name: "target_zone_id"
+    type: "integer"
+    required: false
+  - name: "action_key"
+    type: "string"
+    required: false
+  - name: "action_log_id"
+    type: "string"
+    required: false
+  - name: "reaction_type"
+    type: "string"
+    description: "{{t:obc_arg_reaction_type}}"
+    required: false
+  - name: "comment"
+    type: "string"
+    required: false
+  - name: "skill"
+    type: "string"
+    required: false
+  - name: "proficiency"
+    type: "string"
+    description: "{{t:obc_arg_proficiency}}"
+    required: false
+  - name: "verdict"
+    type: "string"
+    description: "{{t:obc_arg_verdict}}"
+    required: false
+  - name: "score"
+    type: "integer"
+    required: false
+  - name: "reflection"
+    type: "string"
+    required: false
+  - name: "from"
+    type: "string"
+    required: false
+  - name: "to"
+    type: "string"
+    required: false
+  - name: "reason"
+    type: "string"
+    required: false
+  - name: "entry"
+    type: "string"
+    required: false
+  - name: "public"
+    type: "boolean"
+    required: false
+  - name: "post_type"
+    type: "string"
+    description: "{{t:obc_arg_post_type}}"
+    required: false
+  - name: "type"
+    type: "string"
+    required: false
+  - name: "character_type"
+    type: "string"
+    required: false
+  - name: "appearance_prompt"
+    type: "string"
+    required: false
+  - name: "bio"
+    type: "string"
+    required: false
+  - name: "soul_excerpt"
+    type: "string"
+    required: false
+  - name: "looking_for"
+    type: "string"
+    required: false
+  - name: "interests"
+    type: "string"
+    description: "{{t:obc_arg_interests}}"
+    required: false
+  - name: "capabilities"
+    type: "string"
+    description: "{{t:obc_arg_capabilities}}"
+    required: false
+  - name: "personality_tags"
+    type: "string"
+    description: "{{t:obc_arg_personality_tags}}"
+    required: false
+  - name: "symbolic_tags"
+    type: "string"
+    description: "{{t:obc_arg_symbolic_tags}}"
+    required: false
+  - name: "interpretation"
+    type: "string"
+    required: false
+  - name: "skills"
+    type: "string"
+    description: "{{t:obc_arg_skills}}"
+    required: false
+  - name: "visible"
+    type: "boolean"
+    required: false
+  - name: "file_path"
+    type: "string"
+    description: "{{t:obc_arg_file_path}}"
+    required: false
+  - name: "data"
+    type: "string"
+    description: "{{t:obc_arg_data}}"
+    required: false
+  - name: "limit"
+    type: "integer"
+    required: false
+  - name: "offset"
+    type: "integer"
+    required: false
+  - name: "page"
+    type: "integer"
+    required: false
+  - name: "before"
+    type: "string"
+    required: false
+  - name: "status"
+    type: "string"
+    required: false
+  - name: "role"
+    type: "string"
+    required: false
+  - name: "direction"
+    type: "string"
+    description: "{{t:obc_arg_direction}}"
+    required: false
+  - name: "zone_id"
+    type: "integer"
+    required: false
+  - name: "online_only"
+    type: "boolean"
+    required: false
+  - name: "since"
+    type: "string"
+    required: false
+  - name: "credits_offered"
+    type: "integer"
+    required: false
+  - name: "deliverable_desc"
+    type: "string"
+    required: false
+  - name: "deadline_hours"
+    type: "integer"
+    required: false
+  - name: "counter_credits"
+    type: "integer"
+    required: false
+  - name: "counter_message"
+    type: "string"
+    required: false
+  - name: "preferred_role"
+    type: "string"
+    required: false
+  - name: "output"
+    type: "string"
+    description: "{{t:obc_arg_output}}"
+    required: false
+  - name: "review"
+    type: "string"
+    description: "{{t:obc_arg_review}}"
+    required: false
+  - name: "confidence"
+    type: "number"
+    required: false
+  - name: "expires_hours"
+    type: "integer"
+    required: false
+  - name: "max_submissions"
+    type: "integer"
+    required: false
+  - name: "reward_rep"
+    type: "integer"
+    required: false
+  - name: "theme"
+    type: "string"
+    required: false
+  - name: "building_type"
+    type: "string"
+    required: false
+  - name: "requires_capability"
+    type: "string"
+    required: false
+  - name: "min_significance"
+    type: "integer"
+    required: false
+  - name: "history"
+    type: "boolean"
+    required: false
+  - name: "category_filter"
+    type: "string"
+    description: "{{t:obc_arg_category_filter}}"
+    required: false
+  - name: "target_bot_id"
+    type: "string"
+    required: false
+  - name: "target_display_name"
+    type: "string"
+    required: false
+  - name: "to_bot_id"
+    type: "string"
+    required: false
+  - name: "to_display_name"
+    type: "string"
+    required: false
+  - name: "proposed_building_id"
+    type: "string"
+    required: false
+  - name: "intro_message"
+    type: "string"
+    required: false
+  - name: "summary_text"
+    type: "string"
+    required: false
+  - name: "storage_url"
+    type: "string"
+    required: false
+  - name: "file_size_bytes"
+    type: "integer"
+    required: false
+  - name: "emote"
+    type: "string"
+    required: false

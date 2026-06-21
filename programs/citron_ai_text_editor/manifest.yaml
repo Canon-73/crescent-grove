@@ -1,0 +1,67 @@
+name: "citron_ai_text_editor"
+description: "{{t:citron_desc}}"
+timeout: 30
+
+# tool ブロックがあると、このサテライトは第一級ツールとして LLM に直接公開される（オプトイン）。
+# name はツール名（サテライト名と別名にできる）、description は LLM 向けの説明。
+# 無ければ従来どおり run_program 経由のみで利用可能。
+tool:
+  name: text_editor
+  description: "{{t:citron_tool_desc}}"
+
+args:
+  - name: command
+    type: string
+    required: true
+    # enum はツール定義に流用され、LLM が選択肢から選ぶためミスが減る。
+    # この一覧は main.py の COMMANDS と一致している必要があり、test_citron_editor.py で検証している。
+    enum: ["open", "view", "search", "rewrite", "replace", "delete", "insert", "move", "copy", "undo", "redo", "status", "commit", "discard", "help"]
+    description: "{{t:citron_arg_command}}"
+  - name: file
+    type: string
+    required: false
+    description: "{{t:citron_arg_file}}"
+  - name: create
+    type: boolean
+    required: false
+    description: "{{t:citron_arg_create}}"
+  - name: line
+    type: string
+    required: false
+    description: "{{t:citron_arg_line}}"
+  - name: content
+    type: string
+    required: false
+    path_check: false  # 本文テキスト。"../" 等を含んでも正当（パスではない）
+    description: "{{t:citron_arg_content}}"
+  - name: after
+    type: string
+    required: false
+    description: "{{t:citron_arg_after}}"
+  - name: query
+    type: string
+    required: false
+    path_check: false  # 本文テキスト
+    description: "{{t:citron_arg_query}}"
+  - name: context
+    type: integer
+    required: false
+    description: "{{t:citron_arg_context}}"
+  - name: search
+    type: string
+    required: false
+    path_check: false  # 本文テキスト
+    description: "{{t:citron_arg_search}}"
+  - name: replacement
+    type: string
+    required: false
+    path_check: false  # 本文テキスト
+    description: "{{t:citron_arg_replacement}}"
+  - name: start
+    type: string
+    required: false
+    description: "{{t:citron_arg_start}}"
+  - name: end
+    type: string
+    required: false
+    description: "{{t:citron_arg_end}}"

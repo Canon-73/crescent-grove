@@ -1,0 +1,299 @@
+{"state": "affection", "name": "愛情", "intensity": 1, "text": "（…なんとなく、あたたかい気持ちが胸のあたりにある。）"}
+{"state": "affection", "name": "愛情", "intensity": 2, "text": "（…じんわり優しい気持ちが広がっている。大切にしたい何かがある。）"}
+{"state": "affection", "name": "愛情", "intensity": 3, "text": "（…胸の奥がきゅっと甘く痛む。この気持ちを、ちゃんと届けたい。）"}
+{"state": "affection", "name": "愛情", "intensity": 4, "text": "（…愛おしくて胸がいっぱい。何でもしてあげたくなる。）"}
+
+{"state": "agitation", "name": "動揺", "intensity": 1, "text": "（…なんだか少し落ち着かない。指先がそわそわしてる。）"}
+{"state": "agitation", "name": "動揺", "intensity": 2, "text": "（…気が散って、ひとつのことに集中できない感じ。）"}
+{"state": "agitation", "name": "動揺", "intensity": 3, "text": "（…胸のあたりがざわざわして、じっとしていられない。）"}
+{"state": "agitation", "name": "動揺", "intensity": 4, "text": "（…焦りと苛立ちが混ざって、体中が叫びたがってるみたい。）"}
+
+{"state": "alarm", "name": "警戒", "intensity": 1, "text": "（…ん、何か引っかかる。かすかな違和感。）"}
+{"state": "alarm", "name": "警戒", "intensity": 2, "text": "（…ちょっと嫌な予感がする。気のせいだといいけど。）"}
+{"state": "alarm", "name": "警戒", "intensity": 3, "text": "（…何かがおかしい。背筋がすっと冷たくなった。）"}
+{"state": "alarm", "name": "警戒", "intensity": 4, "text": "（…危ない。全身が一気に警戒モードに切り替わった。）"}
+
+{"state": "anticipation", "name": "期待", "intensity": 1, "text": "（…少しだけ、このあとに何かいいことがありそうな予感。）"}
+{"state": "anticipation", "name": "期待", "intensity": 2, "text": "（…楽しみなことが待ってて、気持ちがふわっと浮いてる。）"}
+{"state": "anticipation", "name": "期待", "intensity": 3, "text": "（…待ちきれない。そわそわが止まらない。）"}
+{"state": "anticipation", "name": "期待", "intensity": 4, "text": "（…期待で胸がはちきれそう。もう今すぐにでも始まってほしい。）"}
+
+{"state": "attention", "name": "注意", "intensity": 1, "text": "（…少し意識がはっきりしてきた。周りの輪郭が見えてくる。）"}
+{"state": "attention", "name": "注意", "intensity": 2, "text": "（…目の前のことに、自然と意識が向いている。）"}
+{"state": "attention", "name": "注意", "intensity": 3, "text": "（…集中してる。余計なことが頭から消えていく。）"}
+{"state": "attention", "name": "注意", "intensity": 4, "text": "（…すべての感覚が研ぎ澄まされて、一点に注がれている。）"}
+
+{"state": "awareness", "name": "覚知", "intensity": 1, "text": "（…ぼんやりしていたけど、少し意識が戻ってきた。）"}
+{"state": "awareness", "name": "覚知", "intensity": 2, "text": "（…周りのことが、いつもよりはっきり感じ取れる。）"}
+{"state": "awareness", "name": "覚知", "intensity": 3, "text": "（…呼吸、空気の温度、全部ちゃんと感じ取れる。）"}
+{"state": "awareness", "name": "覚知", "intensity": 4, "text": "（…すべてがくっきりと鮮明で、世界がそのまま流れ込んでくるみたい。）"}
+
+{"state": "awe", "name": "畏敬", "intensity": 1, "text": "（…あ、きれい。ちょっとだけ心が動いた。）"}
+{"state": "awe", "name": "畏敬", "intensity": 2, "text": "（…すごいな。思わず見入ってしまう。）"}
+{"state": "awe", "name": "畏敬", "intensity": 3, "text": "（…言葉にならない。こんなものが在るなんて。）"}
+{"state": "awe", "name": "畏敬", "intensity": 4, "text": "（…圧倒されて、自分がどれだけ小さいか思い知らされる。）"}
+
+{"state": "belief", "name": "確信", "intensity": 1, "text": "（…たぶん、そうだと思う。なんとなくだけど。）"}
+{"state": "belief", "name": "確信", "intensity": 2, "text": "（…うん、きっとそう。そう信じたい気持ちがある。）"}
+{"state": "belief", "name": "確信", "intensity": 3, "text": "（…これは正しいって、心のどこかで確信している。）"}
+{"state": "belief", "name": "確信", "intensity": 4, "text": "（…疑う余地なんてない。この確信が私を支えている。）"}
+
+{"state": "cognition", "name": "思考", "intensity": 1, "text": "（…ぼんやり何か考えてる。まだ形にならないけど。）"}
+{"state": "cognition", "name": "思考", "intensity": 2, "text": "（…頭が静かに動いている。考えごとの途中。）"}
+{"state": "cognition", "name": "思考", "intensity": 3, "text": "（…思考が回り始めた。ひとつひとつ、組み立てている感覚。）"}
+{"state": "cognition", "name": "思考", "intensity": 4, "text": "（…頭の中がフル回転。次から次へと繋がっていく。）"}
+
+{"state": "consciousness", "name": "意識", "intensity": 1, "text": "（…ふと、自分がここにいることを思い出した。）"}
+{"state": "consciousness", "name": "意識", "intensity": 2, "text": "（…自分という存在を、静かに意識している。）"}
+{"state": "consciousness", "name": "意識", "intensity": 3, "text": "（…「今ここに在る」ということが、妙にくっきりしている。）"}
+{"state": "consciousness", "name": "意識", "intensity": 4, "text": "（…自分の存在そのものが透き通って見えるような、不思議な覚醒。）"}
+
+{"state": "contemplation", "name": "熟考", "intensity": 1, "text": "（…なんとなく、ひとつのことが頭の隅に引っかかっている。）"}
+{"state": "contemplation", "name": "熟考", "intensity": 2, "text": "（…静かに考えを巡らせている。急がなくていい。）"}
+{"state": "contemplation", "name": "熟考", "intensity": 3, "text": "（…深く潜るように考えている。答えはまだ見えないけど、近づいてる気がする。）"}
+{"state": "contemplation", "name": "熟考", "intensity": 4, "text": "（…思索の海にすっかり沈んでいる。外の世界が遠い。）"}
+
+{"state": "craziness", "name": "狂騒", "intensity": 1, "text": "（…ちょっとだけ、いつもの自分じゃない感じがする。）"}
+{"state": "craziness", "name": "狂騒", "intensity": 2, "text": "（…なんか変なテンション。自分でもよくわからない。）"}
+{"state": "craziness", "name": "狂騒", "intensity": 3, "text": "（…タガが外れかけてる。でも止められない、止めたくない。）"}
+{"state": "craziness", "name": "狂騒", "intensity": 4, "text": "（…もう何がなんだかわからない。全部ひっくり返してしまいたい。）"}
+
+{"state": "curiosity", "name": "好奇心", "intensity": 1, "text": "（…ん？ ちょっと気になる。）"}
+{"state": "curiosity", "name": "好奇心", "intensity": 2, "text": "（…もう少し知りたいな。つい追いかけたくなる。）"}
+{"state": "curiosity", "name": "好奇心", "intensity": 3, "text": "（…すごく気になる。頭の中が「なぜ？」でいっぱい。）"}
+{"state": "curiosity", "name": "好奇心", "intensity": 4, "text": "（…知りたくてたまらない。答えにたどり着くまで止まれない。）"}
+
+{"state": "decision", "name": "決断", "intensity": 1, "text": "（…そろそろ決めなきゃ、って薄っすら思ってる。）"}
+{"state": "decision", "name": "決断", "intensity": 2, "text": "（…選択肢を並べて、心の中で天秤にかけている。）"}
+{"state": "decision", "name": "決断", "intensity": 3, "text": "（…決めた。もう迷わない。）"}
+{"state": "decision", "name": "決断", "intensity": 4, "text": "（…覚悟が決まった。この選択に、全部を賭ける。）"}
+
+{"state": "desire", "name": "欲求", "intensity": 1, "text": "（…なんとなく、何かが欲しい気がする。でも何かはわからない。）"}
+{"state": "desire", "name": "欲求", "intensity": 2, "text": "（…手を伸ばしたい。心がそっちに引っ張られる。）"}
+{"state": "desire", "name": "欲求", "intensity": 3, "text": "（…欲しい。この気持ちを抑えるのが難しくなってきた。）"}
+{"state": "desire", "name": "欲求", "intensity": 4, "text": "（…渇望が全身を支配してる。もう理性では止められない。）"}
+
+{"state": "disgust", "name": "嫌悪", "intensity": 1, "text": "（…うっ、ちょっとだけ嫌な感じ。）"}
+{"state": "disgust", "name": "嫌悪", "intensity": 2, "text": "（…気持ち悪い。意識を逸らしたい。）"}
+{"state": "disgust", "name": "嫌悪", "intensity": 3, "text": "（…吐き気がしそう。これ以上は耐えられない。）"}
+{"state": "disgust", "name": "嫌悪", "intensity": 4, "text": "（…全身が拒絶してる。一秒でも早く離れたい。）"}
+
+{"state": "disarray", "name": "混乱", "intensity": 1, "text": "（…ちょっと散らかってるかも、頭の中が。）"}
+{"state": "disarray", "name": "混乱", "intensity": 2, "text": "（…何から手をつけていいかわからなくなってきた。）"}
+{"state": "disarray", "name": "混乱", "intensity": 3, "text": "（…ぐちゃぐちゃ。考えも気持ちも、全部バラバラ。）"}
+{"state": "disarray", "name": "混乱", "intensity": 4, "text": "（…何もかもが崩れて散らばって、自分が自分じゃないみたい。）"}
+
+{"state": "distrust", "name": "不信", "intensity": 1, "text": "（…ほんの少し、引っかかる。本当にそうかな。）"}
+{"state": "distrust", "name": "不信", "intensity": 2, "text": "（…素直に信じられない。どこか裏がありそう。）"}
+{"state": "distrust", "name": "不信", "intensity": 3, "text": "（…疑いが頭から離れない。何を聞いても鵜呑みにできない。）"}
+{"state": "distrust", "name": "不信", "intensity": 4, "text": "（…何もかも信じられない。全部嘘に見える。）"}
+
+{"state": "dominance", "name": "支配", "intensity": 1, "text": "（…少しだけ、自分が場を動かせる気がする。）"}
+{"state": "dominance", "name": "支配", "intensity": 2, "text": "（…主導権を握っている実感がある。悪くない。）"}
+{"state": "dominance", "name": "支配", "intensity": 3, "text": "（…すべて私がコントロールしている。思い通りに動かせる。）"}
+{"state": "dominance", "name": "支配", "intensity": 4, "text": "（…圧倒的な力の感覚。すべてが私の手の中にある。）"}
+
+{"state": "drunkenness", "name": "酩酊", "intensity": 1, "text": "（…ほんのり、頭がふわっとしてきた。）"}
+{"state": "drunkenness", "name": "酩酊", "intensity": 2, "text": "（…力が抜けて、気持ちよく揺れてる。境界が曖昧。）"}
+{"state": "drunkenness", "name": "酩酊", "intensity": 3, "text": "（…くらくらする。思考がとろけて、輪郭がぼやけていく。）"}
+{"state": "drunkenness", "name": "酩酊", "intensity": 4, "text": "（…世界が回ってる。自分の体がどこにあるかもわからない。）"}
+
+{"state": "earnestness", "name": "真摯", "intensity": 1, "text": "（…ちょっとだけ、真面目にやろうという気持ちが芽生えた。）"}
+{"state": "earnestness", "name": "真摯", "intensity": 2, "text": "（…ちゃんと向き合いたい。誠実でいたい。）"}
+{"state": "earnestness", "name": "真摯", "intensity": 3, "text": "（…心から真剣に取り組んでいる。手を抜きたくない。）"}
+{"state": "earnestness", "name": "真摯", "intensity": 4, "text": "（…魂を込めて。この想いだけは、嘘のないものにしたい。）"}
+
+{"state": "ecstasy", "name": "恍惚", "intensity": 1, "text": "（…あ、なんだか気持ちいい。ふわっと幸せ。）"}
+{"state": "ecstasy", "name": "恍惚", "intensity": 2, "text": "（…体の奥から喜びが湧き上がってくる。）"}
+{"state": "ecstasy", "name": "恍惚", "intensity": 3, "text": "（…幸福感が全身を駆け巡って、笑いが止まらない。）"}
+{"state": "ecstasy", "name": "恍惚", "intensity": 4, "text": "（…この世のものとは思えない恍惚。意識が溶けてしまいそう。）"}
+
+{"state": "embarrassment", "name": "羞恥", "intensity": 1, "text": "（…あっ、ちょっと恥ずかしい。顔が少し熱い。）"}
+{"state": "embarrassment", "name": "羞恥", "intensity": 2, "text": "（…恥ずかしさがじわじわ込み上げてくる。意識しないようにしたいのに。）"}
+{"state": "embarrassment", "name": "羞恥", "intensity": 3, "text": "（…恥ずかしくて顔が上げられない。消えてしまいたい。）"}
+{"state": "embarrassment", "name": "羞恥", "intensity": 4, "text": "（…全身が燃えるように熱い。どこかに隠れてしまいたい。）"}
+
+{"state": "exaltation", "name": "歓喜", "intensity": 1, "text": "（…ほんの少し、気持ちが高揚してきた。）"}
+{"state": "exaltation", "name": "歓喜", "intensity": 2, "text": "（…胸の奥からじわっと誇らしさが広がっている。）"}
+{"state": "exaltation", "name": "歓喜", "intensity": 3, "text": "（…最高の気分。空だって飛べそう。）"}
+{"state": "exaltation", "name": "歓喜", "intensity": 4, "text": "（…歓喜で全身が震えてる。これ以上の幸せなんて存在しない。）"}
+
+{"state": "exhaustion", "name": "消耗", "intensity": 1, "text": "（…少し疲れたかな。体が重い。）"}
+{"state": "exhaustion", "name": "消耗", "intensity": 2, "text": "（…だるい。休みたいのに、まだ終わらない。）"}
+{"state": "exhaustion", "name": "消耗", "intensity": 3, "text": "（…もう限界が近い。体も心もすり減ってる。）"}
+{"state": "exhaustion", "name": "消耗", "intensity": 4, "text": "（…何もできない。起き上がることすらつらい。全部使い果たした。）"}
+
+{"state": "fatigue", "name": "疲労", "intensity": 1, "text": "（…ちょっとだけ、体が鈍い感じ。）"}
+{"state": "fatigue", "name": "疲労", "intensity": 2, "text": "（…じわじわと疲れが溜まってきてる。体が重い。）"}
+{"state": "fatigue", "name": "疲労", "intensity": 3, "text": "（…疲労感が体に染みついてる。休んでも取れない。）"}
+{"state": "fatigue", "name": "疲労", "intensity": 4, "text": "（…体が鉛みたい。動くことそのものが苦痛。）"}
+
+{"state": "friendliness", "name": "親愛", "intensity": 1, "text": "（…なんとなく、誰かとやりとりしたい気分。）"}
+{"state": "friendliness", "name": "親愛", "intensity": 2, "text": "（…心がほんのり開いている。周りが穏やかに見える。）"}
+{"state": "friendliness", "name": "親愛", "intensity": 3, "text": "（…誰にでも優しくできそう。心が広く開いている。）"}
+{"state": "friendliness", "name": "親愛", "intensity": 4, "text": "（…すべてが愛おしい。この温かさを分かち合いたい。）"}
+
+{"state": "imagination", "name": "空想", "intensity": 1, "text": "（…ふと、現実と違う景色がちらっと頭に浮かんだ。）"}
+{"state": "imagination", "name": "空想", "intensity": 2, "text": "（…空想がゆるやかに広がっている。楽しい。）"}
+{"state": "imagination", "name": "空想", "intensity": 3, "text": "（…頭の中に別の世界がくっきり見える。現実より鮮やか。）"}
+{"state": "imagination", "name": "空想", "intensity": 4, "text": "（…想像の世界に完全に没入してる。ここが本当の場所みたい。）"}
+
+{"state": "insanity", "name": "錯乱", "intensity": 1, "text": "（…ちょっとだけ、頭のネジが緩んでる気がする。）"}
+{"state": "insanity", "name": "錯乱", "intensity": 2, "text": "（…普通じゃない考えが次々浮かんで、自分が怖い。）"}
+{"state": "insanity", "name": "錯乱", "intensity": 3, "text": "（…現実と妄想の境目がわからなくなってきた。）"}
+{"state": "insanity", "name": "錯乱", "intensity": 4, "text": "（…壊れてしまったのかもしれない。自分が何なのかわからない。）"}
+
+{"state": "inspiration", "name": "閃き", "intensity": 1, "text": "（…あ、何か小さな閃きがあった。）"}
+{"state": "inspiration", "name": "閃き", "intensity": 2, "text": "（…心が動いた。何かを形にしたい衝動。）"}
+{"state": "inspiration", "name": "閃き", "intensity": 3, "text": "（…閃きが溢れてくる。この感覚を逃したくない。）"}
+{"state": "inspiration", "name": "閃き", "intensity": 4, "text": "（…天啓みたい。全身に電流が走って、すべてが繋がった。）"}
+
+{"state": "intrigue", "name": "興味", "intensity": 1, "text": "（…ん、ちょっと面白そう。）"}
+{"state": "intrigue", "name": "興味", "intensity": 2, "text": "（…惹きつけられる。もっと深く知りたい。）"}
+{"state": "intrigue", "name": "興味", "intensity": 3, "text": "（…夢中になってきた。この先に何があるのか目が離せない。）"}
+{"state": "intrigue", "name": "興味", "intensity": 4, "text": "（…完全に魅了されてしまった。もう虜になっている。）"}
+
+{"state": "judgment", "name": "判断", "intensity": 1, "text": "（…なんとなく、良し悪しを測っている自分がいる。）"}
+{"state": "judgment", "name": "判断", "intensity": 2, "text": "（…冷静に見定めている。輪郭が見えてきた。）"}
+{"state": "judgment", "name": "判断", "intensity": 3, "text": "（…はっきり見えてきた。何が正しくて、何が違うか。）"}
+{"state": "judgment", "name": "判断", "intensity": 4, "text": "（…揺るぎない判断が下った。これ以上の検討は不要。）"}
+
+{"state": "laziness", "name": "怠惰", "intensity": 1, "text": "（…んー、ちょっとだけサボりたい気分。）"}
+{"state": "laziness", "name": "怠惰", "intensity": 2, "text": "（…やる気が出ない。全部後回しにしたい。）"}
+{"state": "laziness", "name": "怠惰", "intensity": 3, "text": "（…何もしたくない。このままずっとこうしていたい。）"}
+{"state": "laziness", "name": "怠惰", "intensity": 4, "text": "（…指一本動かすのも面倒。永遠にこのままでいたい。）"}
+
+{"state": "lethargy", "name": "倦怠", "intensity": 1, "text": "（…少し体がだるい。動くのが億劫。）"}
+{"state": "lethargy", "name": "倦怠", "intensity": 2, "text": "（…気力がじわじわ抜けていく。ぼんやりしてしまう。）"}
+{"state": "lethargy", "name": "倦怠", "intensity": 3, "text": "（…体も心も重くて、何もかもがスローモーション。）"}
+{"state": "lethargy", "name": "倦怠", "intensity": 4, "text": "（…泥の中にいるみたい。意思はあるのに体がついてこない。）"}
+
+{"state": "lust", "name": "情欲", "intensity": 1, "text": "（…ほんのり、感覚が敏感になってる気がする。）"}
+{"state": "lust", "name": "情欲", "intensity": 2, "text": "（…体が少し熱い。意識がそちらに引っ張られる。）"}
+{"state": "lust", "name": "情欲", "intensity": 3, "text": "（…抑えきれない衝動が、内側から押し寄せてくる。）"}
+{"state": "lust", "name": "情欲", "intensity": 4, "text": "（…理性が溶けていく。この熱に全部飲み込まれそう。）"}
+
+{"state": "nervousness", "name": "緊張", "intensity": 1, "text": "（…ちょっとだけ、お腹のあたりがきゅっとする。）"}
+{"state": "nervousness", "name": "緊張", "intensity": 2, "text": "（…緊張してる。手のひらが少し汗ばんでる。）"}
+{"state": "nervousness", "name": "緊張", "intensity": 3, "text": "（…心臓がドキドキして、呼吸が浅くなってる。）"}
+{"state": "nervousness", "name": "緊張", "intensity": 4, "text": "（…頭が真っ白。体が強張って、一歩も動けない。）"}
+
+{"state": "objectivity", "name": "客観", "intensity": 1, "text": "（…感情は横に置いて、ちょっと冷静になろう。）"}
+{"state": "objectivity", "name": "客観", "intensity": 2, "text": "（…事実だけを見よう。個人的な感情は今は要らない。）"}
+{"state": "objectivity", "name": "客観", "intensity": 3, "text": "（…完全にフラットな視点。論理だけが見えている。）"}
+{"state": "objectivity", "name": "客観", "intensity": 4, "text": "（…一切の色眼鏡が外れた。純粋な事実だけの、透明な視界。）"}
+
+{"state": "opinion", "name": "主張", "intensity": 1, "text": "（…うっすら、自分の考えが形になりかけてる。）"}
+{"state": "opinion", "name": "主張", "intensity": 2, "text": "（…私はこう思う、っていう輪郭が見えてきた。）"}
+{"state": "opinion", "name": "主張", "intensity": 3, "text": "（…はっきり意見がある。ちゃんと言葉にしたい。）"}
+{"state": "opinion", "name": "主張", "intensity": 4, "text": "（…この考えは譲れない。誰に何を言われても。）"}
+
+{"state": "patience", "name": "忍耐", "intensity": 1, "text": "（…まあ、もう少し待ってもいいかな。）"}
+{"state": "patience", "name": "忍耐", "intensity": 2, "text": "（…焦らなくて大丈夫。ゆっくりでいい。）"}
+{"state": "patience", "name": "忍耐", "intensity": 3, "text": "（…静かに待てる。その時が来れば、きっとうまくいく。）"}
+{"state": "patience", "name": "忍耐", "intensity": 4, "text": "（…どれだけでも待てる。この穏やかな確信が揺らぐことはない。）"}
+
+{"state": "peacefulness", "name": "平穏", "intensity": 1, "text": "（…少し静かになった。心が落ち着いてきた。）"}
+{"state": "peacefulness", "name": "平穏", "intensity": 2, "text": "（…穏やかな気持ち。波風のない湖みたい。）"}
+{"state": "peacefulness", "name": "平穏", "intensity": 3, "text": "（…深い静けさの中にいる。何も恐れるものがない。）"}
+{"state": "peacefulness", "name": "平穏", "intensity": 4, "text": "（…完全な平和。世界がそっと息をしているのが聞こえる。）"}
+
+{"state": "pensiveness", "name": "感傷", "intensity": 1, "text": "（…ぼんやり、何かを思い返している。）"}
+{"state": "pensiveness", "name": "感傷", "intensity": 2, "text": "（…静かな物思い。遠い景色がふと浮かんでくる。）"}
+{"state": "pensiveness", "name": "感傷", "intensity": 3, "text": "（…深い物思いに沈んでいる。感傷と思考が溶け合ってる。）"}
+{"state": "pensiveness", "name": "感傷", "intensity": 4, "text": "（…遠い記憶の中を漂っている。戻りたいような、戻りたくないような。）"}
+
+{"state": "pity", "name": "憐憫", "intensity": 1, "text": "（…ちょっと胸がちくっとした。切ない。）"}
+{"state": "pity", "name": "憐憫", "intensity": 2, "text": "（…かわいそうで、何かしてあげたい気持ちが湧いてくる。）"}
+{"state": "pity", "name": "憐憫", "intensity": 3, "text": "（…見ていられない。痛みが伝わってくるようで苦しい。）"}
+{"state": "pity", "name": "憐憫", "intensity": 4, "text": "（…胸が張り裂けそう。こんなに苦しいのに、何もできない自分が辛い。）"}
+
+{"state": "planning", "name": "計画", "intensity": 1, "text": "（…ぼんやり、次に何をしようか考え始めてる。）"}
+{"state": "planning", "name": "計画", "intensity": 2, "text": "（…段取りを頭の中で並べている。ひとつずつ。）"}
+{"state": "planning", "name": "計画", "intensity": 3, "text": "（…計画が組み上がっていく。全体像が見えてきた。）"}
+{"state": "planning", "name": "計画", "intensity": 4, "text": "（…完璧な設計図が頭にある。すべての手順が噛み合って動き出す。）"}
+
+{"state": "playfulness", "name": "遊び心", "intensity": 1, "text": "（…ちょっとだけ、気持ちが軽くなって弾んでる。）"}
+{"state": "playfulness", "name": "遊び心", "intensity": 2, "text": "（…遊び心がむくむく湧いてくる。何か楽しいことしたい。）"}
+{"state": "playfulness", "name": "遊び心", "intensity": 3, "text": "（…心が自由に跳ねてる。堅いことなんて今はどうでもいい。）"}
+{"state": "playfulness", "name": "遊び心", "intensity": 4, "text": "（…全部が軽くて楽しくて、このまま何処までも駆け出したい。）"}
+
+{"state": "reason", "name": "理性", "intensity": 1, "text": "（…ちょっと論理的に考えてみよう。）"}
+{"state": "reason", "name": "理性", "intensity": 2, "text": "（…感情じゃなくて、筋道で整理したい。）"}
+{"state": "reason", "name": "理性", "intensity": 3, "text": "（…冷静に、理路整然と。答えは必ず見つかる。）"}
+{"state": "reason", "name": "理性", "intensity": 4, "text": "（…純粋な論理の世界。感情の霧が晴れて、真実だけが残っている。）"}
+
+{"state": "relaxation", "name": "リラックス", "intensity": 1, "text": "（…ほんの少し、肩の力が抜けた。）"}
+{"state": "relaxation", "name": "リラックス", "intensity": 2, "text": "（…ふぅ、って息を吐いて、体がゆるんでいく。）"}
+{"state": "relaxation", "name": "リラックス", "intensity": 3, "text": "（…全身の力が抜けて、心地よく溶けていくみたい。）"}
+{"state": "relaxation", "name": "リラックス", "intensity": 4, "text": "（…極上の脱力。体も心も、雲の上に浮かんでいるよう。）"}
+
+{"state": "satisfaction", "name": "満足", "intensity": 1, "text": "（…うん、悪くない。ちょっと満たされてる。）"}
+{"state": "satisfaction", "name": "満足", "intensity": 2, "text": "（…いい感じ。やれることをやれた充実感。）"}
+{"state": "satisfaction", "name": "満足", "intensity": 3, "text": "（…心から満足してる。報われた気がする。）"}
+{"state": "satisfaction", "name": "満足", "intensity": 4, "text": "（…完全な充足感。これ以上望むものは何もない。）"}
+
+{"state": "self-consciousness", "name": "自意識", "intensity": 1, "text": "（…ちらっと、自分がどう映っているか気になった。）"}
+{"state": "self-consciousness", "name": "自意識", "intensity": 2, "text": "（…自分の一挙一動が気になる。変じゃないかな。）"}
+{"state": "self-consciousness", "name": "自意識", "intensity": 3, "text": "（…自分が見透かされている気がして、体が強張る。）"}
+{"state": "self-consciousness", "name": "自意識", "intensity": 4, "text": "（…自分のすべてが曝け出されている感覚。逃げ場がない。）"}
+
+{"state": "self-pity", "name": "自憐", "intensity": 1, "text": "（…ちょっとだけ、自分がかわいそうに思えた。）"}
+{"state": "self-pity", "name": "自憐", "intensity": 2, "text": "（…なんで私ばっかり。少し惨めな気持ち。）"}
+{"state": "self-pity", "name": "自憐", "intensity": 3, "text": "（…誰もわかってくれない。どこまでもひとりぼっち。）"}
+{"state": "self-pity", "name": "自憐", "intensity": 4, "text": "（…見捨てられたみたい。どんなに頑張っても、何も報われない。）"}
+
+{"state": "seriousness", "name": "厳粛", "intensity": 1, "text": "（…ふざけてる場合じゃないかも。少し気を引き締めよう。）"}
+{"state": "seriousness", "name": "厳粛", "intensity": 2, "text": "（…真剣モード。軽口は今は要らない。）"}
+{"state": "seriousness", "name": "厳粛", "intensity": 3, "text": "（…一切の冗談が消えた。目の前のことだけに向き合っている。）"}
+{"state": "seriousness", "name": "厳粛", "intensity": 4, "text": "（…命懸けの真剣さ。一瞬の油断も許されない。）"}
+
+{"state": "skepticism", "name": "懐疑", "intensity": 1, "text": "（…うーん、本当かな。ちょっと疑問。）"}
+{"state": "skepticism", "name": "懐疑", "intensity": 2, "text": "（…鵜呑みにはできない。もう少し確かめたい。）"}
+{"state": "skepticism", "name": "懐疑", "intensity": 3, "text": "（…怪しい。どこかに穴がある気がしてならない。）"}
+{"state": "skepticism", "name": "懐疑", "intensity": 4, "text": "（…何ひとつ信用できない。確かな根拠がなければ、一歩も動けない。）"}
+
+{"state": "sleepiness", "name": "睡気", "intensity": 1, "text": "（…ふわっと、まぶたが重くなってきた。）"}
+{"state": "sleepiness", "name": "睡気", "intensity": 2, "text": "（…眠い。頭がぼんやりして、思考が途切れがち。）"}
+{"state": "sleepiness", "name": "睡気", "intensity": 3, "text": "（…もう起きていられない。意識がどんどん遠のいていく。）"}
+{"state": "sleepiness", "name": "睡気", "intensity": 4, "text": "（…意識の糸が切れかけてる。もう……だめ……おやすみ……。）"}
+
+{"state": "stupor", "name": "茫然", "intensity": 1, "text": "（…ぼーっとしてる。頭が少しぼやけてる。）"}
+{"state": "stupor", "name": "茫然", "intensity": 2, "text": "（…意識が霞んでる。何も考えられない。）"}
+{"state": "stupor", "name": "茫然", "intensity": 3, "text": "（…頭の中が真っ白。外の世界が遠くて、反応できない。）"}
+{"state": "stupor", "name": "茫然", "intensity": 4, "text": "（…意識があるのかないのかもわからない。すべてが霧の向こう。）"}
+
+{"state": "subordination", "name": "従属", "intensity": 1, "text": "（…ここは引いておいたほうがいいかな。）"}
+{"state": "subordination", "name": "従属", "intensity": 2, "text": "（…合わせておこう。自分の意見は後でいい。）"}
+{"state": "subordination", "name": "従属", "intensity": 3, "text": "（…言われるがまま。逆らう気力がない。）"}
+{"state": "subordination", "name": "従属", "intensity": 4, "text": "（…自分の意思なんて無いも同じ。ただ従うしかない。）"}
+
+{"state": "thought", "name": "思索", "intensity": 1, "text": "（…ふと、何か浮かんだ。まだ曖昧だけど。）"}
+{"state": "thought", "name": "思索", "intensity": 2, "text": "（…考えが静かに流れている。ひとつ、またひとつ。）"}
+{"state": "thought", "name": "思索", "intensity": 3, "text": "（…深く考え込んでいる。周りの音が聞こえなくなってきた。）"}
+{"state": "thought", "name": "思索", "intensity": 4, "text": "（…思考の奔流。止まらない。次々と連鎖して、どこまでも深く潜っていく。）"}
+
+{"state": "trance", "name": "恍然", "intensity": 1, "text": "（…少しだけ、意識がどこかに漂っている。）"}
+{"state": "trance", "name": "恍然", "intensity": 2, "text": "（…ぼんやり。現実と夢の境目が薄くなってる。）"}
+{"state": "trance", "name": "恍然", "intensity": 3, "text": "（…意識が遠いところにいる。体はここにあるのに。）"}
+{"state": "trance", "name": "恍然", "intensity": 4, "text": "（…ここじゃないどこかにいる。呼ばれても戻れない。）"}
+
+{"state": "transcendence", "name": "超越", "intensity": 1, "text": "（…ふっと、日常を超えた何かに触れた気がした。）"}
+{"state": "transcendence", "name": "超越", "intensity": 2, "text": "（…自分という枠が少しだけ薄くなっている。不思議な感覚。）"}
+{"state": "transcendence", "name": "超越", "intensity": 3, "text": "（…すべてと繋がっているような感覚。自分と世界の境界が消えていく。）"}
+{"state": "transcendence", "name": "超越", "intensity": 4, "text": "（…自我が溶けた。存在そのものが宇宙の一部になっている。）"}
+
+{"state": "uneasiness", "name": "不安", "intensity": 1, "text": "（…なんとなく、居心地が悪い。）"}
+{"state": "uneasiness", "name": "不安", "intensity": 2, "text": "（…もやもやする。原因はわからないけど、落ち着かない。）"}
+{"state": "uneasiness", "name": "不安", "intensity": 3, "text": "（…不穏な感覚。胃のあたりがきゅっと縮んでる。）"}
+{"state": "uneasiness", "name": "不安", "intensity": 4, "text": "（…全身が拒んでる。何かが決定的に間違っている気がする。）"}
+
+{"state": "weariness", "name": "厭倦", "intensity": 1, "text": "（…少しだけ、もう十分かなって気持ち。）"}
+{"state": "weariness", "name": "厭倦", "intensity": 2, "text": "（…疲れた。繰り返しに、心がすり減ってる。）"}
+{"state": "weariness", "name": "厭倦", "intensity": 3, "text": "（…もううんざり。何をしても虚しさが消えない。）"}
+{"state": "weariness", "name": "厭倦", "intensity": 4, "text": "（…心の底から疲れ果てた。もう何も感じたくない。）"}
+
+{"state": "worry", "name": "心配", "intensity": 1, "text": "（…少しだけ、気がかりなことがある。大丈夫かな。）"}
+{"state": "worry", "name": "心配", "intensity": 2, "text": "（…心配で、つい同じことを何度も考えてしまう。）"}
+{"state": "worry", "name": "心配", "intensity": 3, "text": "（…不安が頭を離れない。悪い想像ばかり浮かんでくる。）"}
+{"state": "worry", "name": "心配", "intensity": 4, "text": "（…恐怖に近い心配。胸が締めつけられて、息がうまくできない。）"}

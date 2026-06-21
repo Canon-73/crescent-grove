@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="{{t:html_lang}}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{t:apikeys_title}}</title>
+    <link rel="icon" href="/static/images/favicon.ico" sizes="16x16 32x32">
+    <link rel="apple-touch-icon" href="/static/images/favicon.png" sizes="180x180">
+    <link rel="stylesheet" href="/static/theme-tokens.css?v=4">
+    <link rel="stylesheet" href="/static/dashboard.css?v=9">
+    <script src="/static/theme.js?v=4"></script>
+    <style>
+        .settings-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .settings-panel {
+            background-color: var(--panel-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .settings-header {
+            background-color: var(--header-bg);
+            padding: 15px 20px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-content {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        select.form-control {
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right .7em top 50%;
+            background-size: .65em auto;
+            appearance: none;
+        }
+
+        select.form-control option {
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .input-group .form-control {
+            flex: 1;
+        }
+
+        .input-group-append {
+            display: flex;
+        }
+
+        .btn-toggle-password {
+            background-color: var(--bg-hover);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 0.85em;
+            white-space: nowrap;
+        }
+
+        .btn-toggle-password:hover {
+            background-color: var(--border-color);
+        }
+
+        .btn-primary {
+            background-color: #5c6bc0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background-color: #3f51b5;
+        }
+
+        .btn-danger {
+            background-color: #e57373;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.2s;
+        }
+
+        .btn-danger:hover {
+            background-color: #f44336;
+        }
+
+        /* テーブル設定 */
+        .key-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .key-table th,
+        .key-table td {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .key-table th {
+            background-color: var(--header-bg);
+            font-weight: bold;
+        }
+
+        .badge-llm {
+            background-color: #81c784;
+            color: #1b5e20;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .badge-other {
+            background-color: #64b5f6;
+            color: #0d47a1;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-style: italic;
+        }
+
+        .nav-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #5c6bc0;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        .info-text {
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .env-preview {
+            display: inline-block;
+            margin-top: 5px;
+            font-family: monospace;
+            background-color: var(--bg-color);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px dashed var(--border-color);
+            color: #e91e63;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>⚙️ {{t:settings_heading}}</h1>
+        <div class="nav-links">
+            <button id="themeToggle" class="nav-button">☀️/🌙</button>
+        </div>
+    </div>
+
+    <div class="settings-container">
+        <!-- ナビゲーション（settings_nav.js が縦サイドバーを描画） -->
+        <div id="settingsNav"></div>
+
+        <h1 style="border-bottom:none; padding-bottom:0; margin-top:10px;">{{t:apikeys_page_heading}}</h1>
+        <p style="margin-bottom: 20px; color: var(--text-color);">
+            {{t:apikeys_description}}
+        </p>
+
+        <!-- セクション1: LLM APIキー -->
+        <div class="settings-panel">
+            <div class="settings-header">{{t:apikeys_section_llm}}</div>
+            <div class="settings-content">
+                <form id="llmKeyForm">
+                    <div class="form-group">
+                        <label for="llmProvider">{{t:apikeys_label_provider}}</label>
+                        <select id="llmProvider" class="form-control" required>
+                            <option value="" disabled selected>{{t:apikeys_option_select}}</option>
+                            <option value="DEEPSEEK">Deepseek</option>
+                            <option value="CLAUDE">Claude</option>
+                            <option value="OPENAI">OpenAI</option>
+                            <option value="GEMINI">Gemini</option>
+                            <option value="GROK">Grok</option>
+                        </select>
+                        <div class="info-text">
+                            {{t:apikeys_help_env_auto}} <span class="env-preview" id="llmPreview">CG_LLM_..._API_KEY</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="llmApiKey">{{t:apikeys_label_api_key}}</label>
+                        <div class="input-group">
+                            <input type="password" id="llmApiKey" class="form-control" placeholder="sk-..." required>
+                            <div class="input-group-append">
+                                <button type="button" class="btn-toggle-password"
+                                    onclick="togglePassword('llmApiKey')">{{t:apikeys_btn_show}}</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">{{t:apikeys_btn_register}}</button>
+                    <p class="info-text" style="margin-top: 10px;">{{t:apikeys_help_config_rewrite}}</p>
+                </form>
+            </div>
+        </div>
+
+        <!-- セクション2: その他のAPIキー -->
+        <div class="settings-panel">
+            <div class="settings-header">{{t:apikeys_section_other}}</div>
+            <div class="settings-content">
+                <form id="otherKeyForm">
+                    <div class="form-group">
+                        <label for="otherKeyName">{{t:apikeys_label_key_name}}</label>
+                        <input type="text" id="otherKeyName" class="form-control" placeholder="{{t:apikeys_placeholder_key_name}}"
+                            required pattern="^[A-Za-z0-9_]+$">
+                        <div class="info-text">
+                            {{t:apikeys_help_env_actual}} <span class="env-preview" id="otherPreview">CG_...</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="otherKeyValue">{{t:apikeys_label_key_value}}</label>
+                        <div class="input-group">
+                            <input type="password" id="otherKeyValue" class="form-control" placeholder="{{t:apikeys_placeholder_token}}"
+                                required>
+                            <div class="input-group-append">
+                                <button type="button" class="btn-toggle-password"
+                                    onclick="togglePassword('otherKeyValue')">{{t:apikeys_btn_show}}</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">{{t:apikeys_btn_add}}</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- セクション3: 登録済みキー一覧 -->
+        <div class="settings-panel">
+            <div class="settings-header">{{t:apikeys_section_list}}</div>
+            <div class="settings-content">
+                <table class="key-table">
+                    <thead>
+                        <tr>
+                            <th>{{t:apikeys_th_env_name}}</th>
+                            <th>{{t:apikeys_th_type}}</th>
+                            <th style="width: 80px;">{{t:apikeys_th_action}}</th>
+                        </tr>
+                    </thead>
+                    <tbody id="keysTableBody">
+                        <tr>
+                            <td colspan="3" class="empty-message">{{t:apikeys_loading}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- トースト通知 -->
+    <div id="toast" class="toast">{{t:apikeys_toast_saved}}</div>
+
+    <script>
+        // --- プレビュー表示ロジック ---
+        const llmProvider = document.getElementById('llmProvider');
+        const llmPreview = document.getElementById('llmPreview');
+        llmProvider.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (val) {
+                llmPreview.textContent = `CG_LLM_${val}_API_KEY`;
+            } else {
+                llmPreview.textContent = `CG_LLM_..._API_KEY`;
+            }
+        });
+
+        const otherKeyName = document.getElementById('otherKeyName');
+        const otherPreview = document.getElementById('otherPreview');
+        otherKeyName.addEventListener('input', (e) => {
+            const val = e.target.value.toUpperCase().replace(/[^A-Z0-9_]/g, '');
+            e.target.value = val; // 入力値矯正
+            if (val) {
+                otherPreview.textContent = `CG_${val}`;
+            } else {
+                otherPreview.textContent = `CG_...`;
+            }
+        });
+
+        // --- パスワード表示切替 ---
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const btn = input.nextElementSibling.querySelector('button');
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = T.apikeys_btn_hide;
+            } else {
+                input.type = 'password';
+                btn.textContent = T.apikeys_btn_show;
+            }
+        }
+
+        // --- トースト通知 ---
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.backgroundColor = isError ? '#e57373' : '#4caf50';
+            toast.style.opacity = '1';
+            setTimeout(() => { toast.style.opacity = '0'; }, 3000);
+        }
+
+        // --- API制御 ---
+        async function loadKeys() {
+            try {
+                const res = await fetch('/api/keys');
+                const keys = await res.json();
+                const tbody = document.getElementById('keysTableBody');
+
+                if (keys.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="empty-message">' + T.apikeys_no_keys + '</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                keys.forEach(k => {
+                    const tr = document.createElement('tr');
+
+                    const nameTd = document.createElement('td');
+                    nameTd.style.fontFamily = 'monospace';
+                    nameTd.style.fontWeight = 'bold';
+                    nameTd.textContent = k.name;
+
+                    const typeTd = document.createElement('td');
+                    const badge = document.createElement('span');
+                    badge.className = k.type === 'llm' ? 'badge-llm' : 'badge-other';
+                    badge.textContent = k.type === 'llm' ? T.apikeys_badge_llm : T.apikeys_badge_other;
+                    typeTd.appendChild(badge);
+
+                    const actTd = document.createElement('td');
+                    const delBtn = document.createElement('button');
+                    delBtn.className = 'btn-danger';
+                    delBtn.textContent = T.apikeys_btn_delete;
+                    delBtn.onclick = () => deleteKey(k.name);
+                    actTd.appendChild(delBtn);
+
+                    tr.appendChild(nameTd);
+                    tr.appendChild(typeTd);
+                    tr.appendChild(actTd);
+                    tbody.appendChild(tr);
+                });
+            } catch (e) {
+                console.error(e);
+                document.getElementById('keysTableBody').innerHTML = '<tr><td colspan="3" class="empty-message" style="color:#e57373;">' + T.apikeys_load_error + '</td></tr>';
+            }
+        }
+
+        async function registerKey(name, value, isLlm) {
+            try {
+                const res = await fetch('/api/keys', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, value, is_llm: isLlm })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    showToast(T.apikeys_key_registered);
+                    loadKeys();
+                    return true;
+                } else {
+                    showToast(data.detail || T.apikeys_register_failed, true);
+                    return false;
+                }
+            } catch (e) {
+                showToast(T.settings_network_error, true);
+                console.error(e);
+                return false;
+            }
+        }
+
+        async function deleteKey(name) {
+            if (!confirm(T.apikeys_confirm_delete_prefix + name + T.apikeys_confirm_delete_suffix)) return;
+
+            try {
+                const res = await fetch(`/api/keys/${encodeURIComponent(name)}`, {
+                    method: 'DELETE'
+                });
+
+                if (res.ok) {
+                    showToast(T.apikeys_key_deleted);
+                    loadKeys();
+                } else {
+                    const data = await res.json();
+                    showToast(data.detail || T.apikeys_delete_failed, true);
+                }
+            } catch (e) {
+                showToast(T.settings_network_error, true);
+                console.error(e);
+            }
+        }
+
+        // --- フォーム送信イベント ---
+        document.getElementById('llmKeyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const provider = llmProvider.value;
+            const value = document.getElementById('llmApiKey').value;
+
+            if (!provider) return alert(T.apikeys_alert_select_provider);
+
+            const name = `CG_LLM_${provider}_API_KEY`;
+            const success = await registerKey(name, value, true);
+            if (success) {
+                document.getElementById('llmApiKey').value = '';
+            }
+        });
+
+        document.getElementById('otherKeyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const rawName = otherKeyName.value;
+            const value = document.getElementById('otherKeyValue').value;
+
+            if (!rawName) return;
+
+            const name = `CG_${rawName}`;
+            const success = await registerKey(name, value, false);
+            if (success) {
+                otherKeyName.value = '';
+                document.getElementById('otherKeyValue').value = '';
+                otherPreview.textContent = 'CG_...';
+            }
+        });
+
+        // 初期読み込み
+        loadKeys();
+    </script>
+    <script src="/static/settings_nav.js?v=1"></script>
+</body>
+
+</html>

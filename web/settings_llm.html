@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="{{t:html_lang}}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{t:llm_title}}</title>
+    <link rel="icon" href="/static/images/favicon.ico" sizes="16x16 32x32">
+    <link rel="apple-touch-icon" href="/static/images/favicon.png" sizes="180x180">
+    <link rel="stylesheet" href="/static/theme-tokens.css?v=4">
+    <link rel="stylesheet" href="/static/dashboard.css?v=9">
+    <script src="/static/theme.js?v=4"></script>
+    <style>
+        .settings-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .settings-panel {
+            background-color: var(--panel-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .settings-header {
+            background-color: var(--header-bg);
+            padding: 15px 20px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-content {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: inherit;
+            box-sizing: border-box;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right .7em top 50%;
+            background-size: .65em auto;
+            appearance: none;
+        }
+
+        select.form-control option {
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+        }
+
+        .btn-primary {
+            background-color: #5c6bc0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background-color: #3f51b5;
+        }
+
+        .alert-error {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        /* プロバイダ/モデル変更時の「要再起動」を強く目立たせるバナー */
+        .alert-restart {
+            background-color: #fff3e0;
+            color: #e65100;
+            border: 3px solid #ff9800;
+            border-left: 10px solid #ff9800;
+            padding: 18px 20px;
+            border-radius: 6px;
+            margin-bottom: 18px;
+            display: none;
+            font-size: 1.05em;
+            font-weight: 700;
+            line-height: 1.6;
+            box-shadow: 0 4px 16px rgba(255, 152, 0, 0.35);
+            animation: restartPulse 1.2s ease-in-out infinite;
+        }
+
+        .alert-restart .restart-title {
+            font-size: 1.3em;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        @keyframes restartPulse {
+            0%, 100% { box-shadow: 0 4px 16px rgba(255, 152, 0, 0.35); }
+            50% { box-shadow: 0 4px 26px rgba(255, 152, 0, 0.75); }
+        }
+
+        body.dark-mode .alert-restart {
+            background-color: #3a2600;
+            color: #ffcc80;
+        }
+
+        .provider-details {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        body.dark-mode .provider-details {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>{{t:settings_heading}}</h1>
+        <div class="nav-links">
+            <button id="themeToggle" class="nav-button">☀️/🌙</button>
+        </div>
+    </div>
+
+    <div class="settings-container">
+        <!-- ナビゲーション（settings_nav.js が縦サイドバーを描画） -->
+        <div id="settingsNav"></div>
+
+        <div class="alert-restart" id="restartMessage"></div>
+        <div class="alert-error" id="errorMessage"></div>
+        <div class="alert-success" id="successMessage"></div>
+
+        <div class="settings-panel">
+            <div class="settings-header">
+                {{t:llm_header}}
+            </div>
+            <div class="settings-content">
+                <p style="font-size: 0.9em; color: var(--text-secondary); margin-bottom: 20px;">
+                    {{t:llm_description}}
+                </p>
+                <form id="llmForm" onsubmit="return saveLLMConfig(event)" novalidate>
+                    <div
+                        style="margin-bottom: 20px; padding: 15px; background-color: rgba(92, 107, 192, 0.1); border-left: 4px solid var(--accent); border-radius: 4px;">
+                        <p style="margin: 0; font-size: 0.9em; color: var(--text-primary);">
+                            {{t:llm_api_key_notice}}
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>{{t:llm_label_provider}}</label>
+                        <select id="providerSelect" class="form-control" onchange="updateProviderFields()">
+                            <option value="openai">OpenAI (GPT)</option>
+                            <option value="gemini">Google (Gemini)</option>
+                            <option value="anthropic">Anthropic (Claude)</option>
+                            <option value="grok">xAI (Grok)</option>
+                            <option value="deepseek">DeepSeek</option>
+                            <option value="lmstudio">{{t:llm_option_lmstudio}}</option>
+                            <option value="ollama">{{t:llm_option_ollama}}</option>
+                            <option value="custom">{{t:llm_option_custom}}</option>
+                        </select>
+                    </div>
+
+                    <!-- プロバイダーごとの追加フィールド表示 -->
+                    <div id="deepseekFields" class="provider-details">
+                        <div class="form-group">
+                            <label>{{t:llm_label_model_name}}</label>
+                            <input type="text" id="deepseekModel" class="form-control" placeholder="{{t:llm_placeholder_deepseek}}">
+                        </div>
+                    </div>
+                    <div id="openaiFields" class="provider-details">
+                        <div class="form-group">
+                            <label>{{t:llm_label_model_name}}</label>
+                            <input type="text" id="openaiModel" class="form-control" placeholder="{{t:llm_placeholder_openai}}">
+                        </div>
+                    </div>
+
+                    <div id="geminiFields" class="provider-details">
+                        <div class="form-group">
+                            <label>{{t:llm_label_model_name}}</label>
+                            <input type="text" id="geminiModel" class="form-control" placeholder="{{t:llm_placeholder_gemini}}">
+                        </div>
+                    </div>
+
+                    <div id="grokFields" class="provider-details">
+                        <div class="form-group">
+                            <label>{{t:llm_label_model_name}}</label>
+                            <input type="text" id="grokModel" class="form-control" placeholder="{{t:llm_placeholder_grok}}">
+                        </div>
+                    </div>
+
+                    <div id="anthropicFields" class="provider-details">
+                        <div class="form-group">
+                            <label>{{t:llm_label_model_name}}</label>
+                            <input type="text" id="anthropicModel" class="form-control"
+                                placeholder="{{t:llm_placeholder_anthropic}}">
+                        </div>
+                    </div>
+
+                    <div id="lmstudioFields" class="provider-details">
+                        <div class="form-group">
+                            <label>Base URL</label>
+                            <input type="text" id="lmstudioBaseUrl" class="form-control"
+                                placeholder="{{t:llm_placeholder_lmstudio_url}}">
+                        </div>
+                        <div class="form-group">
+                            <label>{{t:llm_label_model_name_optional}}</label>
+                            <input type="text" id="lmstudioModel" class="form-control" placeholder="{{t:llm_placeholder_optional_empty}}">
+                        </div>
+                    </div>
+
+                    <div id="ollamaFields" class="provider-details">
+                        <div class="form-group">
+                            <label>Base URL</label>
+                            <input type="text" id="ollamaBaseUrl" class="form-control"
+                                placeholder="{{t:llm_placeholder_ollama_url}}">
+                        </div>
+                        <div class="form-group">
+                            <label>{{t:llm_label_model_name}}</label>
+                            <input type="text" id="ollamaModel" class="form-control" placeholder="{{t:llm_placeholder_ollama}}" required>
+                        </div>
+                    </div>
+
+                    <div id="customFields" class="provider-details">
+                        <div class="form-group">
+                            <label>Base URL</label>
+                            <input type="text" id="customBaseUrl" class="form-control"
+                                placeholder="{{t:llm_placeholder_custom_url}}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>{{t:llm_label_model_name}}</label>
+                            <input type="text" id="customModel" class="form-control" placeholder="{{t:llm_placeholder_custom_model}}">
+                        </div>
+                    </div>
+
+                    <!-- 共通パラメータ -->
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label>{{t:llm_label_temperature}}</label>
+                        <input type="number" id="temperature" class="form-control" step="0.1" min="0" max="2"
+                            value="1.0">
+                    </div>
+
+                    <div class="form-group">
+                        <label>{{t:llm_label_max_tokens}}</label>
+                        <input type="number" id="maxTokens" class="form-control" step="512" min="512" max="32768"
+                            value="4096">
+                        <small
+                            style="color: var(--text-secondary); font-size: 0.85em;">{{t:llm_help_max_tokens}}</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>{{t:llm_label_thinking_mode}}</label>
+                        <select id="thinkingMode" class="form-control">
+                            <option value="auto">{{t:llm_option_thinking_auto}}</option>
+                            <option value="off">{{t:llm_option_thinking_off}}</option>
+                            <option value="low">low</option>
+                            <option value="medium">medium</option>
+                            <option value="high">{{t:llm_option_thinking_high}}</option>
+                        </select>
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:llm_help_thinking_mode}}</small>
+                    </div>
+
+                    <hr style="border-color: var(--border-color); margin: 15px 0;">
+                    <p style="font-size: 0.85em; font-weight: bold; color: var(--text-secondary); margin-bottom: 10px;">
+                        {{t:llm_subsection_salia}}</p>
+                    <div class="form-group">
+                        <label><input type="checkbox" id="saliaSameAsMain" onchange="toggleSaliaFields()"> {{t:llm_label_salia_same_as_main}}</label>
+                        <small style="color: var(--text-secondary); font-size: 0.85em; display:block;">{{t:llm_help_salia}}</small>
+                    </div>
+                    <div id="saliaFields">
+                        <div class="form-group">
+                            <label>{{t:llm_label_salia_model}}</label>
+                            <input type="text" id="saliaModel" class="form-control" placeholder="{{t:llm_placeholder_salia_model}}">
+                        </div>
+                        <div class="form-group">
+                            <label>{{t:llm_label_salia_thinking}}</label>
+                            <select id="saliaThinking" class="form-control">
+                                <option value="">{{t:llm_option_salia_same}}</option>
+                                <option value="auto">auto</option>
+                                <option value="off">off</option>
+                                <option value="low">low</option>
+                                <option value="medium">medium</option>
+                                <option value="high">high</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr style="border-color: var(--border-color); margin: 15px 0;">
+                    <p style="font-size: 0.85em; font-weight: bold; color: var(--text-secondary); margin-bottom: 10px;">
+                        {{t:llm_subsection_context}}</p>
+
+                    <div class="form-group">
+                        <label>{{t:llm_label_context_max_tokens}}</label>
+                        <input type="number" id="contextMaxTokens" class="form-control" step="1024" min="8192"
+                            max="262144" value="65536">
+                        <small
+                            style="color: var(--text-secondary); font-size: 0.85em;">{{t:llm_help_context_max_tokens}}</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>{{t:llm_label_compression_threshold}}</label>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="range" id="compressionThreshold" style="flex: 1;" step="0.05" min="0.5"
+                                max="0.9" value="0.7"
+                                oninput="document.getElementById('compressionThresholdVal').textContent = this.value">
+                            <span id="compressionThresholdVal" style="min-width: 2.5em; text-align: right;">0.70</span>
+                        </div>
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:llm_help_compression_threshold}}</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>{{t:llm_label_emergency_threshold}}</label>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="range" id="emergencyCompressionThreshold" style="flex: 1;" step="0.05" min="0.5"
+                                max="0.99" value="0.9"
+                                oninput="document.getElementById('emergencyCompressionThresholdVal').textContent = parseFloat(this.value).toFixed(2)">
+                            <span id="emergencyCompressionThresholdVal"
+                                style="min-width: 2.5em; text-align: right;">0.90</span>
+                        </div>
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:llm_help_emergency_threshold}}</small>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="margin-top: 15px;">{{t:settings_save_button}}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadLLMConfig() {
+            try {
+                const response = await fetch('/api/settings/llm');
+                if (!response.ok) throw new Error(T.llm_error_load_failed);
+                const data = await response.json();
+
+                const provider = data.provider || 'openai';
+                document.getElementById('providerSelect').value = provider;
+
+                // 共通設定
+                document.getElementById('temperature').value = data.temperature !== undefined ? data.temperature : 1.0;
+                document.getElementById('maxTokens').value = data.max_tokens || 4096;
+                document.getElementById('contextMaxTokens').value = data.context_max_tokens || 65536;
+                const threshold = data.compression_threshold || 0.70;
+                document.getElementById('compressionThreshold').value = threshold;
+                document.getElementById('compressionThresholdVal').textContent = threshold.toFixed(2);
+                const emergencyThreshold = data.emergency_compression_threshold || 0.90;
+                document.getElementById('emergencyCompressionThreshold').value = emergencyThreshold;
+                document.getElementById('emergencyCompressionThresholdVal').textContent = emergencyThreshold.toFixed(2);
+
+                // 思考モード・サリアのLLM設定
+                document.getElementById('thinkingMode').value = data.thinking || 'auto';
+                document.getElementById('saliaModel').value = data.salia_model || '';
+                document.getElementById('saliaThinking').value = data.salia_thinking || '';
+                document.getElementById('saliaSameAsMain').checked = !(data.salia_model || data.salia_thinking);
+                toggleSaliaFields();
+
+                // プロバイダー固有の設定を埋め込む
+                if (provider === 'openai') {
+                    document.getElementById('openaiModel').value = data.model || '';
+                } else if (provider === 'gemini') {
+                    document.getElementById('geminiModel').value = data.model || '';
+                } else if (provider === 'grok') {
+                    document.getElementById('grokModel').value = data.model || '';
+                } else if (provider === 'anthropic') {
+                    document.getElementById('anthropicModel').value = data.model || '';
+                } else if (provider === 'deepseek') {
+                    document.getElementById('deepseekModel').value = data.model || 'deepseek-chat';
+                } else if (provider === 'lmstudio') {
+                    document.getElementById('lmstudioBaseUrl').value = data.base_url || 'http://127.0.0.1:1234/v1';
+                    document.getElementById('lmstudioModel').value = data.model || '';
+                } else if (provider === 'ollama') {
+                    document.getElementById('ollamaBaseUrl').value = data.base_url || 'http://127.0.0.1:11434/v1';
+                    document.getElementById('ollamaModel').value = data.model || '';
+                } else if (provider === 'custom') {
+                    document.getElementById('customBaseUrl').value = data.base_url || '';
+                    document.getElementById('customModel').value = data.model || '';
+                }
+
+                updateProviderFields();
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        function toggleSaliaFields() {
+            // 「メインと同じ」チェック時はサリア個別欄を隠す（保存時は空＝メイン追従で送る）。
+            const same = document.getElementById('saliaSameAsMain').checked;
+            document.getElementById('saliaFields').style.display = same ? 'none' : 'block';
+        }
+
+        function updateProviderFields() {
+            // 全ての provider-details を非表示
+            const details = document.querySelectorAll('.provider-details');
+            for (let d of details) d.style.display = 'none';
+
+            // 選択されたプロバイダーのフィールドを表示
+            const provider = document.getElementById('providerSelect').value;
+            const target = document.getElementById(provider + 'Fields');
+            if (target) target.style.display = 'block';
+        }
+
+        async function saveLLMConfig(event) {
+            event.preventDefault();
+
+            const provider = document.getElementById('providerSelect').value;
+            const temperature = parseFloat(document.getElementById('temperature').value);
+
+            // バリデーション初期化
+            hideError();
+
+            let payload = {
+                provider: provider,
+                temperature: temperature,
+                max_tokens: parseInt(document.getElementById('maxTokens').value),
+                context_max_tokens: parseInt(document.getElementById('contextMaxTokens').value),
+                compression_threshold: parseFloat(document.getElementById('compressionThreshold').value),
+                emergency_compression_threshold: parseFloat(document.getElementById('emergencyCompressionThreshold').value)
+            };
+
+            // プロバイダーごとの値を取得 & バリデーション
+            if (provider === 'openai') {
+                payload.model = document.getElementById('openaiModel').value;
+            } else if (provider === 'gemini') {
+                payload.model = document.getElementById('geminiModel').value;
+            } else if (provider === 'grok') {
+                payload.model = document.getElementById('grokModel').value;
+            } else if (provider === 'anthropic') {
+                payload.model = document.getElementById('anthropicModel').value;
+            } else if (provider === 'deepseek') {
+                payload.model = document.getElementById('deepseekModel').value;
+            } else if (provider === 'lmstudio') {
+                payload.base_url = document.getElementById('lmstudioBaseUrl').value;
+                payload.model = document.getElementById('lmstudioModel').value;
+                if (!payload.base_url) return showError(T.llm_error_lmstudio_url_required);
+            } else if (provider === 'ollama') {
+                payload.base_url = document.getElementById('ollamaBaseUrl').value;
+                payload.model = document.getElementById('ollamaModel').value;
+                if (!payload.base_url) return showError(T.llm_error_ollama_url_required);
+                if (!payload.model) return showError(T.llm_error_ollama_model_required);
+            } else if (provider === 'custom') {
+                payload.base_url = document.getElementById('customBaseUrl').value;
+                payload.model = document.getElementById('customModel').value;
+                if (!payload.base_url) return showError(T.llm_error_custom_url_required);
+            }
+
+            // 思考モード・サリアのLLM設定
+            payload.thinking = document.getElementById('thinkingMode').value;
+            if (document.getElementById('saliaSameAsMain').checked) {
+                payload.salia_model = "";
+                payload.salia_thinking = "";
+            } else {
+                payload.salia_model = document.getElementById('saliaModel').value.trim();
+                payload.salia_thinking = document.getElementById('saliaThinking').value;
+            }
+
+            console.log("[DEBUG] saveLLMConfig start", payload);
+            try {
+                const response = await fetch('/api/settings/llm', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                console.log("[DEBUG] saveLLMConfig response status", response.status);
+                if (!response.ok) throw new Error(T.llm_error_save_failed);
+
+                const result = await response.json();
+                if (result.restart_required) {
+                    // プロバイダー/モデル/Base URL が変わった → 超目立つ再起動メッセージ
+                    showRestart();
+                } else {
+                    showSuccess(T.llm_success_saved_no_restart);
+                }
+            } catch (error) {
+                console.error("[DEBUG] saveLLMConfig error", error);
+                showError(error.message);
+            }
+            return false;
+        }
+
+        function showError(msg) {
+            hideSuccess();
+            hideRestart();
+            const el = document.getElementById('errorMessage');
+            el.innerText = msg;
+            el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+
+        function showSuccess(msg) {
+            hideError();
+            hideRestart();
+            const el = document.getElementById('successMessage');
+            el.innerText = msg;
+            el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+
+        function showRestart() {
+            hideError();
+            hideSuccess();
+            const el = document.getElementById('restartMessage');
+            // プロバイダー/モデル変更は反映に再起動が必須。自動で消さず、ユーザーが気づくまで表示し続ける。
+            el.innerHTML = `<span class="restart-title">${T.llm_restart_title}</span>`
+                + T.llm_restart_body;
+            el.style.display = 'block';
+            // 画面上部の見える位置までスクロールして確実に気づかせる
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function hideError() { document.getElementById('errorMessage').style.display = 'none'; }
+        function hideSuccess() { document.getElementById('successMessage').style.display = 'none'; }
+        function hideRestart() { document.getElementById('restartMessage').style.display = 'none'; }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateProviderFields();
+            loadLLMConfig();
+        });
+    </script>
+    <script src="/static/settings_nav.js?v=1"></script>
+</body>
+
+</html>

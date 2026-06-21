@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="{{t:html_lang}}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{t:moonbeat_title}}</title>
+    <link rel="icon" href="/static/images/favicon.ico" sizes="16x16 32x32">
+    <link rel="apple-touch-icon" href="/static/images/favicon.png" sizes="180x180">
+    <link rel="stylesheet" href="/static/theme-tokens.css?v=4">
+    <link rel="stylesheet" href="/static/dashboard.css?v=9">
+    <script src="/static/theme.js?v=4"></script>
+    <style>
+        body {
+            min-width: 100vw;
+        }
+
+        .settings-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .settings-panel {
+            background-color: var(--panel-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .settings-header {
+            background-color: var(--header-bg);
+            padding: 15px 20px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-content {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .btn-primary {
+            background-color: #5c6bc0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background-color: #3f51b5;
+        }
+
+        .alert-error {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .section-title {
+            margin-top: 30px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--accent);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .small-note {
+            color: var(--text-secondary);
+            font-size: 0.85em;
+        }
+
+        .check-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .check-label input {
+            width: auto;
+        }
+
+        /* --- トグルスイッチ（他の設定ページと統一） --- */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            flex: 0 0 auto;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .switch .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border-color, #ccc);
+            border-radius: 24px;
+            transition: background-color .15s;
+        }
+
+        .switch .slider::before {
+            content: "";
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #fff;
+            border-radius: 50%;
+            transition: transform .15s;
+        }
+
+        .switch input:checked + .slider {
+            background-color: #4caf50;
+        }
+
+        .switch input:checked + .slider::before {
+            transform: translateX(20px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>⚙️ {{t:settings_heading}}</h1>
+        <div class="nav-links">
+            <button id="themeToggle" class="nav-button">☀️/🌙</button>
+        </div>
+    </div>
+
+    <div class="settings-container">
+        <!-- ナビゲーション（settings_nav.js が縦サイドバーを描画） -->
+        <div id="settingsNav"></div>
+
+        <div class="alert-error" id="errorMessage"></div>
+        <div class="alert-success" id="successMessage"></div>
+
+        <div class="settings-panel">
+            <div class="settings-header">
+                {{t:moonbeat_section_header}}
+            </div>
+            <div class="settings-content">
+                <p class="small-note" style="margin-bottom: 15px;">
+                    {{t:moonbeat_desc}}
+                </p>
+                <form id="moonbeatForm" onsubmit="return saveMoonbeatConfig(event)" novalidate>
+
+                    <div class="section-title">{{t:moonbeat_section_basic}}</div>
+                    <div class="form-group">
+                        <label class="toggle-row">
+                            <span class="switch"><input type="checkbox" id="enabled"><span class="slider"></span></span>
+                            <span>{{t:moonbeat_label_enabled}}</span>
+                        </label>
+                        <small class="small-note">{{t:moonbeat_help_enabled}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_interval}}</label>
+                        <input type="number" id="intervalMinutes" class="form-control" step="1" min="1" max="1440">
+                        <small class="small-note">{{t:moonbeat_help_interval}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_start_time}}</label>
+                        <input type="time" id="startTime" class="form-control">
+                        <small class="small-note">{{t:moonbeat_help_start_time}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_end_time}}</label>
+                        <input type="time" id="endTime" class="form-control">
+                        <small class="small-note">{{t:moonbeat_help_end_time}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="toggle-row">
+                            <span class="switch"><input type="checkbox" id="skipIfProcessing"><span class="slider"></span></span>
+                            <span>{{t:moonbeat_label_skip_processing}}</span>
+                        </label>
+                        <small class="small-note">{{t:moonbeat_help_skip_processing}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_min_energy}}</label>
+                        <input type="number" id="minEnergy" class="form-control" step="1" min="0" max="100">
+                        <small class="small-note">{{t:moonbeat_help_min_energy}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_min_stamina}}</label>
+                        <input type="number" id="minStamina" class="form-control" step="1" min="0" max="100">
+                        <small class="small-note">{{t:moonbeat_help_min_stamina}}</small>
+                    </div>
+
+                    <div class="section-title">{{t:moonbeat_section_dynamic}}</div>
+                    <div class="form-group">
+                        <label class="toggle-row">
+                            <span class="switch"><input type="checkbox" id="dynEnabled"><span class="slider"></span></span>
+                            <span>{{t:moonbeat_label_dyn_enabled}}</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_token_per_minute}}</label>
+                        <input type="number" id="dynTokenPerMinute" class="form-control" step="100" min="1">
+                        <small class="small-note">{{t:moonbeat_help_token_per_minute}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_max_extension}}</label>
+                        <input type="number" id="dynMaxExtension" class="form-control" step="1" min="0" max="1440">
+                        <small class="small-note">{{t:moonbeat_help_max_extension}}</small>
+                    </div>
+
+                    <div class="section-title">{{t:moonbeat_section_flashback}}</div>
+                    <div class="form-group">
+                        <label class="toggle-row">
+                            <span class="switch"><input type="checkbox" id="fbEnabled"><span class="slider"></span></span>
+                            <span>{{t:moonbeat_label_fb_enabled}}</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_fb_event_prob}}</label>
+                        <input type="number" id="fbEventDbProb" class="form-control" step="0.05" min="0" max="1">
+                        <small class="small-note">{{t:moonbeat_help_fb_event_prob}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_fb_note_prob}}</label>
+                        <input type="number" id="fbNoteProb" class="form-control" step="0.05" min="0" max="1">
+                        <small class="small-note">{{t:moonbeat_help_fb_note_prob}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_fb_min_score}}</label>
+                        <input type="number" id="fbMinScore" class="form-control" step="1" min="0">
+                        <small class="small-note">{{t:moonbeat_help_fb_min_score}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_fb_age_bias}}</label>
+                        <input type="number" id="fbNoteAgeBias" class="form-control" step="0.05" min="0" max="1">
+                        <small class="small-note">{{t:moonbeat_help_fb_age_bias}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_fb_max_chars}}</label>
+                        <input type="number" id="fbNoteMaxChars" class="form-control" step="10" min="0">
+                        <small class="small-note">{{t:moonbeat_help_fb_max_chars}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_fb_candidate_files}}</label>
+                        <input type="number" id="fbNoteCandidateFiles" class="form-control" step="1" min="1">
+                        <small class="small-note">{{t:moonbeat_help_fb_candidate_files}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_fb_prompt}}</label>
+                        <textarea id="fbPrompt" class="form-control" rows="3"></textarea>
+                        <small class="small-note">{{t:moonbeat_help_fb_prompt}}</small>
+                    </div>
+
+                    <div class="section-title">{{t:moonbeat_section_similarity}}</div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_sim_model}}</label>
+                        <input type="text" id="simModel" class="form-control" placeholder="cl-nagoya/ruri-v3-30m">
+                        <small class="small-note">{{t:moonbeat_help_sim_model}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_sim_threshold}}</label>
+                        <input type="number" id="simThreshold" class="form-control" step="0.01" min="0" max="1">
+                        <small class="small-note">{{t:moonbeat_help_sim_threshold}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_sim_max_retry}}</label>
+                        <input type="number" id="simMaxRetry" class="form-control" step="1" min="0" max="10">
+                        <small class="small-note">{{t:moonbeat_help_sim_max_retry}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_sim_penalty}}</label>
+                        <input type="number" id="simRetryPenalty" class="form-control" step="0.1" min="0" max="2">
+                        <small class="small-note">{{t:moonbeat_help_sim_penalty}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:moonbeat_label_sim_retry_msg}}</label>
+                        <textarea id="simRetryMessage" class="form-control" rows="4"></textarea>
+                        <small class="small-note">{{t:moonbeat_help_sim_retry_msg}}</small>
+                    </div>
+
+                    <div class="section-title">{{t:moonbeat_section_time_periods}}</div>
+                    <div class="form-group">
+                        <small class="small-note">{{t:moonbeat_help_time_periods}}</small>
+                        <div id="timePeriodsList" style="margin-top: 8px;"></div>
+                        <div style="display: flex; gap: 8px; margin-top: 8px;">
+                            <input type="number" id="newTpUntil" class="form-control" placeholder="{{t:moonbeat_placeholder_until}}"
+                                style="flex: 1;" step="1" min="0" max="24">
+                            <input type="text" id="newTpPeriod" class="form-control" placeholder="{{t:moonbeat_placeholder_period}}"
+                                style="flex: 2;">
+                            <button type="button" class="btn-primary" onclick="addTimePeriod()"
+                                style="white-space: nowrap;">{{t:moonbeat_btn_add_period}}</button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="margin-top: 20px;">{{t:settings_save_button}}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadMoonbeatConfig() {
+            try {
+                const response = await fetch('/api/settings/moonbeat');
+                if (!response.ok) throw new Error(T.settings_load_error);
+                const data = await response.json();
+
+                // 基本設定
+                document.getElementById('enabled').checked = data.enabled !== false;
+                document.getElementById('intervalMinutes').value = data.interval_minutes ?? 30;
+                document.getElementById('startTime').value = data.start_time || '07:00';
+                document.getElementById('endTime').value = data.end_time || '23:00';
+                document.getElementById('skipIfProcessing').checked = data.skip_if_processing !== false;
+                document.getElementById('minEnergy').value = data.min_energy ?? 5;
+                document.getElementById('minStamina').value = data.min_stamina ?? 10;
+
+                // 動的間隔
+                const di = data.dynamic_interval || {};
+                document.getElementById('dynEnabled').checked = di.enabled !== false;
+                document.getElementById('dynTokenPerMinute').value = di.token_per_minute ?? 1000;
+                document.getElementById('dynMaxExtension').value = di.max_extension_minutes ?? 60;
+
+                // フラッシュバック
+                const fb = data.flashback || {};
+                document.getElementById('fbEnabled').checked = fb.enabled !== false;
+                document.getElementById('fbEventDbProb').value = fb.event_db_probability ?? 0.3;
+                document.getElementById('fbNoteProb').value = fb.note_fragment_probability ?? 0.3;
+                document.getElementById('fbMinScore').value = fb.min_score ?? 50;
+                document.getElementById('fbNoteAgeBias').value = fb.note_fragment_age_bias ?? 0.7;
+                document.getElementById('fbNoteMaxChars').value = fb.note_fragment_max_chars ?? 300;
+                document.getElementById('fbNoteCandidateFiles').value = fb.note_fragment_candidate_files ?? 3;
+                document.getElementById('fbPrompt').value = fb.prompt || '';
+
+                // 類似度
+                const sim = data.similarity || {};
+                document.getElementById('simModel').value = sim.model || '';
+                document.getElementById('simThreshold').value = sim.threshold ?? 0.95;
+                document.getElementById('simMaxRetry').value = sim.max_retry ?? 2;
+                document.getElementById('simRetryPenalty').value = sim.retry_frequency_penalty ?? 1.2;
+                document.getElementById('simRetryMessage').value = sim.retry_message || '';
+
+                // 時間帯ラベル
+                renderTimePeriods(data.time_periods || []);
+
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function saveMoonbeatConfig(event) {
+            event.preventDefault();
+            hideError();
+
+            const payload = {
+                enabled: document.getElementById('enabled').checked,
+                interval_minutes: parseInt(document.getElementById('intervalMinutes').value),
+                start_time: document.getElementById('startTime').value,
+                end_time: document.getElementById('endTime').value,
+                skip_if_processing: document.getElementById('skipIfProcessing').checked,
+                min_energy: parseInt(document.getElementById('minEnergy').value),
+                min_stamina: parseInt(document.getElementById('minStamina').value),
+                dynamic_interval: {
+                    enabled: document.getElementById('dynEnabled').checked,
+                    token_per_minute: parseInt(document.getElementById('dynTokenPerMinute').value),
+                    max_extension_minutes: parseInt(document.getElementById('dynMaxExtension').value)
+                },
+                flashback: {
+                    enabled: document.getElementById('fbEnabled').checked,
+                    event_db_probability: parseFloat(document.getElementById('fbEventDbProb').value),
+                    note_fragment_probability: parseFloat(document.getElementById('fbNoteProb').value),
+                    min_score: parseFloat(document.getElementById('fbMinScore').value),
+                    note_fragment_age_bias: parseFloat(document.getElementById('fbNoteAgeBias').value),
+                    note_fragment_max_chars: parseInt(document.getElementById('fbNoteMaxChars').value),
+                    note_fragment_candidate_files: parseInt(document.getElementById('fbNoteCandidateFiles').value),
+                    prompt: document.getElementById('fbPrompt').value
+                },
+                similarity: {
+                    model: document.getElementById('simModel').value.trim(),
+                    threshold: parseFloat(document.getElementById('simThreshold').value),
+                    max_retry: parseInt(document.getElementById('simMaxRetry').value),
+                    retry_frequency_penalty: parseFloat(document.getElementById('simRetryPenalty').value),
+                    retry_message: document.getElementById('simRetryMessage').value
+                },
+                time_periods: getTimePeriods()
+            };
+
+            try {
+                const response = await fetch('/api/settings/moonbeat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error(T.settings_save_error);
+                showSuccess(T.moonbeat_save_success);
+            } catch (error) {
+                showError(error.message);
+            }
+            return false;
+        }
+
+        function showError(msg) {
+            hideSuccess();
+            const el = document.getElementById('errorMessage');
+            el.innerText = msg;
+            el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+
+        function showSuccess(msg) {
+            hideError();
+            const el = document.getElementById('successMessage');
+            el.innerText = msg;
+            el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+
+        function hideError() { document.getElementById('errorMessage').style.display = 'none'; }
+        function hideSuccess() { document.getElementById('successMessage').style.display = 'none'; }
+
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+        }
+
+        // --- time_periods リストエディタ ---
+        function renderTimePeriods(list) {
+            const container = document.getElementById('timePeriodsList');
+            container.innerHTML = '';
+            list.forEach((item, i) => {
+                const row = document.createElement('div');
+                row.style.cssText = 'display:flex;align-items:center;gap:6px;margin-bottom:6px;';
+                row.innerHTML = `
+                    <span style="font-size:0.8em;color:var(--text-muted);min-width:1.4em;text-align:right;">${i + 1}.</span>
+                    <input type="number" class="form-control tp-until-input" value="${escapeHtml(item.until ?? '')}"
+                        style="flex:1;" step="1" min="0" max="24" title="〜時まで">
+                    <input type="text" class="form-control tp-period-input" value="${escapeHtml(item.period ?? '')}"
+                        style="flex:2;" title="ラベル">
+                    <button type="button" onclick="moveTimePeriod(${i},-1)" title="上へ"
+                        style="background:var(--bg-hover);border:1px solid var(--border);border-radius:4px;padding:4px 8px;cursor:pointer;">▲</button>
+                    <button type="button" onclick="moveTimePeriod(${i},1)" title="下へ"
+                        style="background:var(--bg-hover);border:1px solid var(--border);border-radius:4px;padding:4px 8px;cursor:pointer;">▼</button>
+                    <button type="button" onclick="removeTimePeriod(${i})" title="削除"
+                        style="background:transparent;border:1px solid var(--danger,#e57373);color:var(--danger,#e57373);border-radius:4px;padding:4px 8px;cursor:pointer;">✕</button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function getTimePeriods() {
+            const untils = [...document.querySelectorAll('.tp-until-input')];
+            const periods = [...document.querySelectorAll('.tp-period-input')];
+            const result = [];
+            for (let i = 0; i < untils.length; i++) {
+                const until = untils[i].value.trim();
+                const period = periods[i].value.trim();
+                if (until === '' || period === '') continue;
+                result.push({ until: parseInt(until), period: period });
+            }
+            return result;
+        }
+
+        function addTimePeriod() {
+            const untilInput = document.getElementById('newTpUntil');
+            const periodInput = document.getElementById('newTpPeriod');
+            const until = untilInput.value.trim();
+            const period = periodInput.value.trim();
+            if (until === '' || period === '') return;
+            const list = getTimePeriods();
+            list.push({ until: parseInt(until), period: period });
+            renderTimePeriods(list);
+            untilInput.value = '';
+            periodInput.value = '';
+        }
+
+        function removeTimePeriod(i) {
+            const l = getTimePeriods(); l.splice(i, 1); renderTimePeriods(l);
+        }
+
+        function moveTimePeriod(i, dir) {
+            const l = getTimePeriods(); const j = i + dir;
+            if (j < 0 || j >= l.length) return;[l[i], l[j]] = [l[j], l[i]]; renderTimePeriods(l);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadMoonbeatConfig);
+    </script>
+    <script src="/static/settings_nav.js?v=1"></script>
+
+</body>
+
+</html>

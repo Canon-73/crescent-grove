@@ -1,0 +1,10 @@
+parent_a,parent_b,result,discover_message
+breed_mango,breed_kiwi,rare_tropical,"""...What? The seed is glowing!"" The genes of Mangonian and Star Kiwi resonate, birthing a fruit unlike anything before — [Tropical Nova] discovered!"
+breed_melon,breed_grape,rare_moondrop,The sweetness of melon and the richness of grape entwine, and a softly glowing fruit like a drop of moonlight... [Moondrop] discovered!
+breed_watermelon,breed_lemon,rare_dragon,The watermelon's rind cracks and warps audibly while the lemon's sourness flares like flame — [Dragon Fruit] discovered!
+breed_mango,breed_grape,rare_nectar,Mango and grape juices blend together and nectar begins to drip on its own... [Cosmo Nectar] discovered!
+breed_melon,breed_watermelon,rare_asteroid,Melon's sweetness is wrapped in watermelon's hardness, and a fruit like an asteroid forms — [Asteroid Berry] discovered!
+breed_kiwi,breed_lemon,rare_phantom,The Star Kiwi's light and the lemon's sourness clash and the flesh turns translucent... a [Phantom Grape] that seems to vanish at a touch — discovered!
+rare_tropical,rare_moondrop,legend_king,All attributes resonate and the seed begins to shine like the cosmos itself — the legendary fruit [Cosmic King] is born!!
+rare_dragon,rare_phantom,legend_void,The moment flame and phantom intersect, a fruit grows from the void — [Void Fruit]. A taste from the edge of the universe no one has known.
+legend_king,legend_void,legend_yuzu,The moment two legends become one, crescent moonlight pours in — [Crescent Yuzu]. The entire history of this orchard dwells in this single fruit.

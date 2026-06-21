@@ -1,0 +1,8 @@
+id,name,primary_stat,description
+taste_gp,味覚グランプリ,taste,味の属性が最重視される
+beauty,ビューティコンテスト,looks,見た目の属性が最重視される
+giant,巨大野菜選手権,size,サイズの属性が最重視される
+aroma,香りの祭典,aroma,香りの属性が最重視される
+overall,総合品評会,all,全属性の合計で審査
+rare_auction,珍品オークション,rarity,レア度ボーナスが大きい(×3)
+reverse,逆転コンクール,lowest,最も属性値が低い野菜が優勝

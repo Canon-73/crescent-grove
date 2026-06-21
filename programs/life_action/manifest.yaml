@@ -1,0 +1,16 @@
+name: "life_action"
+description: "{{t:life_action_desc}}"
+timeout: 10
+args:
+  - name: "action"
+    type: "string"
+    description: "{{t:life_action_arg_action}}"
+    required: false
+  - name: "duration_minutes"
+    type: "integer"
+    description: "{{t:life_action_arg_duration}}"
+    required: false
+  - name: "confirmed"
+    type: "boolean"
+    description: "{{t:life_action_arg_confirmed}}"
+    required: false

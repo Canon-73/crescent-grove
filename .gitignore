@@ -1,0 +1,83 @@
+# =====================================================================
+# Crescent Grove リポジトリ方針: 「コード最小」
+#   ソース・設定・ドキュメントだけを追跡する。
+#   ログ・実行時状態・キャラ個人コンテンツ・生成物・秘密は repo に持たない
+#   （いずれもローカル＋D/Google Drive バックアップ側に残る）。
+# =====================================================================
+
+# --- 秘密・認証情報（絶対にコミットしない）---
+.env
+.secret_key
+settings.json
+workspace/secret/
+**/jwt_cache.json
+**/obc_state.json
+.life_action_state.json
+workspace/.life_action_state.json
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+
+# --- 大容量・生成物（再生成可能。Git に入れない）---
+# モデル: scripts/prepare_models.py で HF から取得（約600MB）
+models/
+# 配布ビルドの中間/成果物: scripts/build_*.py・electron-builder で生成
+dist_build/
+liner/dist/
+liner/node_modules/
+node_modules/
+*.exe
+prism_liner/*.exe
+# RAG ベクトルDB: 再生成可・GitHub 100MB 制限超
+workspace/rag_db/
+# アーカイブ類
+*.zip
+
+# --- ログ（実行のたびに変わる出力物）---
+logs/
+*.log
+
+# --- 実行時状態・キャラ個人コンテンツ（repo に持たない）---
+# ルート直下のみを対象（先頭 / でアンカー）。dist_template/data・dist_template/workspace
+# （配布テンプレの必須ファイル）や programs/*/data は巻き込まない。
+# workspace 丸ごと: logs / memory / notes / blog / letters / program_data 等
+/workspace/
+# data 丸ごと: context_state / vital / desire / wyrd / mood / 各種 *_state・進捗・埋め込み・tokenizer 等
+/data/
+
+# --- 外部リサーチデータ（プロジェクト本体ではない）---
+/osfstorage-archive/
+
+# --- 個人環境の起動ランチャー（マシン固有の絶対パス入り。ローカルにのみ置く）---
+/Crescent_Grove.lnk
+/_Crescent_Grove.vbs
+/liner.bat
+
+# --- Claude Code 内部ファイル（IDE/CLI ローカル状態。リポジトリには持ち込まない）---
+.claude/
+
+# --- 編集中バックアップ（同名の .md が真）---
+*.bak
+
+# --- セッション間引継ぎメモ（ローカル個人運用、リポジトリに残さない）---
+HANDOFF.md
+
+# --- プレビュー用 PNG（ドキュメント本文から参照されない手元アセット）---
+/crescentgrove_journal.png
+/moonbeat_journal.png
+site-migration/
+
+# --- site_builder の重量物・生成物（再生成可能。Git に入れない）---
+# 画像群（83MB／WP移行時に取得・後続もWP管理画面 or 手動で増減）
+programs/site_builder/static/uploads/
+# ビルド成果物（build.py が生成）
+programs/site_builder/dist/
+# モデレーション認証トークンが入る（コミット禁止）
+programs/comment_mod/_config.json
+# さくらバックアップ（重い・機密）
+/backups/

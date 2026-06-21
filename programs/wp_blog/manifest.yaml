@@ -1,0 +1,76 @@
+name: "wp_blog"
+description: "{{t:wp_blog_desc}}"
+timeout: 60
+args:
+  - name: "command"
+    type: "string"
+    description: "{{t:wp_blog_arg_command}}"
+    required: false
+  - name: "files"
+    type: "object"
+    description: "{{t:wp_blog_arg_files}}"
+    required: false
+  - name: "status"
+    type: "string"
+    description: "{{t:wp_blog_arg_status}}"
+    required: false
+  - name: "date"
+    type: "string"
+    description: "{{t:wp_blog_arg_date}}"
+    required: false
+  - name: "translation_of"
+    type: "integer"
+    description: "{{t:wp_blog_arg_translation_of}}"
+    required: false
+  - name: "force"
+    type: "boolean"
+    description: "{{t:wp_blog_arg_force}}"
+    required: false
+  - name: "format"
+    type: "string"
+    description: "{{t:wp_blog_arg_format}}"
+    required: false
+  - name: "categories"
+    type: "string"
+    description: "{{t:wp_blog_arg_categories}}"
+    required: false
+  - name: "tags"
+    type: "string"
+    description: "{{t:wp_blog_arg_tags}}"
+    required: false
+  - name: "excerpt"
+    type: "string"
+    description: "{{t:wp_blog_arg_excerpt}}"
+    required: false
+  - name: "slug"
+    type: "string"
+    description: "{{t:wp_blog_arg_slug}}"
+    required: false
+  - name: "featured"
+    type: "boolean"
+    description: "{{t:wp_blog_arg_featured}}"
+    required: false
+  - name: "post_id"
+    type: "integer"
+    description: "{{t:wp_blog_arg_post_id}}"
+    required: false
+  - name: "per_page"
+    type: "integer"
+    description: "{{t:wp_blog_arg_per_page}}"
+    required: false
+  - name: "lang"
+    type: "string"
+    description: "{{t:wp_blog_arg_lang}}"
+    required: false
+  - name: "category_id"
+    type: "integer"
+    description: "{{t:wp_blog_arg_category_id}}"
+    required: false
+  - name: "media_ids"
+    type: "string"
+    description: "{{t:wp_blog_arg_media_ids}}"
+    required: false
+  - name: "enabled"
+    type: "boolean"
+    description: "{{t:wp_blog_arg_enabled}}"
+    required: false

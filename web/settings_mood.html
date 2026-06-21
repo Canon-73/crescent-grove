@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="{{t:html_lang}}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{t:mood_title}}</title>
+    <link rel="icon" href="/static/images/favicon.ico" sizes="16x16 32x32">
+    <link rel="apple-touch-icon" href="/static/images/favicon.png" sizes="180x180">
+    <link rel="stylesheet" href="/static/theme-tokens.css?v=4">
+    <link rel="stylesheet" href="/static/dashboard.css?v=9">
+    <link rel="stylesheet" href="/static/settings_form.css?v=1">
+    <script src="/static/theme.js?v=4"></script>
+    <style>
+        /* --- トグルスイッチ（自己完結スタイル） --- */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 22px;
+            flex: 0 0 auto;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .switch .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--border-color, #ccc);
+            border-radius: 22px;
+            transition: background-color .15s;
+        }
+        .switch .slider::before {
+            content: "";
+            position: absolute;
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #fff;
+            border-radius: 50%;
+            transition: transform .15s;
+        }
+        .switch input:checked + .slider {
+            background-color: #4caf50;
+        }
+        .switch input:checked + .slider::before {
+            transform: translateX(18px);
+        }
+
+        /* メイン（システムON/OFF）の行 */
+        .mood-main-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+
+        /* 感情グリッド */
+        .emotion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 8px 16px;
+            margin-top: 12px;
+        }
+        .emotion-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 0;
+            border-bottom: 1px solid var(--border-color, #eee);
+        }
+        .emotion-item .emotion-label {
+            flex: 1 1 auto;
+            font-size: 0.92em;
+            user-select: none;
+        }
+        .emotion-item .emotion-label .ja {
+            color: var(--text-secondary, #888);
+            font-size: 0.88em;
+        }
+        .emotion-item.disabled .emotion-label {
+            opacity: 0.5;
+        }
+
+        .mood-toolbar {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .mood-toolbar input[type="text"] {
+            flex: 1 1 180px;
+            min-width: 140px;
+        }
+        #emotionSection.disabled-overlay {
+            opacity: 0.45;
+            pointer-events: none;
+        }
+        .mood-count {
+            font-size: 0.85em;
+            color: var(--text-secondary, #888);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>⚙️ {{t:settings_heading}}</h1>
+        <div class="nav-links">
+            <button id="themeToggle" class="nav-button">☀️/🌙</button>
+        </div>
+    </div>
+
+    <div class="settings-container">
+        <!-- ナビゲーション（settings_nav.js が縦サイドバーを描画） -->
+        <div id="settingsNav"></div>
+
+        <div class="alert-error" id="errorMessage"></div>
+        <div class="alert-success" id="successMessage"></div>
+
+        <div class="settings-panel">
+            <div class="settings-header">{{t:mood_section_header}}</div>
+            <div class="settings-content">
+                <p class="small-note" style="margin-bottom: 15px;">
+                    {{t:mood_desc}}
+                </p>
+
+                <form id="moodForm" onsubmit="return saveConfig(event)" novalidate>
+                    <!-- システムON/OFF -->
+                    <div class="form-group">
+                        <div class="mood-main-toggle">
+                            <label class="switch">
+                                <input type="checkbox" id="enabled">
+                                <span class="slider"></span>
+                            </label>
+                            <span><strong>{{t:mood_label_enabled}}</strong></span>
+                        </div>
+                        <small class="small-note">
+                            {{t:mood_help_enabled}}
+                        </small>
+                    </div>
+
+                    <!-- 感情の取捨 -->
+                    <div id="emotionSection">
+                        <div class="section-title">{{t:mood_section_emotions}}</div>
+                        <small class="small-note">
+                            {{t:mood_help_emotions}}
+                        </small>
+
+                        <div class="mood-toolbar">
+                            <input type="text" id="emotionFilter" class="form-control"
+                                   placeholder="{{t:mood_placeholder_filter}}" oninput="applyFilter()">
+                            <button type="button" class="btn-secondary" onclick="setAll(true)">{{t:mood_btn_enable_all}}</button>
+                            <button type="button" class="btn-secondary" onclick="setAll(false)">{{t:mood_btn_disable_all}}</button>
+                            <span class="mood-count" id="moodCount"></span>
+                        </div>
+
+                        <div class="emotion-grid" id="emotionGrid"></div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="margin-top: 16px;">{{t:settings_save_button}}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let EMOTIONS = [];  // [{id, name}]
+
+        async function loadConfig() {
+            try {
+                const res = await fetch('/api/settings/mood');
+                if (!res.ok) throw new Error(T.settings_load_error);
+                const data = await res.json();
+
+                EMOTIONS = data.emotions || [];
+                const excluded = new Set(data.excluded_landmarks || []);
+
+                document.getElementById('enabled').checked = data.enabled !== false;
+                renderEmotions(excluded);
+                syncSystemEnabled();
+            } catch (e) { showError(e.message); }
+        }
+
+        function renderEmotions(excludedSet) {
+            const grid = document.getElementById('emotionGrid');
+            grid.innerHTML = '';
+            for (const emo of EMOTIONS) {
+                const item = document.createElement('label');
+                item.className = 'emotion-item';
+                item.dataset.id = emo.id;
+                item.dataset.search = (emo.id + ' ' + (emo.name || '')).toLowerCase();
+
+                const enabled = !excludedSet.has(emo.id);  // 除外リストに無ければ有効
+                if (!enabled) item.classList.add('disabled');
+
+                item.innerHTML =
+                    '<span class="switch">' +
+                    '  <input type="checkbox" ' + (enabled ? 'checked' : '') + '>' +
+                    '  <span class="slider"></span>' +
+                    '</span>' +
+                    '<span class="emotion-label">' + escapeHtml(emo.id) +
+                    '<span class="ja">（' + escapeHtml(emo.name || emo.id) + '）</span></span>';
+
+                const cb = item.querySelector('input');
+                cb.addEventListener('change', function () {
+                    item.classList.toggle('disabled', !cb.checked);
+                    updateCount();
+                });
+                grid.appendChild(item);
+            }
+            updateCount();
+        }
+
+        function updateCount() {
+            const total = EMOTIONS.length;
+            const on = document.querySelectorAll('#emotionGrid input:checked').length;
+            document.getElementById('moodCount').innerText = `${on} / ${total}`;
+        }
+
+        function applyFilter() {
+            const q = document.getElementById('emotionFilter').value.trim().toLowerCase();
+            for (const item of document.querySelectorAll('.emotion-item')) {
+                const hit = !q || item.dataset.search.includes(q);
+                item.style.display = hit ? '' : 'none';
+            }
+        }
+
+        function setAll(enabled) {
+            // 表示中（フィルタに合致）の項目のみ一括変更する。
+            for (const item of document.querySelectorAll('.emotion-item')) {
+                if (item.style.display === 'none') continue;
+                const cb = item.querySelector('input');
+                cb.checked = enabled;
+                item.classList.toggle('disabled', !enabled);
+            }
+            updateCount();
+        }
+
+        function syncSystemEnabled() {
+            // システムOFF時は感情グリッドを淡色＋操作不可にする（設定は保持）。
+            const on = document.getElementById('enabled').checked;
+            document.getElementById('emotionSection').classList.toggle('disabled-overlay', !on);
+        }
+
+        async function saveConfig(event) {
+            event.preventDefault();
+            hideError();
+
+            // OFFの感情を excluded_landmarks に集約する。
+            const excluded = [];
+            for (const item of document.querySelectorAll('.emotion-item')) {
+                const cb = item.querySelector('input');
+                if (!cb.checked) excluded.push(item.dataset.id);
+            }
+
+            const payload = {
+                enabled: document.getElementById('enabled').checked,
+                excluded_landmarks: excluded
+            };
+            try {
+                const res = await fetch('/api/settings/mood', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) throw new Error(T.settings_save_error);
+                showSuccess(T.mood_save_success);
+                // サイドバーに要再起動バッジを表示。
+                if (window.settingsNav) window.settingsNav.setRestartPending('cg_mood_dirty', true);
+            } catch (e) { showError(e.message); }
+            return false;
+        }
+
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, function (c) {
+                return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+            });
+        }
+
+        function showError(msg) {
+            hideSuccess();
+            const el = document.getElementById('errorMessage');
+            el.innerText = msg; el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+        function showSuccess(msg) {
+            hideError();
+            const el = document.getElementById('successMessage');
+            el.innerText = msg; el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+        function hideError() { document.getElementById('errorMessage').style.display = 'none'; }
+        function hideSuccess() { document.getElementById('successMessage').style.display = 'none'; }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('enabled').addEventListener('change', syncSystemEnabled);
+            loadConfig();
+        });
+    </script>
+    <script src="/static/settings_nav.js?v=1"></script>
+</body>
+
+</html>

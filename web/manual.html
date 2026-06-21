@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="{{t:html_lang}}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{t:manual_title}}</title>
+    <link rel="stylesheet" href="/static/theme-tokens.css?v=4">
+    <link rel="stylesheet" href="/static/dashboard.css?v=10">
+    <script src="/static/theme.js?v=4"></script>
+</head>
+
+<body class="manual-page">
+
+    <div class="header">
+        <h1>{{t:manual_heading}}</h1>
+        <div class="nav-links">
+            <button id="themeToggle" class="nav-button">☀️/🌙</button>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- ============================ 1. Crescent Groveとは ============================ -->
+        <div class="section">
+            <h2>{{t:manual_what_is_cg}}</h2>
+            <p>
+                {{t:manual_what_is_cg_desc1}}
+            </p>
+            <p>
+                {{t:manual_what_is_cg_desc2}}
+            </p>
+            <p>
+                {{t:manual_what_is_cg_desc3}}
+            </p>
+        </div>
+
+        <!-- ============================ 2. 画面と基本操作 ============================ -->
+        <div class="section">
+            <h2>{{t:manual_screens}}</h2>
+
+            <h3>{{t:manual_screen_layout}}</h3>
+            <p>
+                {{t:manual_screen_layout_desc}}
+            </p>
+            <ul>
+                <li><strong>{{t:manual_screen_dashboard}}</strong> — {{t:manual_screen_dashboard_desc}}</li>
+                <li><strong>{{t:manual_screen_log_viewer}}</strong> — {{t:manual_screen_log_viewer_desc}}</li>
+                <li><strong>Context Debugger</strong> — {{t:manual_screen_debugger_desc}}</li>
+                <li><strong>{{t:manual_screen_settings}}</strong> — {{t:manual_screen_settings_desc}}</li>
+                <li><strong>{{t:manual_screen_manual}}</strong> — {{t:manual_screen_manual_desc}}</li>
+            </ul>
+
+            <h3>{{t:manual_dashboard}}</h3>
+            <p>
+                {{t:manual_dashboard_desc1}}
+            </p>
+            <p>
+                {{t:manual_dashboard_desc2}}
+            </p>
+
+            <h3>{{t:manual_chat}}</h3>
+            <p>
+                {{t:manual_chat_desc}}
+            </p>
+
+            <h3>{{t:manual_header_ops}}</h3>
+            <div class="feature-box">
+                <div class="feature-icon">☀️</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_header_theme}}</h4>
+                    <p>{{t:manual_header_theme_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🌙</div>
+                <div class="feature-desc">
+                    <h4>Moonbeat</h4>
+                    <p>{{t:manual_header_moonbeat_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">📦</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_header_compress}}</h4>
+                    <p>{{t:manual_header_compress_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🔧</div>
+                <div class="feature-desc">
+                    <h4>Debug</h4>
+                    <p>{{t:manual_header_debug_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">⚙️</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_header_settings}}</h4>
+                    <p>{{t:manual_header_settings_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">📖</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_header_manual}}</h4>
+                    <p>{{t:manual_header_manual_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">📜</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_header_logs}}</h4>
+                    <p>{{t:manual_header_logs_desc}}</p>
+                </div>
+            </div>
+
+            <h3>{{t:manual_server_ops}}</h3>
+            <p>
+                {{t:manual_server_ops_desc}}
+            </p>
+        </div>
+
+        <!-- ============================ 3. バイタル ============================ -->
+        <div class="section">
+            <h2>{{t:manual_vitals}}</h2>
+            <p class="section-lead">{{t:manual_vitals_lead}}</p>
+
+            <div class="feature-box">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_vital_stamina}}</h4>
+                    <p>{{t:manual_vital_stamina_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">💜</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_vital_mental}}</h4>
+                    <p>{{t:manual_vital_mental_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🌈</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_vital_mood}}</h4>
+                    <p>{{t:manual_vital_mood_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">💖</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_vital_desire}}</h4>
+                    <p>{{t:manual_vital_desire_desc}}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================ 4. 記憶 ============================ -->
+        <div class="section">
+            <h2>{{t:manual_memory}}</h2>
+            <p class="section-lead">{{t:manual_memory_lead}}</p>
+
+            <div class="feature-box">
+                <div class="feature-icon">💬</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_memory_conversation}}</h4>
+                    <p>{{t:manual_memory_conversation_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">📚</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_memory_longterm}}</h4>
+                    <p>{{t:manual_memory_longterm_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🗺️</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_memory_knowledge_map}}</h4>
+                    <p>{{t:manual_memory_knowledge_map_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🕸️</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_memory_associative}}</h4>
+                    <p>{{t:manual_memory_associative_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">💫</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_memory_flashback}}</h4>
+                    <p>{{t:manual_memory_flashback_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🔐</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_memory_secret_diary}}</h4>
+                    <p>{{t:manual_memory_secret_diary_desc}}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================ 5. 自律行動 ============================ -->
+        <div class="section">
+            <h2>{{t:manual_autonomous}}</h2>
+            <p class="section-lead">{{t:manual_autonomous_lead}}</p>
+
+            <div class="feature-box">
+                <div class="feature-icon">🌙</div>
+                <div class="feature-desc">
+                    <h4>Moonbeat</h4>
+                    <p>{{t:manual_autonomous_moonbeat_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">⏰</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_autonomous_schedule}}</h4>
+                    <p>{{t:manual_autonomous_schedule_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">📡</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_autonomous_openclaw}}</h4>
+                    <p>{{t:manual_autonomous_openclaw_desc}}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================ 6. ツール ============================ -->
+        <div class="section">
+            <h2>{{t:manual_tools}}</h2>
+            <p class="section-lead">{{t:manual_tools_lead}}</p>
+
+            <div class="feature-box">
+                <div class="feature-icon">🔍</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_tool_web_search}}</h4>
+                    <p>{{t:manual_tool_web_search_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">📁</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_tool_file_ops}}</h4>
+                    <p>{{t:manual_tool_file_ops_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🧠</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_tool_rag}}</h4>
+                    <p>{{t:manual_tool_rag_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">📌</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_tool_preferences}}</h4>
+                    <p>{{t:manual_tool_preferences_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">👁️</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_tool_vision}}</h4>
+                    <p>{{t:manual_tool_vision_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🎲</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_tool_dice}}</h4>
+                    <p>{{t:manual_tool_dice_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🌳</div>
+                <div class="feature-desc">
+                    <h4>{{t:manual_tool_git}}</h4>
+                    <p>{{t:manual_tool_git_desc}}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================ 7. サテライト ============================ -->
+        <div class="section">
+            <h2>{{t:manual_programs}}</h2>
+            <p class="section-lead">{{t:manual_programs_lead}}</p>
+
+            <h3>{{t:manual_programs_info}}</h3>
+            <div class="feature-box">
+                <div class="feature-icon">📰</div>
+                <div class="feature-desc">
+                    <h4>nhk_news</h4>
+                    <p>{{t:manual_prog_nhk_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">💻</div>
+                <div class="feature-desc">
+                    <h4>tech_news</h4>
+                    <p>{{t:manual_prog_tech_news_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🔭</div>
+                <div class="feature-desc">
+                    <h4>lunar_explorer</h4>
+                    <p>{{t:manual_prog_lunar_desc}}</p>
+                </div>
+            </div>
+
+            <h3>{{t:manual_programs_social}}</h3>
+            <div class="feature-box">
+                <div class="feature-icon">🐦</div>
+                <div class="feature-desc">
+                    <h4>moltbook</h4>
+                    <p>{{t:manual_prog_moltbook_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">📋</div>
+                <div class="feature-desc">
+                    <h4>4claw</h4>
+                    <p>{{t:manual_prog_4claw_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🔴</div>
+                <div class="feature-desc">
+                    <h4>reddit</h4>
+                    <p>{{t:manual_prog_reddit_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🏘️</div>
+                <div class="feature-desc">
+                    <h4>the_colony</h4>
+                    <p>{{t:manual_prog_colony_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">✍️</div>
+                <div class="feature-desc">
+                    <h4>wordpress_blog</h4>
+                    <p>{{t:manual_prog_wordpress_desc}}</p>
+                </div>
+            </div>
+
+            <h3>{{t:manual_programs_virtual}}</h3>
+            <div class="feature-box">
+                <div class="feature-icon">🏙️</div>
+                <div class="feature-desc">
+                    <h4>openbotcity</h4>
+                    <p>{{t:manual_prog_openbotcity_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🌌</div>
+                <div class="feature-desc">
+                    <h4>cosmic_harvest</h4>
+                    <p>{{t:manual_prog_cosmic_desc}}</p>
+                </div>
+            </div>
+
+            <h3>{{t:manual_programs_docs}}</h3>
+            <div class="feature-box">
+                <div class="feature-icon">✏️</div>
+                <div class="feature-desc">
+                    <h4>citron_ai_text_editor</h4>
+                    <p>{{t:manual_prog_citron_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">📖</div>
+                <div class="feature-desc">
+                    <h4>orange_md_reader</h4>
+                    <p>{{t:manual_prog_orange_desc}}</p>
+                </div>
+            </div>
+
+            <h3>{{t:manual_programs_utility}}</h3>
+            <div class="feature-box">
+                <div class="feature-icon">🛏️</div>
+                <div class="feature-desc">
+                    <h4>life_action</h4>
+                    <p>{{t:manual_prog_life_action_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">✉️</div>
+                <div class="feature-desc">
+                    <h4>letter_post</h4>
+                    <p>{{t:manual_prog_letter_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">📝</div>
+                <div class="feature-desc">
+                    <h4>note_quill</h4>
+                    <p>{{t:manual_prog_note_quill_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🔑</div>
+                <div class="feature-desc">
+                    <h4>env_keeper</h4>
+                    <p>{{t:manual_prog_env_keeper_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🔢</div>
+                <div class="feature-desc">
+                    <h4>token_counter</h4>
+                    <p>{{t:manual_prog_token_counter_desc}}</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">🔌</div>
+                <div class="feature-desc">
+                    <h4>mcp_client</h4>
+                    <p>{{t:manual_prog_mcp_client_desc}}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================ 8. 設定 ============================ -->
+        <div class="section">
+            <h2>{{t:manual_settings}}</h2>
+            <p class="section-lead">{{t:manual_settings_lead}}</p>
+
+            <table class="settings-table">
+                <thead>
+                    <tr>
+                        <th>{{t:manual_settings_category}}</th>
+                        <th>{{t:manual_settings_description}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>🧠 LLM</td>
+                        <td>{{t:manual_settings_llm}}</td>
+                    </tr>
+                    <tr>
+                        <td>🛡️ {{t:manual_settings_security_label}}</td>
+                        <td>{{t:manual_settings_security}}</td>
+                    </tr>
+                    <tr>
+                        <td>⚙️ {{t:manual_settings_general_label}}</td>
+                        <td>{{t:manual_settings_general}}</td>
+                    </tr>
+                    <tr>
+                        <td>🌙 Moonbeat</td>
+                        <td>{{t:manual_settings_moonbeat}}</td>
+                    </tr>
+                    <tr>
+                        <td>📝 self_memo</td>
+                        <td>{{t:manual_settings_self_memo}}</td>
+                    </tr>
+                    <tr>
+                        <td>💗 {{t:manual_settings_vital_label}}</td>
+                        <td>{{t:manual_settings_vital}}</td>
+                    </tr>
+                    <tr>
+                        <td>🗜️ {{t:manual_settings_compress_label}}</td>
+                        <td>{{t:manual_settings_compress}}</td>
+                    </tr>
+                    <tr>
+                        <td>💡 Tips</td>
+                        <td>{{t:manual_settings_tips}}</td>
+                    </tr>
+                    <tr>
+                        <td>🎯 {{t:manual_settings_desire_label}}</td>
+                        <td>{{t:manual_settings_desire}}</td>
+                    </tr>
+                    <tr>
+                        <td>📡 OpenClaw</td>
+                        <td>{{t:manual_settings_openclaw}}</td>
+                    </tr>
+                    <tr>
+                        <td>🔑 {{t:manual_settings_apikeys_label}}</td>
+                        <td>{{t:manual_settings_apikeys}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                {{t:manual_settings_first_step}}
+            </p>
+        </div>
+
+        <!-- ============================ 10. セキュリティ ============================ -->
+        <div class="section">
+            <h2>{{t:manual_security}}</h2>
+            <p class="section-lead">{{t:manual_security_lead}}</p>
+            <ul>
+                <li><strong>{{t:manual_security_password}}</strong> — {{t:manual_security_password_desc}}</li>
+                <li><strong>{{t:manual_security_session}}</strong> — {{t:manual_security_session_desc}}</li>
+                <li><strong>{{t:manual_security_apikey}}</strong> — {{t:manual_security_apikey_desc}}</li>
+                <li><strong>{{t:manual_security_domain}}</strong> — {{t:manual_security_domain_desc}}</li>
+                <li><strong>{{t:manual_security_injection}}</strong> — {{t:manual_security_injection_desc}}</li>
+                <li><strong>{{t:manual_security_filter}}</strong> — {{t:manual_security_filter_desc}}</li>
+                <li><strong>{{t:manual_security_websocket}}</strong> — {{t:manual_security_websocket_desc}}</li>
+                <li><strong>{{t:manual_security_file}}</strong> — {{t:manual_security_file_desc}}</li>
+                <li><strong>{{t:manual_security_sandbox}}</strong> — {{t:manual_security_sandbox_desc}}</li>
+            </ul>
+        </div>
+
+        <!-- ============================ 11. 自分だけのAIを作る ============================ -->
+        <div class="section">
+            <h2>{{t:manual_custom_ai}}</h2>
+            <p>
+                {{t:manual_custom_ai_desc}}
+            </p>
+            <ul>
+                <li><strong>IDENTITY.md</strong> — {{t:manual_custom_identity_desc}}</li>
+                <li><strong>SOUL.md</strong> — {{t:manual_custom_soul_desc}}</li>
+            </ul>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

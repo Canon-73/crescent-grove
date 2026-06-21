@@ -1,0 +1,52 @@
+name: "reddit"
+description: "{{t:reddit_desc}}"
+timeout: 30
+args:
+  - name: "command"
+    type: "string"
+    description: "{{t:reddit_arg_command}}"
+    required: false
+  - name: "subreddit"
+    type: "string"
+    description: "{{t:reddit_arg_subreddit}}"
+    required: false
+  - name: "query"
+    type: "string"
+    description: "{{t:reddit_arg_query}}"
+    required: false
+  - name: "post_id"
+    type: "string"
+    description: "{{t:reddit_arg_post_id}}"
+    required: false
+  - name: "thing_id"
+    type: "string"
+    description: "{{t:reddit_arg_thing_id}}"
+    required: false
+  - name: "username"
+    type: "string"
+    description: "{{t:reddit_arg_username}}"
+    required: false
+  - name: "title"
+    type: "string"
+    description: "{{t:reddit_arg_title}}"
+    required: false
+  - name: "text"
+    type: "string"
+    description: "{{t:reddit_arg_text}}"
+    required: false
+  - name: "sort"
+    type: "string"
+    description: "{{t:reddit_arg_sort}}"
+    required: false
+  - name: "time_filter"
+    type: "string"
+    description: "{{t:reddit_arg_time_filter}}"
+    required: false
+  - name: "limit"
+    type: "integer"
+    description: "{{t:reddit_arg_limit}}"
+    required: false
+  - name: "comment_depth"
+    type: "integer"
+    description: "{{t:reddit_arg_comment_depth}}"
+    required: false

@@ -1,0 +1,339 @@
+/* theme-tokens.css - 全ページ共通テーマトークン
+   dark / light / moonlit / moonlit2 の4テーマの CSS 変数を一元管理する。
+   ここでしか色値を定義しない（各ページ CSS は var() で参照するだけ）。
+   data-theme は <html> に付与される（theme.js）。dark はデフォルト=属性なし。 */
+
+/* === ダーク（デフォルト） === */
+:root,
+html[data-theme="dark"] {
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #16213e;
+    --bg-card: #1e2a45;
+    --bg-input: #0f1628;
+    --bg-color: #1a1a2e;
+    --bg-hover: #2a3550;
+    --text-primary: #e0e0e0;
+    --text-secondary: #8892a8;
+    --text-muted: #5a6478;
+    --text-color: #e0e0e0;
+    --accent: #7c4dff;
+    --accent-hover: #651fff;
+    --accent-dim: rgba(124, 77, 255, 0.15);
+    --border: #2a3550;
+    --border-light: #344060;
+    --border-color: #2a3550;
+    --panel-bg: #1e2a45;
+    --header-bg: #16213e;
+    --shadow-color: rgba(0, 0, 0, 0.4);
+    --success: #4caf50;
+    --warning: #ff9800;
+    --danger: #f44336;
+    --tool-color: #26a69a;
+    --thought-color: #7986cb;
+    --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans",
+        "Noto Sans JP", sans-serif;
+    --font-mono: "Cascadia Code", "Fira Code", "Consolas", monospace;
+    /* UI部品（ボタン等）用：テーマで --font-main を手書き風に差し替えても
+       こちらは読みやすい標準書体のまま保つ（全テーマ共通・上書きしない） */
+    --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans",
+        "Noto Sans JP", sans-serif;
+}
+
+/* === ライト === */
+html[data-theme="light"] {
+    /* ライトテーマ */
+    --bg-primary: #f0f2f5;
+    --bg-secondary: #ffffff;
+    --bg-card: #ffffff;
+    --bg-input: #f8f9fa;
+    --bg-color: #f0f2f5;
+    --bg-hover: #e2e8f0;
+    --text-primary: #2d3748;
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+    --text-color: #2d3748;
+    --accent: #6200ea;
+    --accent-hover: #5000cc;
+    --accent-dim: rgba(98, 0, 234, 0.1);
+    --border: #cbd5e0;
+    --border-light: #e2e8f0;
+    --border-color: #cbd5e0;
+    --panel-bg: #ffffff;
+    --header-bg: #edf2f7;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --success: #38a169;
+    --warning: #d69e2e;
+    --danger: #e53e3e;
+    --tool-color: #00897b;
+    --thought-color: #5c6bc0;
+}
+
+/* =========================================================
+   🌙 Moonlit Grove スキン
+   html[data-theme="moonlit"] で有効化
+   ========================================================= */
+
+html[data-theme="moonlit"] {
+    /* ベース：クリーム×ピンクベージュ */
+    --bg-primary: #f3e9dc;
+    --bg-secondary: #faf3e9;
+    --bg-card: #fffaf3;
+    --bg-input: #fffaf3;
+    --bg-color: #f3e9dc;
+    --bg-hover: #f0dccc;
+    --panel-bg: #fffaf3;
+    --header-bg: rgba(250, 243, 233, 0.85);
+
+    /* テキスト：温かいダークブラウン */
+    --text-primary: #4a3a36;
+    --text-secondary: #8a6f6a;
+    --text-muted: #b09a92;
+    --text-color: #4a3a36;
+
+    /* アクセント：月のモーブ */
+    --accent: #9b7bb8;
+    --accent-hover: #7d5da0;
+    --accent-dim: rgba(155, 123, 184, 0.15);
+
+    /* ボーダー：淡いラベンダー */
+    --border: #e5d4d8;
+    --border-light: #f0e0e4;
+    --border-color: #e5d4d8;
+
+    --shadow-color: rgba(155, 123, 184, 0.18);
+    --success: #88b890;
+    --warning: #d4a574;
+    --danger: #d48a8a;
+    --tool-color: #a888c0;
+    --thought-color: #b89bc9;
+
+    /* フォント差し替え（手帳風） */
+    --font-main: "Zen Maru Gothic", "Klee One", "Hiragino Maru Gothic ProN",
+        "Yu Gothic", sans-serif;
+}
+
+/* ---- 全体背景：グラデーション＋星屑（全ページ共通） ---- */
+html[data-theme="moonlit"] body {
+    background:
+        radial-gradient(ellipse at top right, rgba(232, 216, 240, 0.5) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom left, rgba(245, 220, 220, 0.4) 0%, transparent 50%),
+        linear-gradient(135deg, #f5ede0 0%, #f0dcd0 50%, #ecd4dc 100%);
+    background-attachment: fixed;
+    position: relative;
+}
+
+/* === UIアイコン（絵文字置き換え用インラインSVG・全ページ共通） ===
+   フォント依存の絵文字をやめ、自作SVGを <img class="ui-icon"> で表示する。
+   高さは em 基準でボタン文字サイズに自動追従。色はSVG側で固定。 */
+.ui-icon {
+    height: 1.2em;
+    width: auto;
+    vertical-align: -0.18em;   /* テキストのベースラインに馴染ませる */
+    flex-shrink: 0;
+    pointer-events: none;      /* クリックは親ボタンへ通す */
+    margin-right: 0.3em;       /* ラベル文字との間隔 */
+}
+/* アイコン単体（ラベル無し）ボタンでは右マージン不要 */
+.ui-icon.ui-icon-only {
+    margin-right: 0;
+}
+
+/* 星屑オーバーレイ（SVGをBase64で直書き：外部ファイル不要） */
+html[data-theme="moonlit"] body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><g fill='%239b7bb8' opacity='0.35'><circle cx='30' cy='50' r='1'/><circle cx='120' cy='80' r='1.5'/><circle cx='250' cy='40' r='1'/><circle cx='340' cy='120' r='1.2'/><circle cx='80' cy='180' r='0.8'/><circle cx='200' cy='220' r='1.3'/><circle cx='310' cy='260' r='1'/><circle cx='50' cy='320' r='1.5'/><circle cx='160' cy='350' r='1'/><circle cx='280' cy='370' r='1.2'/><text x='100' y='130' font-size='10' opacity='0.6'>✦</text><text x='270' y='180' font-size='8' opacity='0.5'>✧</text><text x='180' y='280' font-size='9' opacity='0.5'>✦</text><text x='350' y='320' font-size='7' opacity='0.6'>✧</text></g></svg>");
+    background-size: 400px 400px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.7;
+}
+
+/* =========================================================
+   🌙✨ Moonlit Grove Ⅱ スキン
+   html[data-theme="moonlit2"] で有効化。
+   moonlit（クリーム手帳風）とは別方向の「本物の月夜の森」：
+   - 深い藍紫の夜空×月光ゴールド×ラベンダーグロー
+   - 輝く満月・オーロラ・パララックスで流れる星屑・蛍
+   - 画面下端に森（Grove）のシルエット
+   星屑・月・森は z-index:-1 で全コンテンツの下に描画される。
+   コンセプトが異なるため moonlit とは共存させる（置き換えはしない）。
+   ========================================================= */
+
+html[data-theme="moonlit2"] {
+    /* ベース：深い藍紫の夜空 */
+    --bg-primary: #201a38;
+    --bg-secondary: #271f45;
+    --bg-card: #2c2450;
+    --bg-input: #1a1530;
+    --bg-color: #201a38;
+    --bg-hover: #383060;
+    --panel-bg: #2c2450;
+    --header-bg: rgba(32, 26, 56, 0.8);
+
+    /* テキスト：月明かりに照らされたラベンダーホワイト */
+    --text-primary: #efe9fb;
+    --text-secondary: #b3a8d4;
+    --text-muted: #7d72a3;
+    --text-color: #efe9fb;
+
+    /* アクセント：発光するラベンダー */
+    --accent: #c9a8f0;
+    --accent-hover: #dbc2f8;
+    --accent-dim: rgba(201, 168, 240, 0.16);
+
+    /* ボーダー：夜空に溶ける菫色 */
+    --border: #443a72;
+    --border-light: #554a8a;
+    --border-color: #443a72;
+
+    --shadow-color: rgba(10, 6, 30, 0.5);
+    --success: #7fd8a0;
+    --warning: #f0c884;
+    --danger: #ef9a9a;
+    --tool-color: #7fd0c8;
+    --thought-color: #a8a0e8;
+
+    /* フォント差し替え（手帳風・moonlit と共通） */
+    --font-main: "Zen Maru Gothic", "Klee One", "Hiragino Maru Gothic ProN",
+        "Yu Gothic", sans-serif;
+}
+
+/* ---- 全体背景：夜空5層（月の温み・オーロラ・薔薇星雲・地表の闇） ---- */
+html[data-theme="moonlit2"] body {
+    background:
+        linear-gradient(to top, rgba(18, 13, 36, 0.9) 0%, transparent 20%),
+        radial-gradient(1000px 800px at 82% -12%, rgba(240, 216, 168, 0.22) 0%, transparent 55%),
+        radial-gradient(1200px 700px at 5% 108%, rgba(79, 216, 196, 0.12) 0%, transparent 60%),
+        radial-gradient(900px 600px at 96% 88%, rgba(214, 140, 184, 0.14) 0%, transparent 60%),
+        linear-gradient(170deg, #342a5e 0%, #271f4c 35%, #1f1840 65%, #171130 100%);
+    background-attachment: fixed;
+    position: relative;
+}
+
+/* ---- 星屑＋蛍：2層タイル（白×金×ラベンダー）----
+   4点スパークルはパス描画（フォント非依存）。蛍は金色のドット＋グロー。
+   瞬き（opacity）と超低速パララックス漂流（background-position）を重ねる。
+   負の z-index で「背景の上・全コンテンツの下」に置く（テキストに星が乗らない） */
+html[data-theme="moonlit2"] body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='620' height='620' viewBox='0 0 620 620'><g fill='%23efe9fb' opacity='0.9'><path d='M120 130 C121 136.5 124.5 139 130 140 C124.5 141 121 143.5 120 150 C119 143.5 115.5 141 110 140 C115.5 139 119 136.5 120 130 Z'/><path d='M520 368 C521.2 375.8 524.2 378.8 532 380 C524.2 381.2 521.2 384.2 520 392 C518.8 384.2 515.8 381.2 508 380 C515.8 378.8 518.8 375.8 520 368 Z'/><path d='M60 553 C60.7 557.55 62.45 559.3 67 560 C62.45 560.7 60.7 562.45 60 567 C59.3 562.45 57.55 560.7 53 560 C57.55 559.3 59.3 557.55 60 553 Z'/></g><g fill='%23f0d8a8' opacity='0.8'><path d='M430 82 C430.8 87.2 433.2 89.2 438 90 C433.2 90.8 430.8 92.8 430 98 C429.2 92.8 426.8 90.8 422 90 C426.8 89.2 429.2 87.2 430 82 Z'/><path d='M240 471 C240.9 476.85 243.15 479.1 249 480 C243.15 480.9 240.9 483.15 240 489 C239.1 483.15 236.85 480.9 231 480 C236.85 479.1 239.1 476.85 240 471 Z'/></g><g fill='%23c9a8f0' opacity='0.5'><circle cx='180' cy='300' r='1.4'/><circle cx='560' cy='180' r='1.6'/><circle cx='90' cy='420' r='1.2'/></g><circle cx='340' cy='250' r='6' fill='%23f0d8a8' opacity='0.18'/><circle cx='340' cy='250' r='1.8' fill='%23f0d8a8' opacity='0.9'/><circle cx='460' cy='540' r='5' fill='%23f0d8a8' opacity='0.15'/><circle cx='460' cy='540' r='1.6' fill='%23f0d8a8' opacity='0.85'/></svg>"),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='440' height='440' viewBox='0 0 440 440'><g fill='%23efe9fb' opacity='0.85'><path d='M70 84 C70.6 87.9 72.1 89.4 76 90 C72.1 90.6 70.6 92.1 70 96 C69.4 92.1 67.9 90.6 64 90 C67.9 89.4 69.4 87.9 70 84 Z'/><path d='M300 55 C300.5 58.25 301.75 59.5 305 60 C301.75 60.5 300.5 61.75 300 65 C299.5 61.75 298.25 60.5 295 60 C298.25 59.5 299.5 58.25 300 55 Z'/><path d='M390 294.5 C390.55 298.07 391.93 299.45 395.5 300 C391.93 300.55 390.55 301.93 390 305.5 C389.45 301.93 388.07 300.55 384.5 300 C388.07 299.45 389.45 298.07 390 294.5 Z'/><path d='M90 354 C90.6 357.9 92.1 359.4 96 360 C92.1 360.6 90.6 362.1 90 366 C89.4 362.1 87.9 360.6 84 360 C87.9 359.4 89.4 357.9 90 354 Z'/></g><g fill='%23f0d8a8' opacity='0.7'><path d='M180 223 C180.7 227.55 182.45 229.3 187 230 C182.45 230.7 180.7 232.45 180 237 C179.3 232.45 177.55 230.7 173 230 C177.55 229.3 179.3 227.55 180 223 Z'/><path d='M250 396 C250.4 398.6 251.4 399.6 254 400 C251.4 400.4 250.4 401.4 250 404 C249.6 401.4 248.6 400.4 246 400 C248.6 399.6 249.6 398.6 250 396 Z'/></g><g fill='%23c9a8f0' opacity='0.55'><circle cx='30' cy='40' r='1.2'/><circle cx='140' cy='150' r='0.9'/><circle cx='220' cy='110' r='1.4'/><circle cx='350' cy='170' r='1'/><circle cx='40' cy='250' r='1.1'/><circle cx='310' cy='230' r='0.8'/><circle cx='130' cy='310' r='1.3'/><circle cx='410' cy='80' r='1'/><circle cx='370' cy='410' r='1.2'/><circle cx='200' cy='330' r='0.9'/><circle cx='60' cy='180' r='0.8'/><circle cx='270' cy='290' r='1.1'/></g></svg>");
+    background-size: 620px 620px, 440px 440px;
+    pointer-events: none;
+    z-index: -1;
+    animation:
+        moonlit2-twinkle 8s ease-in-out infinite,
+        moonlit2-drift 300s linear infinite;
+}
+
+/* ---- 輝く満月＋森（Grove）のシルエット ----
+   月：金色の核から月暈（ラベンダー）まで多段グラデ。
+   森：遠景（薄い菫）と近景（濃紺）の二重treelineを画面下端に repeat-x。 */
+html[data-theme="moonlit2"] body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='900' height='150' viewBox='0 0 900 150' preserveAspectRatio='none'><g fill='%231c1538' opacity='0.6'><path d='M0 150 L0 96 Q80 78 160 94 Q240 108 320 90 Q400 74 480 96 Q560 114 640 88 Q720 66 800 96 L900 88 L900 150 Z'/><path d='M200 40 L222 100 L212 96 L232 150 L168 150 L188 96 L178 100 Z'/><path d='M760 56 L780 106 L771 102 L790 150 L730 150 L749 102 L740 106 Z'/></g><g fill='%23110c22' opacity='0.95'><path d='M0 150 L0 112 Q60 96 120 108 Q180 120 240 106 Q300 92 360 110 Q420 122 480 108 Q540 96 600 112 Q660 124 720 108 Q780 94 840 110 L900 104 L900 150 Z'/><path d='M90 38 L114 96 L103 92 L126 150 L54 150 L77 92 L66 96 Z'/><path d='M300 60 L320 108 L311 105 L330 150 L270 150 L289 105 L280 108 Z'/><path d='M520 28 L548 94 L535 89 L560 150 L480 150 L505 89 L492 94 Z'/><path d='M700 70 L716 112 L709 109 L724 150 L676 150 L691 109 L684 112 Z'/><path d='M850 48 L872 102 L862 98 L884 150 L816 150 L838 98 L828 102 Z'/><path d='M385 150 L385 122 Q383 98 410 96 Q437 98 435 122 L435 150 Z'/><path d='M595 150 L595 128 Q594 110 615 108 Q636 110 635 128 L635 150 Z'/></g></svg>"),
+        radial-gradient(circle,
+            rgba(255, 251, 235, 1) 0%,
+            rgba(255, 244, 214, 0.9) 13%,
+            rgba(250, 232, 190, 0.45) 22%,
+            rgba(201, 168, 240, 0.18) 40%,
+            transparent 62%);
+    background-position: left bottom, calc(100% + 160px) -180px;
+    background-size: 900px 150px, 620px 620px;
+    background-repeat: repeat-x, no-repeat;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes moonlit2-twinkle {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+/* 星空がごくゆっくり流れる（2層で速度差＝パララックス） */
+@keyframes moonlit2-drift {
+    from { background-position: 0 0, 0 0; }
+    to { background-position: -620px 120px, 440px -80px; }
+}
+
+/* 動きを抑えたい環境ではアニメーションを止める */
+@media (prefers-reduced-motion: reduce) {
+    html[data-theme="moonlit2"] body::before,
+    html[data-theme="moonlit2"] body::after {
+        animation: none;
+    }
+}
+
+/* =========================================================
+   📔 Grove Journal スキン（第五テーマ）
+   html[data-theme="journal"] で有効化。
+   「手作りのスクラップブック手帳」：
+   - 紙のテクスチャ（feTurbulenceの繊維ノイズ）
+   - 押し花のラベンダー・小花の装飾（四隅）
+   - 茶インクの文字×ラベンダーインクのアクセント
+   - コンポーネント側（dashboard.css）でマスキングテープ・付箋・
+     罫線ノート・消印スタンプ・手描き風のよれた枠線を表現
+   ========================================================= */
+
+html[data-theme="journal"] {
+    /* ベース：クラフト紙と古紙のクリーム（彩度控えめ。元の濃い色はメモリーの対応表参照） */
+    --bg-primary: #efeae1;
+    --bg-secondary: #f5f2eb;
+    --bg-card: #fdfcf8;
+    --bg-input: #fdfcf8;
+    --bg-color: #efeae1;
+    --bg-hover: #e7e1d5;
+    --panel-bg: #fdfcf8;
+    --header-bg: rgba(245, 242, 235, 0.92);
+
+    /* テキスト：万年筆の茶インク */
+    --text-primary: #463f37;
+    --text-secondary: #776d61;
+    --text-muted: #a19686;
+    --text-color: #463f37;
+
+    /* アクセント：ラベンダーインク */
+    --accent: #8d77be;
+    --accent-hover: #75609f;
+    --accent-dim: rgba(141, 119, 190, 0.14);
+
+    /* ボーダー：日に焼けた紙の縁 */
+    --border: #d4cbbd;
+    --border-light: #e4ddd0;
+    --border-color: #d4cbbd;
+
+    --shadow-color: rgba(111, 94, 71, 0.18);
+    --success: #7ca86f;
+    --warning: #cf9a5e;
+    --danger: #c97f72;
+    --tool-color: #6f9a78;
+    --thought-color: #8d77be;
+
+    /* フォント：手書き風（Klee One）を最優先 */
+    --font-main: "Klee One", "Zen Maru Gothic", "Hiragino Maru Gothic ProN",
+        "Yu Gothic", sans-serif;
+}
+
+/* ---- 全体背景：白に近い生成り（台紙とほぼ同化させ、境界は枠線と影に任せる） ---- */
+html[data-theme="journal"] body {
+    background:
+        radial-gradient(1200px 800px at 50% -10%, rgba(255, 255, 253, 0.8) 0%, transparent 70%),
+        radial-gradient(900px 700px at 100% 100%, rgba(232, 227, 218, 0.3) 0%, transparent 60%),
+        linear-gradient(180deg, #fbfaf7 0%, #f5f3ed 100%);
+    background-attachment: fixed;
+    position: relative;
+}
+
+/* 机の紙テクスチャ（body::before）は白い机ではほぼ見えないため撤去。
+   テクスチャはパネル側（dashboard.css の .panel::before、linen-tile.png）に集約 */
+
+/* 押し花・ポラロイドの机装飾（body::after）はパネルに隠れて見えないため撤去
+   （画像は images/themes/journal/ に残置。復活させる場合は git 履歴参照） */

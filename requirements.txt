@@ -1,0 +1,39 @@
+fastapi==0.115.*
+uvicorn==0.34.*
+websockets==14.*
+openai==1.61.*
+pyyaml==6.*
+tiktoken==0.9.*
+# Pillow: コード内で import 箇所が無く実環境にも未インストール（実態と乖離）のため無効化。
+# 画像処理を実際に使う場合のみ復活させる。
+# Pillow>=10.2.0
+
+# tools
+tavily-python
+beautifulsoup4>=4.12.0
+requests>=2.31.0
+httpx>=0.28.0
+# DuckDuckGo 検索（core/web_tools.py が import）。既定の検索プロバイダー。
+# 旧 duckduckgo-search はリネーム＆API変更で動かなくなったため、新パッケージ ddgs を使用。
+ddgs
+
+# RAG
+chromadb>=0.4.20
+
+# Secret File System
+cryptography>=41.0.0
+
+# Auth
+bcrypt>=4.0.0
+
+# Moonbeat類似度チェック
+sentence-transformers
+
+fugashi[unidic-lite]>=1.5.0
+
+aiohttp==3.13.5
+
+faiss-cpu>=1.7.0
+
+# wp_blog: Markdown→HTML変換に使用。無くても簡易変換で動作する
+markdown>=3.5

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="{{t:html_lang}}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{t:security_title}}</title>
+    <link rel="icon" href="/static/images/favicon.ico" sizes="16x16 32x32">
+    <link rel="apple-touch-icon" href="/static/images/favicon.png" sizes="180x180">
+    <link rel="stylesheet" href="/static/theme-tokens.css?v=4">
+    <link rel="stylesheet" href="/static/dashboard.css?v=9">
+    <script src="/static/theme.js?v=4"></script>
+    <style>
+        .settings-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .settings-panel {
+            background-color: var(--panel-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .settings-header {
+            background-color: var(--header-bg);
+            padding: 15px 20px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-content {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .btn-primary {
+            background-color: #5c6bc0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #3f51b5;
+        }
+
+        .btn-delete {
+            background-color: transparent;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.2s;
+        }
+
+        .btn-delete:hover:not(:disabled) {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-delete:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .alert-error {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .domain-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .domain-table th,
+        .domain-table td {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .domain-table th {
+            background-color: var(--header-bg);
+            font-weight: bold;
+        }
+
+        .domain-default {
+            color: var(--text-secondary);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-group .form-control {
+            flex: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>⚙️ {{t:settings_heading}}</h1>
+        <div class="nav-links">
+            <button id="themeToggle" class="nav-button">☀️/🌙</button>
+        </div>
+    </div>
+
+    <div class="settings-container">
+        <!-- ナビゲーション（settings_nav.js が縦サイドバーを描画） -->
+        <div id="settingsNav"></div>
+
+        <div class="alert-error" id="errorMessage"></div>
+
+        <!-- ホワイトリスト設定 -->
+        <div class="settings-panel">
+            <div class="settings-header">
+                {{t:security_section_whitelist}}
+            </div>
+            <div class="settings-content">
+                <p style="font-size: 0.9em; color: var(--text-secondary); margin-bottom: 20px;">
+                    {{t:security_whitelist_desc}}
+                </p>
+
+                <form id="addDomainForm" onsubmit="addDomain(event)">
+                    <div class="form-group">
+                        <label>{{t:security_label_add_domain}}</label>
+                        <div class="input-group">
+                            <input type="text" id="newDomain" class="form-control" placeholder="{{t:security_placeholder_domain}}"
+                                required>
+                            <button type="submit" class="btn-primary">{{t:security_btn_add}}</button>
+                        </div>
+                    </div>
+                </form>
+
+                <table class="domain-table">
+                    <thead>
+                        <tr>
+                            <th>{{t:security_th_domain}}</th>
+                            <th style="width: 100px; text-align: center;">{{t:security_th_action}}</th>
+                        </tr>
+                    </thead>
+                    <tbody id="domainList">
+                        <!-- JSで動的に追加 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // デフォルトドメイン（削除不可）
+        const DEFAULT_DOMAINS = [
+            "api.duckduckgo.com",
+            "duckduckgo.com",
+            "html.duckduckgo.com",
+            "127.0.0.1",
+            "localhost"
+        ];
+
+        async function loadDomains() {
+            try {
+                const response = await fetch('/api/settings/security/domains');
+                if (!response.ok) throw new Error(T.settings_load_error);
+                const data = await response.json();
+                renderDomainList(data.domains);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        function renderDomainList(domains) {
+            const tbody = document.getElementById('domainList');
+            tbody.innerHTML = '';
+
+            const allDomains = [...new Set([...DEFAULT_DOMAINS, ...domains])];
+            // デフォルトドメインを先頭に、アルファベット順にソートして表示
+            allDomains.sort((a, b) => {
+                const aIsDefault = DEFAULT_DOMAINS.includes(a);
+                const bIsDefault = DEFAULT_DOMAINS.includes(b);
+                if (aIsDefault && !bIsDefault) return -1;
+                if (!aIsDefault && bIsDefault) return 1;
+                return a.localeCompare(b);
+            });
+
+            for (const domain of allDomains) {
+                const tr = document.createElement('tr');
+                const isDefault = DEFAULT_DOMAINS.includes(domain);
+
+                tr.innerHTML = `
+                    <td class="${isDefault ? 'domain-default' : ''}">
+                        ${escapeHtml(domain)}
+                        ${isDefault ? '<span style="font-size:0.8em; margin-left:10px;">' + T.security_badge_system + '</span>' : ''}
+                    </td>
+                    <td style="text-align: center;">
+                        <button class="btn-delete" onclick="deleteDomain('${escapeHtml(domain)}')" ${isDefault ? 'disabled title="' + T.security_btn_delete_disabled_title + '"' : ''}>
+                            ${T.security_btn_delete}
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        async function addDomain(event) {
+            event.preventDefault();
+            const input = document.getElementById('newDomain');
+            let domain = input.value.trim().toLowerCase();
+
+            if (!domain) return;
+            if (domain.includes(' ')) {
+                showError(T.security_error_space);
+                return;
+            }
+            if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(domain)) {
+                showError(T.security_error_ip);
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/settings/security/domains', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ domain: domain })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.detail || T.security_add_failed);
+                }
+
+                input.value = '';
+                hideError();
+                loadDomains();
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function deleteDomain(domain) {
+            if (!confirm(T.security_confirm_delete_prefix + domain + T.security_confirm_delete_suffix)) return;
+
+            try {
+                const response = await fetch('/api/settings/security/domains', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ domain: domain })
+                });
+
+                if (!response.ok) throw new Error(T.security_delete_failed);
+
+                hideError();
+                loadDomains();
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('errorMessage');
+            el.innerText = msg;
+            el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/[&<>'"]/g, match => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+            })[match]);
+        }
+
+        // 初期読み込み
+        document.addEventListener('DOMContentLoaded', loadDomains);
+    </script>
+    <script src="/static/settings_nav.js?v=1"></script>
+</body>
+
+</html>

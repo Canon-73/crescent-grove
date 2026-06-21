@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="{{t:html_lang}}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{t:general_title}}</title>
+    <link rel="icon" href="/static/images/favicon.ico" sizes="16x16 32x32">
+    <link rel="apple-touch-icon" href="/static/images/favicon.png" sizes="180x180">
+    <link rel="stylesheet" href="/static/theme-tokens.css?v=4">
+    <link rel="stylesheet" href="/static/dashboard.css?v=9">
+    <script src="/static/theme.js?v=4"></script>
+    <style>
+        body {
+            min-width: 100vw;
+        }
+
+        .settings-container {
+
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .settings-panel {
+            background-color: var(--panel-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .settings-header {
+            background-color: var(--header-bg);
+            padding: 15px 20px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-content {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .btn-primary {
+            background-color: #5c6bc0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background-color: #3f51b5;
+        }
+
+        .alert-error {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .section-title {
+            margin-top: 30px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--accent);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>{{t:settings_heading}}</h1>
+        <div class="nav-links">
+            <button id="themeToggle" class="nav-button">☀️/🌙</button>
+        </div>
+    </div>
+
+    <div class="settings-container">
+        <!-- ナビゲーション（settings_nav.js が縦サイドバーを描画） -->
+        <div id="settingsNav"></div>
+
+        <div class="alert-error" id="errorMessage"></div>
+        <div class="alert-success" id="successMessage"></div>
+
+        <div class="settings-panel">
+            <div class="settings-header">
+                {{t:general_header}}
+            </div>
+            <div class="settings-content">
+                <form id="generalForm" onsubmit="return saveGeneralConfig(event)" novalidate>
+
+                    <div class="section-title">{{t:general_section_profile}}</div>
+
+                    <p style="font-size:0.85em;font-weight:bold;margin-bottom:6px;">{{t:general_subsection_agent}}</p>
+                    <div class="form-group">
+                        <label>{{t:general_label_agent_name}}</label>
+                        <input type="text" id="agentName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_agent_avatar}}</label>
+                        <input type="text" id="agentAvatar" class="form-control"
+                            placeholder="{{t:general_placeholder_agent_avatar}}">
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_icon_size}}</label>
+                        <select id="agentSize" class="form-control">
+                            <option value="40px">40px</option>
+                            <option value="80px">80px</option>
+                            <option value="120px" selected>120px</option>
+                            <option value="160px">160px</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_layout}}</label>
+                        <select id="agentLayout" class="form-control">
+                            <option value="horizontal">{{t:general_option_horizontal}}</option>
+                            <option value="vertical" selected>{{t:general_option_vertical_standing}}</option>
+                        </select>
+                    </div>
+
+                    <p style="font-size:0.85em;font-weight:bold;margin-top:15px;margin-bottom:6px;">{{t:general_subsection_user}}</p>
+                    <div class="form-group">
+                        <label>{{t:general_label_user_name}}</label>
+                        <input type="text" id="userName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_honorific}}</label>
+                        <input type="text" id="userHonorific" class="form-control"
+                            placeholder="{{t:general_placeholder_honorific}}">
+                        <small style="color:#888;">{{t:general_help_honorific}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_agent_avatar}}</label>
+                        <input type="text" id="userAvatar" class="form-control"
+                            placeholder="{{t:general_placeholder_user_avatar}}">
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_icon_size}}</label>
+                        <select id="userSize" class="form-control">
+                            <option value="40px" selected>40px</option>
+                            <option value="80px">80px</option>
+                            <option value="120px">120px</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_layout}}</label>
+                        <select id="userLayout" class="form-control">
+                            <option value="horizontal" selected>{{t:general_option_horizontal}}</option>
+                            <option value="vertical">{{t:general_option_vertical}}</option>
+                        </select>
+                    </div>
+
+                    <div class="section-title">{{t:general_section_paths}}</div>
+                    <!-- ワークスペースは data-root/workspace に固定したため変更欄を非表示にする。
+                         hidden input は JS 互換のため残す（値は読み込み時の値を保持し、保存時も
+                         そのまま送るが、サーバ側 resolve_workspace は無視する＝無害）。 -->
+                    <div class="form-group" style="display: none;">
+                        <label>{{t:general_label_workspace}}</label>
+                        <input type="text" id="workspacePath" class="form-control" placeholder="{{t:general_placeholder_workspace}}">
+                        <div style="font-size: 0.8em; color: var(--text-muted); margin-top: 4px;">{{t:general_help_relative_or_absolute}}</div>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_chat_log_dir}}</label>
+                        <input type="text" id="logsPath" class="form-control" placeholder="{{t:general_placeholder_chat_log}}">
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_full_log_dir}}</label>
+                        <input type="text" id="fullLogsPath" class="form-control" placeholder="{{t:general_placeholder_full_log}}">
+                        <div style="font-size: 0.8em; color: var(--text-muted); margin-top: 4px;">{{t:general_help_full_log_default}}</div>
+                    </div>
+
+                    <div class="section-title">{{t:general_section_lethe}}</div>
+                    <div class="form-group">
+                        <label>{{t:general_label_mem_max_tokens}}</label>
+                        <input type="number" id="memMaxTokens" class="form-control" step="100" min="500" max="10000">
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_mem_max_tokens}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_mem_max_event_tokens}}</label>
+                        <input type="number" id="memMaxEventTokens" class="form-control" step="5" min="10" max="200">
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_mem_max_event_tokens}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_decay_coeff}}</label>
+                        <input type="number" id="memDecayCoeff" class="form-control" step="0.1" min="0" max="10.0">
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_decay_coeff}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_max_details}}</label>
+                        <input type="number" id="memMaxDetails" class="form-control" step="1" min="1" max="50">
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_max_details}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_max_events_per_day}}</label>
+                        <input type="number" id="memMaxEventsPerDay" class="form-control" step="1" min="1" max="50">
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_max_events_per_day}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_event_db}}</label>
+                        <input type="text" id="memEventDb" class="form-control" placeholder="memory/event_db.json">
+                        <small
+                            style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_event_db}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_compressed_file}}</label>
+                        <input type="text" id="memCompressedFile" class="form-control"
+                            placeholder="memory/compressed.md">
+                        <small
+                            style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_compressed_file}}</small>
+                    </div>
+
+                    <div class="section-title">{{t:general_section_boot_memories}}</div>
+                    <div class="form-group">
+                        <small
+                            style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_boot_memories}}</small>
+                        <div id="bootMemoriesList" style="margin-top: 8px;"></div>
+                        <div style="display: flex; gap: 8px; margin-top: 8px;">
+                            <input type="text" id="newBootMemory" class="form-control"
+                                placeholder="{{t:general_placeholder_boot_memory}}" style="flex: 1;">
+                            <button type="button" class="btn-primary" onclick="addBootMemory()"
+                                style="white-space: nowrap;">{{t:general_btn_add}}</button>
+                        </div>
+                    </div>
+
+                    <div class="section-title">{{t:general_section_letter}}</div>
+                    <div class="form-group">
+                        <label>{{t:general_label_letter_path}}</label>
+                        <input type="text" id="letterFilePath" class="form-control"
+                            placeholder="memory/letter_for_me.md">
+                        <small
+                            style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_letter_path}}</small>
+                    </div>
+
+                    <div class="section-title">{{t:general_section_memory_maintenance}}</div>
+                    <div
+                        style="background: var(--bg-hover); padding: 15px; border-radius: 8px; border: 1px solid var(--border);">
+                        <p style="font-size: 0.9em; margin-bottom: 12px;">{{t:general_help_rebuild_desc}}
+                        </p>
+                        <div style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+                            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 150px;">
+                                <label style="font-size: 0.85em;">{{t:general_label_start_date}}</label>
+                                <input type="date" id="rebuildStartDate" class="form-control">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 150px;">
+                                <label style="font-size: 0.85em;">{{t:general_label_end_date}}</label>
+                                <input type="date" id="rebuildEndDate" class="form-control">
+                            </div>
+                            <button type="button" class="btn-primary" id="btnRebuildRange"
+                                onclick="rebuildMemoryRange()" style="height: 38px;">{{t:general_btn_rebuild}}</button>
+                        </div>
+                        <div id="rebuildStatus" style="margin-top: 10px; font-size: 0.85em; display: none;"></div>
+                    </div>
+
+                    <div class="section-title">{{t:general_section_system_prompt}}</div>
+                    <div class="form-group">
+                        <label>{{t:general_label_sys_prompt_dir}}</label>
+                        <input type="text" id="sysPromptDir" class="form-control" placeholder="system_prompt">
+                    </div>
+                    <div class="form-group">
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_sys_prompt}}</small>
+                        <div id="sysPromptFilesList" style="margin-top: 8px;"></div>
+                        <div style="display: flex; gap: 8px; margin-top: 8px;">
+                            <input type="text" id="newSysPromptFile" class="form-control" placeholder="{{t:general_placeholder_sys_prompt}}"
+                                style="flex: 1;">
+                            <button type="button" class="btn-primary" onclick="addSysPromptFile()"
+                                style="white-space: nowrap;">{{t:general_btn_add}}</button>
+                        </div>
+                    </div>
+
+                    <div class="section-title">{{t:general_section_post_prompt}}</div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="postPromptEnabled" style="width: auto;"
+                                onchange="updatePostPromptWarning()">
+                            {{t:general_label_post_prompt_enable}}
+                        </label>
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_post_prompt}}</small>
+                    </div>
+                    <div id="postPromptWarning"
+                        style="display:none; background:#fdecea; color:#c62828; border:1px solid #c62828; border-radius:4px; padding:10px; margin-bottom:15px; font-size:0.85em; line-height:1.5;">
+                        {{t:general_warning_post_prompt}}
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_post_prompt_dir}}</label>
+                        <input type="text" id="postPromptDir" class="form-control" placeholder="system_prompt">
+                    </div>
+                    <div class="form-group">
+                        <small
+                            style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_post_prompt_files}}</small>
+                        <div id="postPromptFilesList" style="margin-top: 8px;"></div>
+                        <div style="display: flex; gap: 8px; margin-top: 8px;">
+                            <input type="text" id="newPostPromptFile" class="form-control"
+                                placeholder="{{t:general_placeholder_post_prompt}}" style="flex: 1;">
+                            <button type="button" class="btn-primary" onclick="addPostPromptFile()"
+                                style="white-space: nowrap;">{{t:general_btn_add}}</button>
+                        </div>
+                    </div>
+
+                    <div class="section-title">{{t:general_section_tokenizer}}</div>
+                    <div class="form-group">
+                        <label>{{t:general_label_tokenizer_type}}</label>
+                        <select id="tokenizerType" class="form-control">
+                            <option value="deepseek">{{t:general_option_tokenizer_deepseek}}</option>
+                            <option value="qwen">{{t:general_option_tokenizer_qwen}}</option>
+                            <option value="gemini">{{t:general_option_tokenizer_gemini}}</option>
+                            <option value="tiktoken">{{t:general_option_tokenizer_tiktoken}}</option>
+                        </select>
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_tokenizer_type}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_tokenizer_path}}</label>
+                        <input type="text" id="tokenizerPath" class="form-control"
+                            placeholder="data/tokenizer_deepseek.json">
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_tokenizer_path}}</small>
+                    </div>
+
+                    <div class="section-title">{{t:general_section_salia}}</div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="saliaEnabled" style="width: auto;">
+                            {{t:general_label_salia_enabled}}
+                        </label>
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_salia_enabled}}</small>
+                    </div>
+
+                    <p style="font-size:0.85em;font-weight:bold;margin-top:15px;margin-bottom:6px;">{{t:general_subsection_somatic}}</p>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="somaticEnabled" style="width: auto;">
+                            {{t:general_label_somatic_enabled}}
+                        </label>
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_somatic_enabled}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_somatic_probability}}</label>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="range" id="somaticProbability" style="flex: 1;" step="0.05" min="0" max="1"
+                                value="0.3"
+                                oninput="document.getElementById('somaticProbabilityVal').textContent = parseFloat(this.value).toFixed(2)">
+                            <span id="somaticProbabilityVal" style="min-width: 2.5em; text-align: right;">0.30</span>
+                        </div>
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_somatic_probability}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_somatic_valence}}</label>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="range" id="somaticValence" style="flex: 1;" step="0.05" min="0" max="1"
+                                value="0.5"
+                                oninput="document.getElementById('somaticValenceVal').textContent = parseFloat(this.value).toFixed(2)">
+                            <span id="somaticValenceVal" style="min-width: 2.5em; text-align: right;">0.50</span>
+                        </div>
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_somatic_valence}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:general_label_somatic_candidates}}</label>
+                        <input type="number" id="somaticCandidateCount" class="form-control" step="1" min="1" max="20"
+                            value="5">
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_somatic_candidates}}</small>
+                    </div>
+
+                    <p style="font-size:0.85em;font-weight:bold;margin-top:15px;margin-bottom:6px;">{{t:general_subsection_evaluate_turn}}</p>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="evaluateTurnEnabled" style="width: auto;">
+                            {{t:general_label_evaluate_turn_enabled}}
+                        </label>
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">{{t:general_help_evaluate_turn}}</small>
+                    </div>
+
+                    <div class="section-title">{{t:general_section_search}}</div>
+                    <div class="form-group">
+                        <label>{{t:general_label_search_provider}}</label>
+                        <select id="searchProvider" class="form-control">
+                            <option value="ddgs">{{t:general_option_search_ddgs}}</option>
+                            <option value="tavily">{{t:general_option_search_tavily}}</option>
+                        </select>
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">
+                            {{t:general_help_search_provider}}
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>{{t:general_label_search_max_parallel}}</label>
+                        <input type="number" id="searchMaxParallel" class="form-control" min="1" max="10" step="1">
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">
+                            {{t:general_help_search_max_parallel}}
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>{{t:general_label_search_max_queries}}</label>
+                        <input type="number" id="searchMaxQueries" class="form-control" min="1" max="10" step="1">
+                        <small style="color: var(--text-secondary); font-size: 0.85em;">
+                            {{t:general_help_search_max_queries}}
+                        </small>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="margin-top: 20px;">{{t:settings_save_button}}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadGeneralConfig() {
+            try {
+                const response = await fetch('/api/settings/general');
+                if (!response.ok) throw new Error(T.general_error_load_failed);
+                const data = await response.json();
+
+                // プロファイル
+                document.getElementById('agentName').value = data.profile?.agent?.name || 'Agent';
+                document.getElementById('agentAvatar').value = data.profile?.agent?.avatar || '';
+                document.getElementById('agentSize').value = data.profile?.agent?.size || '120px';
+                document.getElementById('agentLayout').value = data.profile?.agent?.layout || 'vertical';
+                document.getElementById('userName').value = data.profile?.user?.name || 'User';
+                document.getElementById('userHonorific').value = data.profile?.user?.honorific || '';
+                document.getElementById('userAvatar').value = data.profile?.user?.avatar || '';
+                document.getElementById('userSize').value = data.profile?.user?.size || '40px';
+                document.getElementById('userLayout').value = data.profile?.user?.layout || 'horizontal';
+
+                // パス
+                document.getElementById('workspacePath').value = data.workspace?.path || '';
+                document.getElementById('logsPath').value = data.logs?.chat_log_directory || '';
+                document.getElementById('fullLogsPath').value = data.logs?.full_log_directory || '';
+
+                // 記憶圧縮
+                const mc = data.memory_compression || {};
+                document.getElementById('memMaxTokens').value = mc.max_tokens || 2000;
+                document.getElementById('memMaxEventTokens').value = mc.max_event_tokens || 30;
+                document.getElementById('memDecayCoeff').value = mc.decay_coeff || 1.0;
+                document.getElementById('memMaxDetails').value = mc.max_details || 8;
+                document.getElementById('memMaxEventsPerDay').value = mc.max_events_per_day || 10;
+                document.getElementById('memEventDb').value = mc.event_db || 'memory/event_db.json';
+                document.getElementById('memCompressedFile').value = mc.compressed_file || 'memory/compressed.md';
+
+                // 手紙ファイルパス
+                document.getElementById('letterFilePath').value = data.letter_file || 'memory/letter_for_me.md';
+
+                // 起動記憶ファイルリスト
+                renderBootMemories(data.boot_memories || []);
+
+                // システムプロンプト (最上段)
+                const sp = data.system_prompts || {};
+                document.getElementById('sysPromptDir').value = sp.directory || 'system_prompt';
+                renderSysPromptFiles(sp.files || []);
+
+                // ポストプロンプト (最下段)
+                const pp = data.post_prompts || {};
+                document.getElementById('postPromptDir').value = pp.directory || 'system_prompt';
+                renderPostPromptFiles(pp.files || []);
+                document.getElementById('postPromptEnabled').checked = !!pp.enabled;
+                updatePostPromptWarning();
+
+                // トークナイザー
+                const tk = data.tokenizer || {};
+                document.getElementById('tokenizerType').value = tk.type || 'deepseek';
+                document.getElementById('tokenizerPath').value = tk.path || 'data/tokenizer_deepseek.json';
+
+                // Salia（情動評価）
+                const salia = data.salia || {};
+                const sm = salia.somatic_marker || {};
+                const et = salia.evaluate_turn || {};
+                document.getElementById('saliaEnabled').checked = salia.enabled !== false;
+                document.getElementById('somaticEnabled').checked = sm.enabled !== false;
+                const prob = sm.probability !== undefined ? sm.probability : 0.3;
+                document.getElementById('somaticProbability').value = prob;
+                document.getElementById('somaticProbabilityVal').textContent = prob.toFixed(2);
+                const valence = sm.valence_threshold !== undefined ? sm.valence_threshold : 0.5;
+                document.getElementById('somaticValence').value = valence;
+                document.getElementById('somaticValenceVal').textContent = valence.toFixed(2);
+                document.getElementById('somaticCandidateCount').value = sm.candidate_count !== undefined ? sm.candidate_count : 5;
+                document.getElementById('evaluateTurnEnabled').checked = et.enabled !== false;
+
+                // Web検索プロバイダー（既定 ddgs）
+                document.getElementById('searchProvider').value = data.search?.provider || 'ddgs';
+                // 複数クエリ同時検索の調整値（既定 3 / 5）
+                document.getElementById('searchMaxParallel').value = data.search?.max_parallel ?? 3;
+                document.getElementById('searchMaxQueries').value = data.search?.max_queries ?? 5;
+
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        async function saveGeneralConfig(event) {
+            event.preventDefault();
+
+            // 値の取得
+            const agentName = document.getElementById('agentName').value.trim();
+            const userName = document.getElementById('userName').value.trim();
+            const workspacePath = document.getElementById('workspacePath').value.trim();
+
+            // バリデーション初期化
+            hideError();
+
+            // 必須チェック
+            if (!agentName) return showError(T.general_error_agent_name_required);
+            if (!userName) return showError(T.general_error_user_name_required);
+            // workspace は data-root/workspace に固定したため必須チェックは廃止
+            // （欄は非表示。空でも他項目の保存をブロックしない）。
+
+            const payload = {
+                profile: {
+                    agent: {
+                        name: agentName,
+                        avatar: document.getElementById('agentAvatar').value,
+                        size: document.getElementById('agentSize').value,
+                        layout: document.getElementById('agentLayout').value
+                    },
+                    user: {
+                        name: userName,
+                        honorific: document.getElementById('userHonorific').value.trim(),
+                        avatar: document.getElementById('userAvatar').value,
+                        size: document.getElementById('userSize').value,
+                        layout: document.getElementById('userLayout').value
+                    }
+                },
+                workspace: { path: workspacePath },
+                logs: {
+                    chat_log_directory: document.getElementById('logsPath').value,
+                    full_log_directory: document.getElementById('fullLogsPath').value
+                },
+                memory_compression: {
+                    max_tokens: parseInt(document.getElementById('memMaxTokens').value),
+                    max_event_tokens: parseInt(document.getElementById('memMaxEventTokens').value),
+                    decay_coeff: parseFloat(document.getElementById('memDecayCoeff').value),
+                    max_details: parseInt(document.getElementById('memMaxDetails').value),
+                    max_events_per_day: parseInt(document.getElementById('memMaxEventsPerDay').value),
+                    event_db: document.getElementById('memEventDb').value,
+                    compressed_file: document.getElementById('memCompressedFile').value
+                },
+                letter_file: document.getElementById('letterFilePath').value,
+                boot_memories: getBootMemories(),
+                system_prompts: {
+                    directory: document.getElementById('sysPromptDir').value,
+                    files: getSysPromptFiles()
+                },
+                post_prompts: {
+                    directory: document.getElementById('postPromptDir').value,
+                    files: getPostPromptFiles(),
+                    enabled: document.getElementById('postPromptEnabled').checked
+                },
+                tokenizer: {
+                    type: document.getElementById('tokenizerType').value,
+                    path: document.getElementById('tokenizerPath').value.trim()
+                },
+                salia: {
+                    enabled: document.getElementById('saliaEnabled').checked,
+                    somatic_marker: {
+                        enabled: document.getElementById('somaticEnabled').checked,
+                        probability: parseFloat(document.getElementById('somaticProbability').value),
+                        valence_threshold: parseFloat(document.getElementById('somaticValence').value),
+                        candidate_count: parseInt(document.getElementById('somaticCandidateCount').value)
+                    },
+                    evaluate_turn: {
+                        enabled: document.getElementById('evaluateTurnEnabled').checked
+                    }
+                },
+                search: {
+                    provider: document.getElementById('searchProvider').value,
+                    max_parallel: parseInt(document.getElementById('searchMaxParallel').value),
+                    max_queries: parseInt(document.getElementById('searchMaxQueries').value)
+                }
+            };
+
+            console.log("[DEBUG] saveGeneralConfig start", payload);
+            try {
+                const response = await fetch('/api/settings/general', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                console.log("[DEBUG] saveGeneralConfig response status", response.status);
+                if (!response.ok) throw new Error(T.general_error_save_failed);
+
+                showSuccess(T.general_success_saved);
+            } catch (error) {
+                console.error("[DEBUG] saveGeneralConfig error", error);
+                showError(error.message);
+            }
+            return false;
+        }
+
+        function showError(msg) {
+            hideSuccess();
+            const el = document.getElementById('errorMessage');
+            el.innerText = msg;
+            el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+
+        function showSuccess(msg) {
+            hideError();
+            const el = document.getElementById('successMessage');
+            el.innerText = msg;
+            el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+
+        function hideError() { document.getElementById('errorMessage').style.display = 'none'; }
+        function hideSuccess() { document.getElementById('successMessage').style.display = 'none'; }
+
+        // --- 汎用リストエディタ ---
+        function renderList(containerId, list, inputClass, moveFn, removeFn) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            list.forEach((item, i) => {
+                const row = document.createElement('div');
+                row.style.cssText = 'display:flex;align-items:center;gap:6px;margin-bottom:6px;';
+                row.innerHTML = `
+                    <span style="font-size:0.8em;color:var(--text-muted);min-width:1.4em;text-align:right;">${i + 1}.</span>
+                    <input type="text" class="form-control ${inputClass}" value="${escapeHtml(item)}" style="flex:1;">
+                    <button type="button" onclick="${moveFn}(${i},-1)" title="${T.general_btn_move_up}"
+                        style="background:var(--bg-hover);border:1px solid var(--border);border-radius:4px;padding:4px 8px;cursor:pointer;">▲</button>
+                    <button type="button" onclick="${moveFn}(${i},1)" title="${T.general_btn_move_down}"
+                        style="background:var(--bg-hover);border:1px solid var(--border);border-radius:4px;padding:4px 8px;cursor:pointer;">▼</button>
+                    <button type="button" onclick="${removeFn}(${i})" title="${T.general_btn_delete}"
+                        style="background:transparent;border:1px solid var(--danger,#e57373);color:var(--danger,#e57373);border-radius:4px;padding:4px 8px;cursor:pointer;">✕</button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function escapeHtml(s) {
+            return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+        }
+
+        function getListItems(cls) {
+            return [...document.querySelectorAll(`.${cls}`)].map(el => el.value.trim()).filter(v => v);
+        }
+
+        // boot_memories
+        function renderBootMemories(list) {
+            renderList('bootMemoriesList', list, 'boot-memory-input', 'moveBootMemory', 'removeBootMemory');
+        }
+        function getBootMemories() { return getListItems('boot-memory-input'); }
+        function addBootMemory() {
+            const input = document.getElementById('newBootMemory');
+            const val = input.value.trim(); if (!val) return;
+            const list = getBootMemories(); list.push(val);
+            renderBootMemories(list); input.value = '';
+        }
+        function removeBootMemory(i) { const l = getBootMemories(); l.splice(i, 1); renderBootMemories(l); }
+        function moveBootMemory(i, dir) {
+            const l = getBootMemories(); const j = i + dir;
+            if (j < 0 || j >= l.length) return;[l[i], l[j]] = [l[j], l[i]]; renderBootMemories(l);
+        }
+
+        // system_prompts.files
+        function renderSysPromptFiles(list) {
+            renderList('sysPromptFilesList', list, 'sys-prompt-input', 'moveSysPromptFile', 'removeSysPromptFile');
+        }
+        function getSysPromptFiles() { return getListItems('sys-prompt-input'); }
+        function addSysPromptFile() {
+            const input = document.getElementById('newSysPromptFile');
+            const val = input.value.trim(); if (!val) return;
+            const list = getSysPromptFiles(); list.push(val);
+            renderSysPromptFiles(list); input.value = '';
+        }
+        function removeSysPromptFile(i) { const l = getSysPromptFiles(); l.splice(i, 1); renderSysPromptFiles(l); }
+        function moveSysPromptFile(i, dir) {
+            const l = getSysPromptFiles(); const j = i + dir;
+            if (j < 0 || j >= l.length) return;[l[i], l[j]] = [l[j], l[i]]; renderSysPromptFiles(l);
+        }
+
+        // post_prompts.files
+        function renderPostPromptFiles(list) {
+            renderList('postPromptFilesList', list, 'post-prompt-input', 'movePostPromptFile', 'removePostPromptFile');
+        }
+
+        // ボトムプロンプト有効化トグルに連動して赤警告バナーの表示を切り替える
+        function updatePostPromptWarning() {
+            const on = document.getElementById('postPromptEnabled').checked;
+            document.getElementById('postPromptWarning').style.display = on ? 'block' : 'none';
+        }
+
+        function getPostPromptFiles() { return getListItems('post-prompt-input'); }
+        function addPostPromptFile() {
+            const input = document.getElementById('newPostPromptFile');
+            const val = input.value.trim(); if (!val) return;
+            const list = getPostPromptFiles(); list.push(val);
+            renderPostPromptFiles(list); input.value = '';
+        }
+        function removePostPromptFile(i) { const l = getPostPromptFiles(); l.splice(i, 1); renderPostPromptFiles(l); }
+        function movePostPromptFile(i, dir) {
+            const l = getPostPromptFiles(); const j = i + dir;
+            if (j < 0 || j >= l.length) return;[l[i], l[j]] = [l[j], l[i]]; renderPostPromptFiles(l);
+        }
+
+        async function rebuildMemoryRange() {
+            const start = document.getElementById('rebuildStartDate').value;
+            const end = document.getElementById('rebuildEndDate').value;
+            const btn = document.getElementById('btnRebuildRange');
+            const status = document.getElementById('rebuildStatus');
+
+            if (!start || !end) {
+                alert(T.general_alert_specify_dates);
+                return;
+            }
+
+            if (!confirm(T.general_confirm_rebuild.replace('{start}', start).replace('{end}', end))) {
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = T.general_btn_processing;
+            status.style.display = 'block';
+            status.style.color = 'var(--text-secondary)';
+            status.innerText = T.general_status_rebuilding;
+
+            try {
+                const response = await fetch('/api/memory/rebuild-range', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ start_date: start, end_date: end })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    status.style.color = '#4caf50';
+                    status.innerText = T.general_status_rebuild_done.replace('{count}', result.processed);
+                } else {
+                    throw new Error(result.detail || T.general_error_rebuild_failed);
+                }
+            } catch (error) {
+                status.style.color = '#f44336';
+                status.innerText = T.general_status_rebuild_error.replace('{message}', error.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = T.general_btn_rebuild;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadGeneralConfig);
+    </script>
+    <script src="/static/settings_nav.js?v=1"></script>
+
+</body>
+
+</html>

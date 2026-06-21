@@ -1,0 +1,46 @@
+appId: crescent-grove
+productName: Crescent Grove
+copyright: Copyright © 2026 カノン
+directories:
+  output: dist
+files:
+  - out/**/*
+  - package.json
+  # splash.html を app.asar 内に同梱する。loadSplash() は
+  # join(app.getAppPath(), 'resources', 'splash.html') で参照するため、
+  # asar 内 resources/splash.html として含める必要がある（dev/packaged 共通）。
+  - resources/**
+# 配布版の本体一式（embeddable runtime + 本体コード + models + dist_template）を
+# asar の外（process.resourcesPath/agent/）に展開する。python.exe を実行可能な実体
+# として置く必要があるため files(asar) ではなく extraResources を使う。
+# from は electron-builder.yml(=liner/) 基準で解決され agent/dist_build/staging を指す。
+# staging は scripts/build_dist.py が生成する（build:win の前段で再生成・約2GB）。
+extraResources:
+  - from: "../dist_build/staging/"
+    to: "agent"
+    filter: ["**/*"]
+# ライセンス表記（MIT 本体 + 第三者ライブラリ）をインストール先のトップ階層
+# （Crescent Grove.exe と同階層）にも配置し、利用者がすぐ参照できるようにする。
+# Electron/Chromium 自体のクレジット（LICENSE.electron.txt / LICENSES.chromium.html）は
+# electron-builder が別途自動同梱する。
+extraFiles:
+  - from: "../LICENSE"
+    to: "LICENSE.txt"
+  - from: "../THIRD_PARTY_NOTICES.md"
+    to: "THIRD_PARTY_NOTICES.md"
+win:
+  icon: build/icon.ico
+  publisherName: カノン
+  target:
+    - nsis
+    - zip
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Crescent Grove
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
+  installerHeaderIcon: build/icon.ico

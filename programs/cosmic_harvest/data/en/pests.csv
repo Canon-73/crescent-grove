@@ -1,0 +1,6 @@
+id,name,emoji,personality,description,chase_success,trap_success,bait_success,damage_type,quality_effect,special
+nebula_rabbit,Nebula Rabbit,🐰,timid and cute,A fluffy glowing cosmic rabbit. Folds its ears when you meet its eyes. Loves mandarins.,95,80,90,quality,0.9,Encounter rate doubles when Cosmo Mandarin is present. Whimpers when chased away.
+crater_bear,Crater Bear,🐻,fierce and stubborn,Strong enough to crack open an asteroid. Returns immediately after being chased away.,40,30,60,death,0.0,Low chase success. Only large fruit work as bait.
+comet_fox,Comet Fox,🦊,cunning and mischievous,Swift like a shooting star. Skilled at slipping through traps. Targets only the most expensive fruit.,85,25,70,steal,1.0,Traps almost never work. Highest reward when captured.
+dust_mouse,Dust Mouse,🐭,mass-spawning,A mouse small as dust. One is harmless; they come in swarms.,70,60,50,quality,0.8,Appears 1-3 at once (difficulty parameter). Encounter rate halves if Thorn Lemon is in the field.
+void_jelly,Void Jelly,🪼,beautiful and merciless,A cosmic jellyfish drifting in the void. Its clear tentacles wipe out the taste of any fruit they touch.,80,50,30,taste_destroy,1.0,Hard to lure with bait. Beautiful to look at but devastating.

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="{{t:html_lang}}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{t:vital_title}}</title>
+    <link rel="icon" href="/static/images/favicon.ico" sizes="16x16 32x32">
+    <link rel="apple-touch-icon" href="/static/images/favicon.png" sizes="180x180">
+    <link rel="stylesheet" href="/static/theme-tokens.css?v=4">
+    <link rel="stylesheet" href="/static/dashboard.css?v=9">
+    <link rel="stylesheet" href="/static/settings_form.css?v=1">
+    <script src="/static/theme.js?v=4"></script>
+</head>
+
+<body>
+    <div class="header">
+        <h1>⚙️ {{t:settings_heading}}</h1>
+        <div class="nav-links">
+            <button id="themeToggle" class="nav-button">☀️/🌙</button>
+        </div>
+    </div>
+
+    <div class="settings-container">
+        <!-- ナビゲーション（settings_nav.js が縦サイドバーを描画） -->
+        <div id="settingsNav"></div>
+
+        <div class="alert-error" id="errorMessage"></div>
+        <div class="alert-success" id="successMessage"></div>
+
+        <div class="settings-panel">
+            <div class="settings-header">{{t:vital_section_header}}</div>
+            <div class="settings-content">
+                <p class="small-note" style="margin-bottom: 15px;">
+                    {{t:vital_desc}}
+                </p>
+                <form id="vitalForm" onsubmit="return saveConfig(event)" novalidate>
+
+                    <!-- システムON/OFF（最上部マスタートグル） -->
+                    <div class="master-toggle">
+                        <label class="switch">
+                            <input type="checkbox" id="vitalEnabled">
+                            <span class="slider"></span>
+                        </label>
+                        <div class="master-toggle-text">
+                            <strong>{{t:vital_label_enabled}}</strong>
+                            <small class="small-note">{{t:vital_help_enabled}}</small>
+                        </div>
+                    </div>
+
+                    <div class="section-title">{{t:vital_section_stamina}}</div>
+                    <div class="form-group">
+                        <label>{{t:vital_label_stamina_mode}}</label>
+                        <select id="staminaMode" class="form-control">
+                            <option value="token">{{t:vital_option_token}}</option>
+                            <option value="cost">{{t:vital_option_cost}}</option>
+                        </select>
+                        <small class="small-note">{{t:vital_help_stamina_mode}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:vital_label_daily_budget}}</label>
+                        <input type="number" id="dailyBudgetUsd" class="form-control" step="0.01" min="0">
+                        <small class="small-note">{{t:vital_help_daily_budget}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:vital_label_daily_token_limit}}</label>
+                        <input type="number" id="dailyTokenLimit" class="form-control" step="1000" min="0">
+                        <small class="small-note">{{t:vital_help_daily_token_limit}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:vital_label_input_weight}}</label>
+                        <input type="number" id="staminaInputWeight" class="form-control" step="0.1" min="0">
+                        <small class="small-note">{{t:vital_help_input_weight}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:vital_label_input_softcap}}</label>
+                        <input type="number" id="inputSoftcap" class="form-control" step="100" min="0">
+                        <small class="small-note">{{t:vital_help_input_softcap}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:vital_label_output_weight}}</label>
+                        <input type="number" id="staminaOutputWeight" class="form-control" step="0.1" min="0">
+                        <small class="small-note">{{t:vital_help_output_weight}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:vital_label_cost_multiplier}}</label>
+                        <input type="number" id="staminaCostMultiplier" class="form-control" step="0.0001" min="0">
+                        <small class="small-note">{{t:vital_help_cost_multiplier}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:vital_label_stamina_max}}</label>
+                        <input type="number" id="staminaMax" class="form-control" step="1" min="1">
+                        <small class="small-note">{{t:vital_help_stamina_max}}</small>
+                    </div>
+
+                    <div class="section-title">{{t:vital_section_energy}}</div>
+                    <div class="form-group">
+                        <label>{{t:vital_label_energy_max}}</label>
+                        <input type="number" id="energyMax" class="form-control" step="1" min="1">
+                        <small class="small-note">{{t:vital_help_energy_max}}</small>
+                    </div>
+                    <div class="form-group">
+                        <label>{{t:vital_label_energy_recovery}}</label>
+                        <input type="number" id="energyRecovery" class="form-control" step="0.1" min="0">
+                        <small class="small-note">{{t:vital_help_energy_recovery}}</small>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="margin-top: 20px;">{{t:settings_save_button}}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadConfig() {
+            try {
+                const res = await fetch('/api/settings/vital');
+                if (!res.ok) throw new Error(T.settings_load_error);
+                const d = await res.json();
+                document.getElementById('vitalEnabled').checked = d.enabled !== false;
+                document.getElementById('staminaMode').value = d.stamina_mode || 'token';
+                document.getElementById('dailyBudgetUsd').value = d.daily_budget_usd ?? 0.5;
+                document.getElementById('dailyTokenLimit').value = d.daily_token_limit ?? 500000;
+                document.getElementById('staminaInputWeight').value = d.stamina_input_weight ?? 1.0;
+                document.getElementById('inputSoftcap').value = d.input_softcap ?? 2500;
+                document.getElementById('staminaOutputWeight').value = d.stamina_output_weight ?? 1.0;
+                document.getElementById('staminaCostMultiplier').value = d.stamina_cost_multiplier ?? 0.0002;
+                document.getElementById('staminaMax').value = d.stamina_max ?? 500;
+                document.getElementById('energyMax').value = d.energy_max ?? 50;
+                document.getElementById('energyRecovery').value = d.energy_recovery_per_minute ?? 1.2;
+            } catch (e) { showError(e.message); }
+        }
+
+        async function saveConfig(event) {
+            event.preventDefault();
+            hideError();
+            const payload = {
+                enabled: document.getElementById('vitalEnabled').checked,
+                stamina_mode: document.getElementById('staminaMode').value,
+                daily_budget_usd: parseFloat(document.getElementById('dailyBudgetUsd').value),
+                daily_token_limit: parseInt(document.getElementById('dailyTokenLimit').value),
+                stamina_input_weight: parseFloat(document.getElementById('staminaInputWeight').value),
+                input_softcap: parseInt(document.getElementById('inputSoftcap').value),
+                stamina_output_weight: parseFloat(document.getElementById('staminaOutputWeight').value),
+                stamina_cost_multiplier: parseFloat(document.getElementById('staminaCostMultiplier').value),
+                stamina_max: parseInt(document.getElementById('staminaMax').value),
+                energy_max: parseInt(document.getElementById('energyMax').value),
+                energy_recovery_per_minute: parseFloat(document.getElementById('energyRecovery').value)
+            };
+            try {
+                const res = await fetch('/api/settings/vital', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) throw new Error(T.settings_save_error);
+                showSuccess(T.vital_save_success);
+            } catch (e) { showError(e.message); }
+            return false;
+        }
+
+        function showError(msg) {
+            hideSuccess();
+            const el = document.getElementById('errorMessage');
+            el.innerText = msg; el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+        function showSuccess(msg) {
+            hideError();
+            const el = document.getElementById('successMessage');
+            el.innerText = msg; el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+        function hideError() { document.getElementById('errorMessage').style.display = 'none'; }
+        function hideSuccess() { document.getElementById('successMessage').style.display = 'none'; }
+
+        document.addEventListener('DOMContentLoaded', loadConfig);
+    </script>
+    <script src="/static/settings_nav.js?v=1"></script>
+</body>
+
+</html>

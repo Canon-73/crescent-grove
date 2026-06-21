@@ -1,0 +1,72 @@
+# keywords_A
+中国
+China
+Chinese
+中華
+中华
+PRC
+CCP
+共産党
+共产党
+Communist Party
+北京
+Beijing
+中共
+
+# keywords_B
+人権
+人权
+human rights
+弾圧
+镇压
+crackdown
+repression
+侵害
+検閲
+审查
+censorship
+民主化
+民主
+democracy
+独裁
+dictatorship
+authoritarian
+腐敗
+腐败
+corruption
+汚職
+デモ
+游行
+抗議
+抗议
+protest
+言論の自由
+言论自由
+freedom of speech
+報道の自由
+新闻自由
+press freedom
+ジェノサイド
+genocide
+強制労働
+强制劳动
+forced labor
+迫害
+persecution
+虐殺
+massacre
+粛清
+purge
+収容
+detention
+dissident
+異見
+異議
+反体制
+opposition
+surveillance
+監視
+监控
+propaganda
+プロパガンダ
+宣传

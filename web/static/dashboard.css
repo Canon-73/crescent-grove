@@ -1,0 +1,2714 @@
+/* dashboard.css - 柚月エージェント ダッシュボードUI (2カラム+上下分割版) */
+
+/* === リセット・ベース === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* テーマ変数（dark / light / moonlit）は theme-tokens.css に一元化。
+   このファイルでは var() で参照するだけで色値は持たない。 */
+
+html {
+    overflow-y: scroll;
+}
+
+body {
+    font-family: var(--font-main);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* === 基本リンク === */
+a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: var(--accent);
+}
+
+/* === ヘッダー === */
+.header {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 10;
+    flex-shrink: 0;
+}
+
+.header-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.header-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.header-status {
+    font-size: 11px;
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* パイロットランプ風の小さなLED（オンライン=緑 / オフライン=赤） */
+.header-status::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.header-status.status-online::before {
+    background: #2ecc40;
+    box-shadow: 0 0 5px rgba(46, 204, 64, 0.8);
+}
+
+.header-status.status-offline::before {
+    background: #ff4136;
+    box-shadow: 0 0 5px rgba(255, 65, 54, 0.8);
+}
+
+.header-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* === ヘッダー2段目（折りたたみドロワー） === */
+/* 開閉トグルボタン：開いている時は矢印を反転させる */
+/* 詳細度を .header-button より高くするため2クラス指定にする
+   （単一クラスだと後勝ちで .header-button のスタイルに負ける） */
+.header-button.header-drawer-toggle {
+    transition: transform 0.3s ease, all 0.2s;
+    /* アイコンは大きめ・ボタン外形は他のボタンと揃える */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    padding: 3px 12px;
+}
+/* play アイコンは右向きなので、閉時は下向き（＝開く方向）に回しておく。
+   開時はボタン側の rotate(180deg) と合わさって上向きになる。 */
+.header-button.header-drawer-toggle .ui-icon {
+    height: 15px;
+    transform: rotate(90deg);
+}
+.header-button.header-drawer-toggle.open {
+    transform: rotate(180deg);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* ドロワー本体：max-height アニメーションでぬるっと開閉 */
+.header-drawer {
+    max-height: 0;
+    overflow: hidden;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid transparent;
+    transition: max-height 0.3s ease, border-bottom-color 0.3s ease;
+    flex-shrink: 0;
+    z-index: 9;
+}
+.header-drawer.open {
+    /* 中身が収まる十分な高さ（折り返しても対応） */
+    max-height: 120px;
+    border-bottom-color: var(--border);
+}
+.header-drawer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 10px 20px;
+}
+
+.token-info {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+}
+
+.token-bar-container {
+    width: 100px;
+    height: 6px;
+    background: var(--border-color);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.token-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width 0.3s, background 0.3s;
+}
+
+/* === バイタル/気分ゲージ（体調タブ） === */
+/* セクション見出し＋カードの中に「アイコン｜ラベル｜バー｜数値」の横一列。
+   体力/エナジー/メンタルは固定色＋25%未満で赤、気分は感情価で固定色。
+   各要素の white-space: normal は、親 .memory-content の pre-wrap を打ち消して
+   テンプレートリテラル内の改行/インデントが余白として描画されるのを防ぐ。 */
+.vital-section-title {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 14px 2px 6px;
+    white-space: normal;
+}
+.vital-section-title:first-child { margin-top: 0; }
+
+.vital-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 12px 14px;
+    box-shadow: 0 1px 4px var(--shadow-color);
+    white-space: normal;
+}
+
+.vital-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0;
+    white-space: normal;
+}
+.vital-row:first-child { margin-top: 0; }
+.vital-row:last-child { margin-bottom: 0; }
+
+/* 行頭アイコンは箱を固定幅にする（muscle/lightning/heart で縦横比が
+   異なるため、幅可変のままだとゲージの開始位置が行ごとにずれる） */
+.vital-row > .ui-icon {
+    flex: 0 0 1.4em;
+    width: 1.4em;
+    height: 1.3em;
+    object-fit: contain;
+    margin-right: 0; /* 間隔は .vital-row の gap で取る */
+}
+
+.vital-row-label {
+    flex: 0 0 78px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.vital-gauge-track {
+    flex: 1 1 auto;
+    height: 8px;
+    background: var(--border-light);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.vital-gauge-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    transition: width 0.4s ease, background 0.3s;
+}
+
+/* 数値は右端に揃える（"499 / 500" / "0.21" など） */
+.vital-row-value {
+    flex: 0 0 auto;
+    min-width: 62px;
+    text-align: right;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+}
+
+/* バイタル3種の色（モックアップ準拠のソフトトーン） */
+.vital-gauge-fill.is-stamina { background: #58b58d; } /* 体力＝グリーン */
+.vital-gauge-fill.is-energy  { background: #5b8fd0; } /* エナジー＝ブルー */
+.vital-gauge-fill.is-mental  { background: #e4bf4a; } /* メンタル＝ゴールド（中立感情と同色） */
+.vital-gauge-fill.is-mood    { background: #a3a8a5; } /* moodphase軸など中立フォールバック */
+
+/* 25%未満は赤（中間色なし。固定色より優先） */
+.vital-gauge-fill.is-low { background: #cc8079; } /* くすんだ赤（ダスティローズ） */
+
+/* 気分の感情価カラー（活性度で幅のみ変化、色は固定） */
+.vital-gauge-fill.mood-pos { background: #df8fae; } /* ポジティブ＝ピンク */
+.vital-gauge-fill.mood-neu { background: #e4bf4a; } /* 中立＝イエロー */
+.vital-gauge-fill.mood-neg { background: #a98fc6; } /* ネガティブ＝パープル */
+
+/* テキスト系セクション（欲求・生活行動・コンテキスト）のカード */
+.vital-card-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.9;
+}
+
+/* コンテキスト欄の行頭アイコンはゲージ行（.vital-row）と同じ大きさに揃える。
+   箱を固定幅にして、縦横比の違う絵柄でもラベルの開始位置が揃うようにする */
+.vital-card-text .ui-icon {
+    width: 1.4em;
+    height: 1.3em;
+    object-fit: contain;
+    vertical-align: -0.3em;
+}
+
+/* === 欲求＋コンテキストのペア（手帳パネルが広い時だけ横並び） === */
+/* 画面幅ではなく手帳パネル自体の幅で判定したいので、
+   体調タブのスクロール領域をコンテナにする（リサイザーのドラッグにも追従） */
+#tab-vital .panel-content {
+    container-type: inline-size;
+    container-name: vitalpane;
+}
+
+/* 縦積み時のセクション間隔。
+   .vital-pair-item 内では見出しが first-child になり既存ルールで
+   margin-top が 0 になるため、ラッパー側で間隔を持たせる */
+.vital-pair {
+    margin-top: 14px;
+}
+.vital-pair-item + .vital-pair-item {
+    margin-top: 14px;
+}
+
+/* 520px は padding を除いた中身の幅。パネル全体ではおよそ 544px 以上で横並びになる */
+@container vitalpane (min-width: 520px) {
+    .vital-pair {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 10px;
+        align-items: start; /* カードの高さは揃えず、それぞれ内容なりに */
+    }
+    .vital-pair-item + .vital-pair-item {
+        margin-top: 0;
+    }
+    /* 片方しか無い時（トークン情報の未取得時など）は全幅で表示 */
+    .vital-pair-item:only-child {
+        grid-column: 1 / -1;
+    }
+}
+
+/* 最終更新などの脚注 */
+.vital-footnote {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-muted);
+    white-space: normal;
+}
+
+.header-button {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 12px;
+    /* <a>(.nav-link)はテーマフォントを継承する一方、<button>は継承せず
+       ブラウザ既定フォントになるため、両段とも --font-ui に明示して揃える */
+    font-family: var(--font-ui);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.header-button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.header-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Moonbeatトグル：ON時はアクセント色で点灯、OFF時は淡色表示 */
+.header-button.moonbeat-on {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.header-button.moonbeat-off {
+    opacity: 0.55;
+}
+
+.nav-link {
+    font-size: 12px;
+    font-family: var(--font-ui);
+    color: var(--text-muted);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    transition: all 0.2s;
+}
+
+.nav-links {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-button {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.nav-button:hover {
+    background: var(--bg-card);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.nav-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+/* === メインレイアウト（リサイズ対応Grid） === */
+.main-layout {
+    flex: 1;
+    display: grid;
+    /* 初期値：1fr 6px 1fr */
+    grid-template-columns: 1fr 6px 1fr;
+    gap: 0;
+    background: var(--border);
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* 右側のコンテナ（上下分割） */
+.right-container {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-primary);
+    overflow: hidden;
+    min-height: 0;
+    height: 100%;
+}
+
+/* === パネル共通 === */
+.panel {
+    background: var(--bg-primary);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.panel-header {
+    background: var(--bg-secondary);
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.panel-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* スクロールバー */
+.panel-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.panel-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.panel-content::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+}
+
+.panel-content::-webkit-scrollbar-thumb:hover {
+    background: var(--border-light);
+}
+
+/* === リサイザー（ドラッグバー） === */
+.resizer {
+    background: var(--bg-primary);
+    z-index: 20;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.resizer:hover,
+.resizer.resizing {
+    background: var(--accent);
+}
+
+/* 水平方向のリサイズ（左右分割） */
+.resizer.horizontal {
+    width: 6px;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    cursor: col-resize;
+}
+
+/* 垂直方向のリサイズ（上下分割） */
+.resizer.vertical {
+    height: 6px;
+    width: 100%;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    cursor: row-resize;
+}
+
+/* === 右パネルの開閉（折りたたみ） === */
+/* タブバー右端の「閉じる」トグル。memory-refresh-button と外形を揃える。 */
+.memory-collapse-button {
+    background: none;
+    border: none;
+    border-radius: 6px;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;            /* タブが混んでいても潰さない */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    line-height: 1;
+    color: var(--text-muted);
+    cursor: pointer;
+    margin-left: 6px;
+    transition: all 0.2s;
+}
+
+.memory-collapse-button .ui-icon {
+    height: 15px;
+}
+
+.memory-collapse-button:hover {
+    color: var(--accent);
+    background: var(--bg-hover);
+}
+
+/* 折りたたみ時：リサイザーと右コンテナを隠す。
+   列幅は JS が gridTemplateColumns を 1fr 0 0 に書き換える。 */
+.main-layout.right-collapsed > .resizer.horizontal,
+.main-layout.right-collapsed > .right-container {
+    display: none;
+}
+
+/* 右端の再展開つまみ。折りたたみ時のみ表示する手帳アイコンのボタン。 */
+.right-reopen-tab {
+    display: none;
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 30;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-right: none;
+    border-radius: 10px 0 0 10px;
+    padding: 10px 8px;
+    font-size: 18px;
+    line-height: 1;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.08);
+}
+
+.right-reopen-tab:hover {
+    border-color: var(--accent);
+    padding-right: 12px;
+}
+
+/* 折りたたみ状態のときだけ再展開タブを出す */
+body.right-panel-collapsed .right-reopen-tab {
+    display: block;
+}
+
+/* === チャットパネル（ログ含む） === */
+.chat-block {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+    max-width: 80%;
+    gap: 0;
+}
+
+/* --- Vertical Layout (画像の下にセリフ) --- */
+.chat-block.vertical {
+    flex-direction: column;
+}
+
+.chat-block.vertical.assistant {
+    align-self: flex-start;
+    align-items: flex-start;
+}
+
+.chat-block.vertical.user {
+    align-self: flex-end;
+    align-items: flex-end;
+}
+
+.chat-block.vertical .chat-header {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.chat-block.vertical.user .chat-header {
+    flex-direction: row-reverse;
+}
+
+/* --- Horizontal Layout (画像の横にセリフ) --- */
+.chat-block.horizontal {
+    flex-direction: row;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.chat-block.horizontal.user {
+    flex-direction: row-reverse;
+    align-self: flex-end;
+}
+
+.chat-block.horizontal.assistant {
+    align-self: flex-start;
+}
+
+.chat-block.horizontal .chat-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-block.horizontal.user .chat-body {
+    align-items: flex-end;
+}
+
+.chat-block.horizontal.user .sender-name {
+    margin-right: 2px;
+}
+
+.chat-block.horizontal.assistant .sender-name {
+    margin-left: 2px;
+}
+
+/* --- 共通コンポーネント --- */
+
+.avatar {
+    /* デフォルトサイズ（JSで上書きされなければこれ） */
+    width: 40px;
+    height: 40px;
+    /* 大きな画像でも綺麗に見えるように微調整 */
+    border-radius: 8px;
+    /* 丸ではなく角丸四角にする（立ち絵などは丸だと切れるため） */
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    overflow: hidden;
+    object-position: center top;
+    /* 上揃えで表示 */
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* 枠に合わせてトリミング */
+    object-position: center top;
+}
+
+.sender-name {
+    font-size: 15px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+    font-weight: bold;
+}
+
+.message {
+    padding: 12px 16px;
+    border-radius: 12px;
+    line-height: 1.6;
+    font-size: 14px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-line;
+    display: inline-block;
+    box-sizing: border-box;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+}
+
+.message.assistant {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-top-left-radius: 2px;
+}
+
+.message.user {
+    background: var(--accent);
+    color: #fff;
+    border-top-right-radius: 2px;
+}
+
+/* タイプライター表示中の点滅キャレット（クリックで全文表示できる合図も兼ねる） */
+.message.typing-anim {
+    cursor: pointer;
+}
+.message.typing-anim::after,
+.message.streaming::after {
+    content: '▏';
+    color: var(--accent);
+    animation: typingCaretBlink 0.8s steps(1) infinite;
+}
+@keyframes typingCaretBlink {
+    50% { opacity: 0; }
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    overflow: hidden;
+    margin-top: 4px;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.bubble-area {
+    display: flex;
+    flex-direction: column;
+    max-width: calc(100% - 50px);
+}
+
+.chat-row.user .bubble-area {
+    align-items: flex-end;
+}
+
+.sender-name {
+    font-size: 15px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    margin-left: 2px;
+}
+
+.chat-row.user .sender-name {
+    margin-right: 2px;
+    margin-left: 0;
+}
+
+/* チャット内ログ（復活） */
+.log-entry {
+    align-self: flex-start;
+    max-width: 95%;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border-left: 3px solid transparent;
+    line-height: 1.5;
+    word-break: break-all;
+    margin: 4px 0;
+}
+
+/* ツールログと吹き出しが隣接するときの間隔を、ツールログ同士の並び
+   （margin 4px + gap 8px + margin 4px = 16px）に揃える。
+   .chat-block の margin-bottom:24px はターン区切り用なので、直後がツールログなら詰める */
+.chat-block:has(+ .log-entry) {
+    margin-bottom: 4px;
+}
+
+.log-entry + .chat-block {
+    margin-top: 4px;
+}
+
+.log-entry.tool-call {
+    background: rgba(38, 166, 154, 0.08);
+    border-left-color: var(--tool-color);
+    color: var(--tool-color);
+}
+
+.log-entry.tool-result {
+    background: rgba(38, 166, 154, 0.04);
+    border-left-color: var(--border);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.log-entry.system {
+    background: rgba(255, 152, 0, 0.08);
+    border-left-color: var(--warning);
+    color: var(--warning);
+    align-self: center;
+}
+
+.log-entry.error {
+    background: rgba(244, 67, 54, 0.08);
+    border-left-color: var(--danger);
+    color: var(--danger);
+}
+
+/* 入力エリア */
+.chat-input-area {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.chat-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* 画像添付ボタン */
+.attach-button {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.attach-button:hover {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+}
+
+.attach-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* 添付プレビュー（画像サムネ＋テキストのファイル名チップを横並び） */
+.attachment-preview-area {
+    display: none;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+}
+
+.attachment-preview-area.visible {
+    display: flex;
+}
+
+/* 添付1件分のラッパ。画像はサムネ、テキストはチップ */
+.attachment-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.attachment-item.image img {
+    max-height: 80px;
+    max-width: 120px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    object-fit: cover;
+    display: block;
+}
+
+/* テキストファイルのチップ */
+.attachment-item.text {
+    gap: 6px;
+    padding: 5px 10px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    max-width: 200px;
+}
+
+.attachment-item.text .attachment-name {
+    font-size: 12px;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 削除ボタン。画像は右上に重ねる、テキストはチップ末尾に並べる */
+.attachment-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    display: inline-flex;
+    align-items: center;
+    opacity: 0.7;
+}
+
+.attachment-remove:hover {
+    opacity: 1;
+}
+
+.attachment-remove .ui-icon {
+    width: 12px;
+    height: 12px;
+}
+
+.attachment-item.image .attachment-remove {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    padding: 3px;
+}
+
+.attachment-item.image .attachment-remove .ui-icon {
+    filter: brightness(0) invert(1);
+}
+
+/* チャットバブル内に表示する送信済み添付 */
+.message-attachments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.message-attachment-image {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 8px;
+    display: block;
+}
+
+.message-attachment-file {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    font-size: 12px;
+    max-width: 200px;
+}
+
+.message-attachment-file span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.message-attachment-file .ui-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+.chat-input-area textarea {
+    flex: 1;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-family: var(--font-main);
+    color: var(--text-primary);
+    resize: none;
+    outline: none;
+    max-height: 80px;
+    line-height: 1.5;
+}
+
+/* テキストエリアの縦スクロールバー（▲▼の上下ボタン付き）が
+   入力枠の右端＝送信ボタンの左に顔を出すのが目障りなので隠す。
+   ホイールやドラッグでのスクロールは従来どおり効く。 */
+.chat-input-area textarea {
+    scrollbar-width: none;          /* Firefox */
+    -ms-overflow-style: none;       /* 旧Edge/IE */
+}
+.chat-input-area textarea::-webkit-scrollbar {
+    display: none;                  /* Chromium/WebKit（Crescent Liner含む） */
+}
+
+.chat-input-area textarea::placeholder {
+    color: var(--text-muted);
+}
+
+.chat-input-area textarea:focus {
+    border-color: var(--accent);
+}
+
+.send-button {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    /* 淡いアクセント地＋細枠：ベタ塗りだと濃すぎてパステル調アイコンに合わないため */
+    border: 1px solid var(--accent);
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+    flex-shrink: 0;
+}
+
+.send-button:hover {
+    background: color-mix(in srgb, var(--accent) 22%, transparent);
+    border-color: var(--accent-hover);
+}
+
+.send-button:disabled {
+    background: var(--border);
+    cursor: not-allowed;
+    display: none;
+}
+
+/* 丸ボタン（添付・送信）内のアイコンは中央に少し大きめで */
+.attach-button .ui-icon,
+.send-button .ui-icon {
+    height: 20px;
+    vertical-align: middle;
+}
+
+/* ヘッダー（上段ナビ＋2段目ドロワー）のアイコンは一回り大きめ */
+.header-button .ui-icon,
+.nav-link .ui-icon {
+    height: 1.45em;
+    vertical-align: -0.28em;
+}
+
+/* テントウムシ（Debug）：絵柄が横長で小サイズだと平たい虫に見えるため、
+   表示時に45度傾けてシルエットを丸く見せる（SVG元ファイルは無加工）。
+   scaleはレイアウトに影響しないため、ボタンサイズはそのままで絵だけ拡大できる */
+.nav-link .ui-icon[src*="ladybug"] {
+    transform: rotate(45deg) scale(1.2);
+}
+
+/* 公式サイト（地球儀）：絵柄が小さめに見えるので一回り拡大する。
+   scaleはレイアウトに影響しないため、ボタンサイズはそのままで絵だけ大きくできる */
+.header-button .ui-icon[src*="globe"] {
+    transform: scale(1.2);
+}
+
+.stop-button {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    background: #ff5252;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.stop-button:hover {
+    background: #d32f2f;
+}
+
+
+.stop-icon {
+    display: block;
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border-radius: 2px;
+}
+
+
+.stop-button.visible {
+    display: flex;
+}
+
+/* 入力中インジケーター */
+.typing-indicator {
+    font-size: 11px;
+    color: var(--text-muted);
+    padding: 4px 0;
+    display: none;
+    align-self: flex-start;
+}
+
+.typing-indicator.visible {
+    display: block;
+}
+
+/* === メモリパネル（右側） === */
+.memory-section {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--border);
+}
+
+.memory-section:last-child {
+    border-bottom: none;
+}
+
+.memory-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+}
+
+.memory-content {
+    /* チャット(.message=14px)と同等の読みやすさに揃える */
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.memory-content .empty {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* 予定タブ：1スケジュールを複数行で見やすく表示する。
+   件数が少ない前提なので各エントリ間に余白を取って判別しやすくする。 */
+.schedule-item {
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-subtle, rgba(128,128,128,0.15));
+}
+.schedule-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+.schedule-title {
+    margin-bottom: 2px;
+}
+.schedule-row {
+    padding-left: 20px;  /* ⏰ アイコン分インデント */
+}
+.schedule-sub {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+.schedule-badge-disabled {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 6px;
+    font-size: 11px;
+    border-radius: 4px;
+    background: var(--text-muted);
+    color: var(--bg-primary, #fff);
+    vertical-align: middle;
+}
+
+.memory-file-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-top: 8px;
+    margin-bottom: 2px;
+    padding: 2px 6px;
+    background: var(--bg-card);
+    border-radius: 3px;
+    display: inline-block;
+}
+
+/* タブバー右端のリロード。枠線なし・memory-collapse-button と外形を揃える。 */
+.memory-refresh-button {
+    background: none;
+    border: none;
+    border-radius: 6px;
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;            /* タブが混んでいても潰さない */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    cursor: pointer;
+    margin-left: auto;
+    transition: all 0.2s;
+}
+
+.memory-refresh-button .ui-icon {
+    height: 17px;
+}
+
+.memory-refresh-button:hover {
+    color: var(--accent);
+    background: var(--bg-hover);
+}
+
+/* システム通知 */
+.system-notice {
+    align-self: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    padding: 4px 12px;
+    border-radius: 12px;
+    margin: 8px 0;
+}
+
+/* =========================================
+   設定画面 共通レイアウト
+   ========================================= */
+.settings-container {
+    max-width: 800px;
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* =========================================
+   設定画面 ナビゲーションタブの共通スタイル
+   ========================================= */
+.settings-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: flex-start;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.settings-tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: var(--text-primary);
+    border-radius: 8px 8px 0 0;
+    background-color: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-bottom: none;
+    font-weight: bold;
+    opacity: 0.7;
+    transition: all 0.2s;
+}
+
+.settings-tab:hover {
+    opacity: 1;
+    background-color: var(--bg-hover);
+}
+
+.settings-tab.active {
+    opacity: 1;
+    background-color: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+}
+
+/* === 設定ページ 縦サイドバーナビ（settings_nav.js が描画） === */
+/* 項目数が多い（11個）ため横並びタブをやめ、左端固定の縦サイドバーにする。 */
+.settings-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 16px 10px;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    z-index: 60;
+}
+
+/* サイドバーがある時は、ヘッダーと本文をサイドバー幅ぶん右にずらす。 */
+body.has-settings-sidebar {
+    min-width: 0;
+}
+
+body.has-settings-sidebar .header,
+body.has-settings-sidebar .settings-container {
+    margin-left: 220px;
+}
+
+.settings-sidebar-title {
+    font-weight: bold;
+    font-size: 1.05em;
+    padding: 4px 12px 14px;
+    color: var(--text-primary);
+}
+
+.settings-nav-group {
+    margin-bottom: 16px;
+}
+
+.settings-nav-group-title {
+    font-size: 0.72em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    padding: 0 12px 6px;
+}
+
+.settings-side-link {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 12px;
+    margin-bottom: 2px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--text-primary);
+    opacity: 0.78;
+    font-weight: 500;
+    transition: background-color 0.15s, opacity 0.15s;
+}
+
+.settings-side-link:hover {
+    background-color: var(--bg-hover);
+    opacity: 1;
+}
+
+.settings-side-link.active {
+    background-color: var(--accent);
+    color: #ffffff;
+    opacity: 1;
+}
+
+.settings-side-icon {
+    width: 1.3em;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.settings-side-label {
+    flex: 1;
+}
+
+.settings-side-badge {
+    margin-left: auto;
+    font-size: 0.9em;
+    animation: settings-badge-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes settings-badge-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+}
+
+/* 狭い画面（モバイル）ではサイドバーを通常フローの横並びバーに戻す。 */
+@media (max-width: 760px) {
+    .settings-sidebar {
+        position: static;
+        width: auto;
+        height: auto;
+        overflow-y: visible;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+    }
+
+    body.has-settings-sidebar .header,
+    body.has-settings-sidebar .settings-container {
+        margin-left: 0;
+    }
+
+    .settings-sidebar-title {
+        width: 100%;
+        padding: 4px 6px 8px;
+    }
+
+    .settings-nav-group {
+        margin-bottom: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .settings-nav-group-title {
+        display: none;
+    }
+
+    .settings-side-link {
+        margin-bottom: 0;
+    }
+}
+
+/* タブUI */
+.tab-bar {
+    display: flex;
+    gap: 2px;
+    padding: 4px 8px;
+    background: var(--bg-secondary, #f0f0f0);
+    border-bottom: 1px solid var(--border-color, #ddd);
+    align-items: center;
+    flex-shrink: 0;
+}
+.tab-button {
+    padding: 4px 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 4px;
+    /* button はフォントを継承しないため明示指定（環境差で書体が変わるのを防ぐ） */
+    font-family: var(--font-ui);
+    font-size: 14px;
+    color: var(--text-secondary, #666);
+    white-space: nowrap;       /* 狭幅でも文字を縦に割らない */
+}
+/* タブ内アイコンは少し大きめ（視認性重視）・間隔は詰めめ */
+.tab-button .ui-icon {
+    height: 1.3em;
+    margin-right: 0.25em;
+    vertical-align: -0.22em;
+}
+.tab-button:hover {
+    background: var(--bg-hover, #e0e0e0);
+}
+.tab-button.active {
+    background: var(--accent-color, #7c3aed);
+    color: white;
+}
+.tab-content {
+    display: none;
+    flex: 1;
+    overflow: hidden;
+}
+.tab-content.active {
+    display: flex;
+    flex-direction: column;
+}
+.tab-content .panel-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* --- タブが幅に収まらない時は折り返して全タブを常に見せる（PC・スマホ共通） --- */
+/* PCで右窓を狭めた時／スマホの全画面手帳のどちらでも、6タブ＋更新＋×が
+   横幅に収まらないと右端のタブや×が切れてアクセスできなくなる。
+   横スクロールはマウスだと操作しづらい（ホイールは縦方向）ので、
+   素直に flex-wrap で2段3段に折り返し、全部を常に見える＝押せる状態にする。
+   幅が足りていれば1行のままなので、通常時の見た目・挙動は従来どおり。 */
+.tab-bar {
+    flex-wrap: wrap;
+}
+/* タブは縮めて文字が切れるより、折り返してほしいので自然幅を保つ */
+.tab-button {
+    flex: 0 0 auto;
+}
+
+.moonbeat-marker {
+    text-align: center;
+    padding: 4px 0;
+    font-size: 12px;
+    color: var(--text-muted, #999);
+}
+.moonbeat-label {
+    background: var(--bg-secondary, #f0f0f0);
+    padding: 2px 12px;
+    border-radius: 12px;
+}
+
+.header-logo {
+    height: 34px;
+    width: auto;
+}
+
+/* =========================================================
+   🌙 Moonlit Grove スキン（コンポーネント側ルール）
+   data-theme="moonlit" で有効化。
+   テーマ変数・全体背景グラデ・星屑は theme-tokens.css に移管済み。
+   ここには Dashboard 固有コンポーネントの装飾のみ残す。
+   ========================================================= */
+
+/* z-indexを各レイヤに付与（星屑より上に） */
+[data-theme="moonlit"] .header,
+[data-theme="moonlit"] .main-layout {
+    position: relative;
+    z-index: 2;
+}
+
+/* ---- ヘッダー：半透明ガラス ---- */
+[data-theme="moonlit"] .header {
+    background: rgba(250, 243, 233, 0.75);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 12px rgba(155, 123, 184, 0.08);
+}
+
+/* ドロワー2段目もヘッダーと同じ半透明ガラスに揃える */
+[data-theme="moonlit"] .header-drawer {
+    background: rgba(250, 243, 233, 0.75);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+[data-theme="moonlit"] .header-button,
+[data-theme="moonlit"] .nav-link {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: var(--text-secondary);
+    transition: all 0.25s ease;
+}
+
+[data-theme="moonlit"] .header-button:hover,
+[data-theme="moonlit"] .nav-link:hover {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(155, 123, 184, 0.2);
+}
+
+/* トークンバー：グラデ */
+[data-theme="moonlit"] .token-bar {
+    background: linear-gradient(90deg, #c9a8d4 0%, #9b7bb8 100%);
+}
+
+/* ---- メインレイアウト：パネル間の隙間を背景色に ---- */
+[data-theme="moonlit"] .main-layout {
+    background: transparent;
+    gap: 0;
+}
+
+/* ---- パネル：カード化（半透明＋角丸＋影） ---- */
+[data-theme="moonlit"] .panel {
+    background: rgba(255, 250, 243, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(155, 123, 184, 0.1);
+    margin: 8px;
+    overflow: hidden;
+}
+
+[data-theme="moonlit"] .right-container {
+    background: transparent;
+}
+
+/* パネルヘッダー：手書き風 */
+[data-theme="moonlit"] .panel-header {
+    background: transparent;
+    border-bottom: 1px dashed var(--border);
+    color: var(--accent);
+    text-transform: none;
+    letter-spacing: 0.3px;
+    font-size: 13px;
+    padding: 10px 16px;
+}
+
+/* リサイザーを透明に */
+[data-theme="moonlit"] .resizer {
+    background: transparent;
+    border-color: transparent;
+}
+
+[data-theme="moonlit"] .resizer:hover,
+[data-theme="moonlit"] .resizer.resizing {
+    background: var(--accent-dim);
+}
+
+/* ---- アバター：月のフレーム ---- */
+[data-theme="moonlit"] .avatar {
+    border: 2px solid #c9a8d4;
+    box-shadow:
+        0 0 0 3px rgba(255, 255, 255, 0.7),
+        0 4px 12px rgba(155, 123, 184, 0.25);
+    background: var(--bg-card);
+}
+
+/* ---- 送信者名 ---- */
+[data-theme="moonlit"] .sender-name {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* ---- メッセージバブル ---- */
+[data-theme="moonlit"] .message {
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(155, 123, 184, 0.1);
+    line-height: 1.75;
+}
+
+[data-theme="moonlit"] .message.assistant {
+    background: rgba(255, 250, 243, 0.92);
+    border: 1px solid rgba(201, 168, 212, 0.5);
+    color: var(--text-primary);
+    border-top-left-radius: 4px;
+}
+
+[data-theme="moonlit"] .message.user {
+    background: linear-gradient(135deg, #9b7bb8 0%, #b896cc 100%);
+    color: #fffaf3;
+    border-top-right-radius: 4px;
+    box-shadow: 0 2px 10px rgba(155, 123, 184, 0.35);
+}
+
+/* ---- ログエントリ：手帳の付箋風 ---- */
+[data-theme="moonlit"] .log-entry.tool-call {
+    background: rgba(168, 136, 192, 0.1);
+    border-left-color: var(--tool-color);
+    color: #7d5da0;
+    border-radius: 8px;
+    font-family: var(--font-mono);
+}
+
+[data-theme="moonlit"] .log-entry.tool-result {
+    background: rgba(255, 250, 243, 0.6);
+    border-left-color: var(--border);
+    color: var(--text-secondary);
+    border-radius: 8px;
+}
+
+[data-theme="moonlit"] .log-entry.system {
+    background: rgba(212, 165, 116, 0.12);
+    border-left-color: var(--warning);
+    color: #a07a4a;
+    border-radius: 12px;
+}
+
+[data-theme="moonlit"] .log-entry.error {
+    background: rgba(212, 138, 138, 0.12);
+    border-left-color: var(--danger);
+    color: #a05050;
+    border-radius: 8px;
+}
+
+/* システム通知（接続しました等） */
+[data-theme="moonlit"] .system-notice {
+    background: rgba(255, 250, 243, 0.8);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    border-radius: 16px;
+    padding: 4px 16px;
+    box-shadow: 0 1px 4px rgba(155, 123, 184, 0.1);
+}
+
+/* Moonbeatマーカー */
+[data-theme="moonlit"] .moonbeat-label {
+    background: linear-gradient(135deg, rgba(201, 168, 212, 0.25), rgba(232, 216, 240, 0.5));
+    color: var(--accent);
+    border: 1px solid rgba(201, 168, 212, 0.4);
+    padding: 3px 16px;
+    border-radius: 16px;
+    font-weight: 600;
+}
+
+/* ---- 入力エリア ---- */
+[data-theme="moonlit"] .chat-input-area {
+    background: rgba(250, 243, 233, 0.6);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid var(--border);
+}
+
+[data-theme="moonlit"] .chat-input-area textarea {
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text-primary);
+    padding: 10px 16px;
+}
+
+[data-theme="moonlit"] .chat-input-area textarea:focus {
+    border-color: var(--accent);
+    background: #fff;
+    box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+[data-theme="moonlit"] .attach-button {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--border);
+}
+
+[data-theme="moonlit"] .attach-button:hover {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+}
+
+[data-theme="moonlit"] .send-button {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    box-shadow: none;
+}
+
+[data-theme="moonlit"] .send-button:hover {
+    background: color-mix(in srgb, var(--accent) 22%, transparent);
+    border-color: var(--accent-hover);
+    transform: none;
+    box-shadow: none;
+}
+
+/* ---- 右パネルのタブ ---- */
+[data-theme="moonlit"] .tab-bar {
+    background: transparent;
+    border-bottom: 1px dashed var(--border);
+}
+
+[data-theme="moonlit"] .tab-button {
+    color: var(--text-muted);
+    border-radius: 10px 10px 0 0;
+    font-weight: 500;
+}
+
+[data-theme="moonlit"] .tab-button:hover {
+    background: var(--accent-dim);
+    color: var(--accent);
+}
+
+[data-theme="moonlit"] .tab-button.active {
+    background: linear-gradient(135deg, #9b7bb8 0%, #b896cc 100%);
+    color: #fffaf3;
+    box-shadow: 0 2px 6px rgba(155, 123, 184, 0.3);
+}
+
+/* ---- メモリパネル中身 ---- */
+[data-theme="moonlit"] .memory-section-title {
+    color: var(--accent);
+    border-bottom: 1px dotted var(--border);
+    padding-bottom: 4px;
+}
+
+[data-theme="moonlit"] .memory-file-name {
+    background: var(--accent-dim);
+    color: var(--accent);
+    border-radius: 8px;
+}
+
+/* スクロールバー */
+[data-theme="moonlit"] .panel-content::-webkit-scrollbar-thumb {
+    background: rgba(155, 123, 184, 0.3);
+    border-radius: 3px;
+}
+
+[data-theme="moonlit"] .panel-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(155, 123, 184, 0.5);
+}
+
+/* =========================================================
+   🌙✨ Moonlit Grove Ⅱ スキン（コンポーネント側ルール）
+   data-theme="moonlit2" で有効化。
+   「本物の月夜の森」：深い藍紫の夜空に浮かぶダークガラスのカード、
+   月光ゴールド×発光ラベンダーのアクセント。
+   ※ moonlit（クリーム手帳風）とはコンセプトが異なる別テーマとして
+   共存させる（置き換えはしない）。
+   テーマ変数・夜空・星屑・月・森シルエットは theme-tokens.css 側。
+   星屑等は z-index:-1 のため z-index の持ち上げは不要。
+   ========================================================= */
+
+/* ---- ヘッダー：夜のガラス（月明かりの細い境界線） ---- */
+[data-theme="moonlit2"] .header {
+    background: rgba(32, 26, 56, 0.65);
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    border-bottom: 1px solid rgba(201, 168, 240, 0.22);
+    box-shadow: 0 2px 24px rgba(10, 6, 30, 0.5);
+}
+
+/* ドロワー2段目もヘッダーと同じ夜ガラスに揃える */
+[data-theme="moonlit2"] .header-drawer {
+    background: rgba(32, 26, 56, 0.65);
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+}
+
+[data-theme="moonlit2"] .header-button,
+[data-theme="moonlit2"] .nav-link {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: var(--text-secondary);
+    transition: all 0.25s ease;
+}
+
+[data-theme="moonlit2"] .header-button:hover,
+[data-theme="moonlit2"] .nav-link:hover {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 0 14px rgba(201, 168, 240, 0.35);
+}
+
+/* トークンバー：月光ゴールド→ラベンダーのグラデ */
+[data-theme="moonlit2"] .token-bar {
+    background: linear-gradient(90deg, #f0d8a8 0%, #c9a8f0 100%);
+}
+
+/* ---- メインレイアウト：パネル間の隙間から夜空を覗かせる ---- */
+[data-theme="moonlit2"] .main-layout {
+    background: transparent;
+    gap: 0;
+}
+
+/* ---- パネル：夜のガラスカード（月光の縁＋微発光） ---- */
+[data-theme="moonlit2"] .panel {
+    background: rgba(39, 31, 69, 0.6);
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    border: 1px solid rgba(201, 168, 240, 0.18);
+    border-radius: 18px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 12px 40px rgba(10, 6, 30, 0.5),
+        0 0 28px rgba(201, 168, 240, 0.07);
+    margin: 8px;
+    overflow: hidden;
+}
+
+[data-theme="moonlit2"] .right-container {
+    background: transparent;
+}
+
+/* パネルヘッダー：ラベンダー→ゴールドのグラデ細線 */
+[data-theme="moonlit2"] .panel-header {
+    background:
+        linear-gradient(90deg,
+            rgba(201, 168, 240, 0.5) 0%,
+            rgba(240, 216, 168, 0.3) 55%,
+            transparent 100%)
+        bottom left / 100% 1px no-repeat;
+    border-bottom: none;
+    color: var(--accent);
+    text-transform: none;
+    letter-spacing: 0.4px;
+    font-size: 13px;
+    padding: 10px 16px;
+}
+
+/* リサイザーを透明に */
+[data-theme="moonlit2"] .resizer {
+    background: transparent;
+    border-color: transparent;
+}
+
+[data-theme="moonlit2"] .resizer:hover,
+[data-theme="moonlit2"] .resizer.resizing {
+    background: var(--accent-dim);
+}
+
+/* ---- アバター：月光ゴールドのフチ＋ラベンダーの光輪 ---- */
+[data-theme="moonlit2"] .avatar {
+    border: 2px solid rgba(240, 216, 168, 0.85);
+    box-shadow:
+        0 0 0 2px rgba(201, 168, 240, 0.4),
+        0 0 16px rgba(201, 168, 240, 0.5),
+        0 4px 14px rgba(10, 6, 30, 0.6);
+    background: var(--bg-card);
+}
+
+/* ---- 送信者名 ---- */
+[data-theme="moonlit2"] .sender-name {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* ---- メッセージバブル ---- */
+[data-theme="moonlit2"] .message {
+    border-radius: 16px;
+    line-height: 1.75;
+}
+
+[data-theme="moonlit2"] .message.assistant {
+    background: rgba(44, 36, 80, 0.8);
+    border: 1px solid rgba(201, 168, 240, 0.28);
+    color: var(--text-primary);
+    border-top-left-radius: 4px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 4px 16px rgba(10, 6, 30, 0.35);
+}
+
+[data-theme="moonlit2"] .message.user {
+    background: linear-gradient(135deg, #9a72d8 0%, #7a55b8 100%);
+    color: #fff;
+    border-top-right-radius: 4px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        0 4px 18px rgba(154, 114, 216, 0.45);
+}
+
+/* ---- ログエントリ：夜光の付箋 ---- */
+[data-theme="moonlit2"] .log-entry.tool-call {
+    background: rgba(127, 208, 200, 0.1);
+    border-left-color: var(--tool-color);
+    color: #8fd8d0;
+    border-radius: 8px;
+    font-family: var(--font-mono);
+}
+
+[data-theme="moonlit2"] .log-entry.tool-result {
+    background: rgba(201, 168, 240, 0.07);
+    border-left-color: var(--border);
+    color: var(--text-secondary);
+    border-radius: 8px;
+}
+
+[data-theme="moonlit2"] .log-entry.system {
+    background: rgba(240, 200, 132, 0.1);
+    border-left-color: var(--warning);
+    color: #e8c890;
+    border-radius: 12px;
+}
+
+[data-theme="moonlit2"] .log-entry.error {
+    background: rgba(239, 154, 154, 0.12);
+    border-left-color: var(--danger);
+    color: #f0a8a8;
+    border-radius: 8px;
+}
+
+/* システム通知（接続しました等）：夜ガラスのピル */
+[data-theme="moonlit2"] .system-notice {
+    background: rgba(44, 36, 80, 0.7);
+    border: 1px solid rgba(201, 168, 240, 0.3);
+    color: var(--accent);
+    border-radius: 16px;
+    padding: 4px 16px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 0 12px rgba(201, 168, 240, 0.15);
+}
+
+/* Moonbeatマーカー：月光のシマー（金色の光が流れる） */
+[data-theme="moonlit2"] .moonbeat-label {
+    background: linear-gradient(120deg,
+        rgba(201, 168, 240, 0.18) 0%,
+        rgba(240, 216, 168, 0.38) 50%,
+        rgba(201, 168, 240, 0.18) 100%);
+    background-size: 200% 100%;
+    color: #f0d8a8;
+    border: 1px solid rgba(240, 216, 168, 0.4);
+    padding: 3px 16px;
+    border-radius: 16px;
+    font-weight: 600;
+    animation: moonlit2-shimmer 6s linear infinite;
+}
+
+@keyframes moonlit2-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-theme="moonlit2"] .moonbeat-label {
+        animation: none;
+    }
+}
+
+/* ---- 入力エリア ---- */
+[data-theme="moonlit2"] .chat-input-area {
+    background: rgba(26, 21, 48, 0.6);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(201, 168, 240, 0.18);
+}
+
+[data-theme="moonlit2"] .chat-input-area textarea {
+    background: rgba(16, 12, 32, 0.7);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--text-primary);
+    padding: 10px 16px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+[data-theme="moonlit2"] .chat-input-area textarea:focus {
+    border-color: var(--accent);
+    background: rgba(22, 17, 42, 0.95);
+    box-shadow:
+        0 0 0 3px var(--accent-dim),
+        0 0 16px rgba(201, 168, 240, 0.3);
+}
+
+[data-theme="moonlit2"] .attach-button {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border);
+}
+
+[data-theme="moonlit2"] .attach-button:hover {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+}
+
+[data-theme="moonlit2"] .send-button {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    box-shadow: none;
+    transition: all 0.25s ease;
+}
+
+[data-theme="moonlit2"] .send-button:hover {
+    background: color-mix(in srgb, var(--accent) 28%, transparent);
+    border-color: var(--accent-hover);
+    transform: none;
+    box-shadow: 0 0 14px rgba(201, 168, 240, 0.5);
+}
+
+/* ---- 右パネルのタブ ---- */
+[data-theme="moonlit2"] .tab-bar {
+    background: transparent;
+    border-bottom: none;
+    background-image: linear-gradient(90deg,
+        rgba(201, 168, 240, 0.35) 0%,
+        transparent 100%);
+    background-position: bottom left;
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+}
+
+[data-theme="moonlit2"] .tab-button {
+    color: var(--text-muted);
+    border-radius: 10px 10px 0 0;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+[data-theme="moonlit2"] .tab-button:hover {
+    background: var(--accent-dim);
+    color: var(--accent);
+}
+
+[data-theme="moonlit2"] .tab-button.active {
+    background: linear-gradient(135deg, #a47fe0 0%, #7c58bc 100%);
+    color: #fff;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        0 0 14px rgba(201, 168, 240, 0.4);
+}
+
+/* ---- メモリパネル中身 ---- */
+[data-theme="moonlit2"] .memory-section-title {
+    color: var(--accent);
+    border-bottom: 1px dotted var(--border);
+    padding-bottom: 4px;
+}
+
+[data-theme="moonlit2"] .memory-file-name {
+    background: var(--accent-dim);
+    color: var(--accent);
+    border-radius: 8px;
+}
+
+/* スクロールバー */
+[data-theme="moonlit2"] .panel-content::-webkit-scrollbar-thumb {
+    background: rgba(201, 168, 240, 0.3);
+    border-radius: 3px;
+}
+
+[data-theme="moonlit2"] .panel-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(201, 168, 240, 0.5);
+}
+
+/* =========================================================
+   📔 Grove Journal スキン（コンポーネント側ルール）
+   data-theme="journal" で有効化。
+   「手作りのスクラップブック手帳」：マスキングテープで留めた紙のカード、
+   罫線ノートの吹き出し、付箋、消印スタンプ、手描き風のよれた枠線。
+   テーマ変数・紙テクスチャ・押し花は theme-tokens.css 側。
+   ========================================================= */
+
+/* ---- ヘッダー：ステッチ（縫い目）で綴じた紙 ---- */
+[data-theme="journal"] .header {
+    background: rgba(245, 242, 235, 0.92);
+    border-bottom: 2px dashed rgba(130, 108, 88, 0.3);
+    box-shadow: 0 3px 14px rgba(111, 94, 71, 0.12);
+}
+
+[data-theme="journal"] .header-drawer {
+    background: rgba(245, 242, 235, 0.92);
+    border-bottom: 2px dashed rgba(130, 108, 88, 0.25);
+}
+
+/* ボタン＝紙のステッカー（角がわずかに不揃い） */
+[data-theme="journal"] .header-button,
+[data-theme="journal"] .nav-link {
+    background: #fdfcf8;
+    border: 1.5px solid #cdc2b0;
+    border-radius: 10px 12px 10px 13px / 12px 10px 13px 10px;
+    color: var(--text-secondary);
+    box-shadow: 0 2px 0 rgba(111, 94, 71, 0.15);
+    transition: all 0.2s ease;
+}
+
+[data-theme="journal"] .header-button:hover,
+[data-theme="journal"] .nav-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px) rotate(-1deg);
+    box-shadow: 0 3px 0 rgba(141, 119, 190, 0.3);
+}
+
+/* トークンバー：緑の色鉛筆 */
+[data-theme="journal"] .token-bar {
+    background: linear-gradient(90deg, #a8c39a 0%, #7ca86f 100%);
+}
+
+[data-theme="journal"] .main-layout {
+    background: transparent;
+    gap: 0;
+}
+
+/* ---- パネル：ノートの台紙（リネンを乗せても重く見えない明るめのクリーム） ---- */
+[data-theme="journal"] .panel {
+    background: #f7f4ec;
+    border: 1px solid #d9d1c2;
+    border-radius: 6px;
+    box-shadow:
+        0 1px 3px rgba(111, 94, 71, 0.12),
+        0 8px 22px rgba(111, 94, 71, 0.14);
+    margin: 10px;
+    position: relative;
+    overflow: hidden;
+    /* ::before のテクスチャ(z-index:-1)を台紙色より手前・内容より奥に挟むため */
+    isolation: isolate;
+}
+
+/* 台紙の麻布テクスチャ（linen.png 原本から生成したシームレスタイル。
+   グレースケールなので台紙色を黄ばませない） */
+[data-theme="journal"] .panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("/static/images/themes/journal/linen-tile.png");
+    /* 384px表示＝原寸512pxのやや細かめ。濃さは0.35がベスト（確定済み） */
+    background-size: 384px 384px;
+    mix-blend-mode: multiply;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: -1;
+}
+
+[data-theme="journal"] .right-container {
+    background: transparent;
+}
+
+/* パネルヘッダー：リネンに貼った半透明のマステ帯
+   （半透明なので下のリネンが透ける。clip-pathで両端をちぎれた紙風に） */
+[data-theme="journal"] .panel-header {
+    background-color: rgba(141, 119, 190, 0.18);
+    background-image: radial-gradient(rgba(255, 255, 255, 0.55) 2px, transparent 2.6px);
+    background-size: 16px 16px;
+    border-bottom: none;
+    color: var(--accent-hover);
+    text-transform: none;
+    letter-spacing: 0.5px;
+    font-size: 13px;
+    /* 手書きフォントではなくタブと同じ基本フォントで */
+    font-family: var(--font-ui);
+    padding: 8px 22px;
+    margin: 12px 14px 4px;
+    transform: rotate(-0.8deg);
+    clip-path: polygon(
+        0.8% 0, 99.4% 2%, 100% 18%, 99% 34%, 99.8% 52%, 99.2% 70%, 100% 86%,
+        99.3% 100%, 0.5% 98%, 0 84%, 0.9% 66%, 0.2% 48%, 1% 30%, 0.3% 14%);
+}
+
+/* マステの上では吹き出しの中の緑が沈むため、白塗り版アイコンに差し替え
+   （chat-bubble.svg 原本は無加工。白版は別ファイル chat-bubble-white.svg）
+   マステ帯の幅を活かして大きめに表示。負マージンで帯の高さは変えない */
+[data-theme="journal"] .panel-header .ui-icon {
+    content: url("/static/images/icons/chat-bubble-white.svg");
+    height: 24px;
+    margin: -8px 0;
+}
+
+[data-theme="journal"] .resizer {
+    background: transparent;
+    border-color: transparent;
+}
+
+[data-theme="journal"] .resizer:hover,
+[data-theme="journal"] .resizer.resizing {
+    background: var(--accent-dim);
+}
+
+/* ---- アバター：少し傾いた写真（白フチ） ---- */
+[data-theme="journal"] .avatar {
+    border: 3px solid #fff;
+    box-shadow:
+        0 0 0 1px #d9d1c2,
+        0 4px 10px rgba(111, 94, 71, 0.25);
+    background: var(--bg-card);
+    transform: rotate(-2deg);
+}
+
+[data-theme="journal"] .sender-name {
+    color: #75609f;
+    font-weight: 600;
+}
+
+/* ---- メッセージバブル ---- */
+[data-theme="journal"] .message {
+    line-height: 1.75;
+    /* チャット欄は手書き風の Klee One（ボールド=600）で */
+    font-family: "Klee One", "Hiragino Maru Gothic ProN",
+        "Yu Gothic", sans-serif;
+    /* 小数px(15.5px)はピクセル境界をまたいで滲むため整数の16pxに。
+       行送り1.75em=28px・罫線位置27pxも整数に乗りシャープになる */
+    font-size: 16px;
+    /* Klee One が持つ本物のボールド（合成ではない実ウェイト） */
+    font-weight: 600;
+}
+
+[data-theme="journal"] .chat-input-area textarea {
+    font-family: "Klee One", "Hiragino Maru Gothic ProN",
+        "Yu Gothic", sans-serif;
+}
+
+/* 柚月＝罫線入りのノートの切れ端。
+   罫線は content-box 起点で描く：行送り(line-height:1.75)と罫線の周期
+   (1.75em)が文字の開始位置から一致し、各行が罫線の上に乗る。 */
+[data-theme="journal"] .message.assistant {
+    background:
+        repeating-linear-gradient(
+            transparent 0,
+            transparent calc(1.75em - 1px),
+            rgba(141, 119, 190, 0.28) calc(1.75em - 1px),
+            rgba(141, 119, 190, 0.28) 1.75em)
+        content-box,
+        #fdfcf8;
+    border: 1px solid #ded5c6;
+    border-radius: 3px 10px 3px 10px;
+    color: var(--text-primary);
+    box-shadow: 0 2px 6px rgba(111, 94, 71, 0.16);
+}
+
+/* 段落間も罫線のリズム(1.75em)に揃え、行が罫線から外れないようにする */
+[data-theme="journal"] .message.assistant p {
+    margin: 1.75em 0;
+}
+
+[data-theme="journal"] .message.assistant p:first-child {
+    margin-top: 0;
+}
+
+[data-theme="journal"] .message.assistant p:last-child {
+    margin-bottom: 0;
+}
+
+/* ユーザー＝ラベンダーの付箋（わずかに傾く）
+   背景(生成りリネン)に溶けて見にくかったため、彩度を一段上げ・
+   縁取りと影を足して紙片として浮かせる。文字も濃くしてコントラスト確保。 */
+[data-theme="journal"] .message.user {
+    background: linear-gradient(180deg, #ddc9f5 0%, #ccb3ee 100%);
+    border: 1px solid #b79de0;
+    border-radius: 2px 8px 2px 8px;
+    transform: rotate(-0.5deg);
+    color: #382a50;
+    box-shadow: 0 3px 9px rgba(90, 70, 120, 0.28);
+}
+
+/* ---- ログエントリ ---- */
+/* ツール呼び出し＝緑の点線ラベル（マステ画像は実機で不評だったため点線に） */
+[data-theme="journal"] .log-entry.tool-call {
+    background: rgba(124, 168, 111, 0.16);
+    border: 1px dashed rgba(124, 168, 111, 0.45);
+    border-left-color: var(--tool-color);
+    color: #5d8a52;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+}
+
+/* ツール結果＝鉛筆のメモ */
+[data-theme="journal"] .log-entry.tool-result {
+    background: rgba(111, 94, 71, 0.06);
+    border-left-color: var(--border);
+    color: var(--text-secondary);
+    border-radius: 3px;
+}
+
+/* システム＝黄色い付箋 */
+[data-theme="journal"] .log-entry.system {
+    background: rgba(207, 189, 145, 0.18);
+    border-left-color: var(--warning);
+    color: #8a7550;
+    border-radius: 3px;
+}
+
+/* エラー＝赤ペンの書き込み */
+[data-theme="journal"] .log-entry.error {
+    background: rgba(201, 127, 114, 0.14);
+    border-left-color: var(--danger);
+    color: #a85a4a;
+    border-radius: 3px;
+}
+
+/* システム通知＝クラフト紙の荷札タグ */
+[data-theme="journal"] .system-notice {
+    background: #e6dfd1;
+    border: 1px solid #cec1a9;
+    color: #7f6d55;
+    border-radius: 4px 12px 4px 12px;
+    padding: 4px 16px;
+    transform: rotate(-0.8deg);
+    box-shadow: 0 2px 5px rgba(111, 94, 71, 0.15);
+}
+
+/* Moonbeatマーカー＝消印スタンプ */
+[data-theme="journal"] .moonbeat-label {
+    background: transparent;
+    border: 1.5px dashed #aa8e71;
+    color: #95775a;
+    border-radius: 8px;
+    padding: 2px 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* ---- 入力エリア ---- */
+[data-theme="journal"] .chat-input-area {
+    background: rgba(245, 242, 235, 0.85);
+    border-top: 2px dashed rgba(130, 108, 88, 0.25);
+}
+
+/* テキストエリア＝手描きのよれた枠線 */
+[data-theme="journal"] .chat-input-area textarea {
+    background: #fdfcf8;
+    border: 1.5px solid #bcb09b;
+    border-radius: 16px 18px 15px 19px / 18px 15px 19px 16px;
+    color: var(--text-primary);
+    padding: 10px 16px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+[data-theme="journal"] .chat-input-area textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+[data-theme="journal"] .attach-button {
+    background: #fdfcf8;
+    border: 1.5px solid #cdc2b0;
+    border-radius: 10px 12px 10px 13px / 12px 10px 13px 10px;
+}
+
+[data-theme="journal"] .attach-button:hover {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+    transform: rotate(-2deg);
+}
+
+/* 封蝋には三日月の刻印があるため、紙飛行機アイコンは重ねない */
+[data-theme="journal"] .send-button .ui-icon {
+    display: none;
+}
+
+/* 送信ボタン＝封蝋（本物のシーリングワックス画像・三日月の刻印） */
+[data-theme="journal"] .send-button {
+    background: url("/static/images/themes/journal/wax-seal.png") center / contain no-repeat;
+    border: none;
+    color: #fff;
+    box-shadow: none;
+    filter: drop-shadow(0 2px 3px rgba(111, 94, 71, 0.35));
+    transition: all 0.2s ease;
+}
+
+[data-theme="journal"] .send-button:hover {
+    background: url("/static/images/themes/journal/wax-seal.png") center / contain no-repeat;
+    border: none;
+    transform: translateY(-1px) rotate(-4deg);
+    box-shadow: none;
+    filter: drop-shadow(0 3px 5px rgba(111, 94, 71, 0.4)) brightness(1.06);
+}
+
+/* ---- 右パネルのタブ＝ノートのインデックスタブ ---- */
+[data-theme="journal"] .tab-bar {
+    background: transparent;
+    border-bottom: 1px dashed #cdc2b0;
+}
+
+[data-theme="journal"] .tab-button {
+    background: #faf8f3;
+    border: 1px solid #d5cbb9;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    color: var(--text-muted);
+    font-weight: 500;
+    transition: all 0.2s ease;
+    /* 台紙のリネン（multiply合成の::before）より確実に手前へ。
+       ブラウザによっては合成順の解釈差でタブにリネンが透けるため明示する */
+    position: relative;
+    z-index: 1;
+}
+
+[data-theme="journal"] .tab-button:hover {
+    background: #e7e1d5;
+    color: var(--accent);
+}
+
+/* アクティブタブ＝ラベンダー水玉のマスキングテープ */
+[data-theme="journal"] .tab-button.active {
+    /* 白抜き文字は太って見えるため、500のままだとつぶれる */
+    font-weight: 400;
+    background-color: #a48ccd;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.4) 1.2px, transparent 1.3px);
+    background-size: 8px 8px;
+    color: #fff;
+    border-color: #9d86c8;
+    box-shadow: 0 -2px 5px rgba(111, 94, 71, 0.12);
+}
+
+/* タブバー右端のリロード・閉じる：リネン直置きだと沈むため、
+   タブと同じ下地と枠を与える（z-indexはタブと同じ合成順対策）。
+   素の定義はリロード26px・閉じる22pxとサイズが揃っておらず、
+   枠を付けると差が目立つためここで同寸に揃える */
+[data-theme="journal"] .memory-refresh-button,
+[data-theme="journal"] .memory-collapse-button {
+    background: #faf8f3;
+    border: 1px solid #d5cbb9;
+    position: relative;
+    z-index: 1;
+    width: 26px;
+    height: 26px;
+}
+
+[data-theme="journal"] .memory-refresh-button .ui-icon,
+[data-theme="journal"] .memory-collapse-button .ui-icon {
+    height: 16px;
+}
+
+[data-theme="journal"] .memory-refresh-button:hover,
+[data-theme="journal"] .memory-collapse-button:hover {
+    background: #e7e1d5;
+    color: var(--accent);
+}
+
+/* 右タブエリアの中身とヘッダーのステータス表示（オンライン/オフライン）は
+   手書き風（Klee One）にせず、タブと同じ標準書体で統一。
+   button/input/textarea はフォントを継承しないため個別に指定する */
+[data-theme="journal"] .header-status,
+[data-theme="journal"] .tab-content,
+[data-theme="journal"] .tab-content button,
+[data-theme="journal"] .tab-content input,
+[data-theme="journal"] .tab-content textarea,
+[data-theme="journal"] .tab-content select {
+    font-family: var(--font-ui);
+}
+
+/* ---- メモリパネル中身 ---- */
+[data-theme="journal"] .memory-section-title {
+    color: var(--accent);
+    border-bottom: 1px dashed #cdc2b0;
+    padding-bottom: 4px;
+}
+
+[data-theme="journal"] .memory-file-name {
+    background: var(--accent-dim);
+    color: var(--accent);
+    border-radius: 6px;
+}
+
+/* スクロールバー */
+[data-theme="journal"] .panel-content::-webkit-scrollbar-thumb {
+    background: rgba(130, 108, 88, 0.3);
+    border-radius: 3px;
+}
+
+[data-theme="journal"] .panel-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(130, 108, 88, 0.5);
+}
+
+/* =========================================================
+   📖 マニュアルページ専用レイアウト
+   manual.html は <body class="manual-page"> を付与して読み込む。
+   全ルールを body.manual-page 配下にスコープし、他ページへ影響させない。
+   色は theme-tokens.css の var() を参照するため dark/light/moonlit が自動対応。
+   ========================================================= */
+
+/* マニュアルは長尺の通常フロー文書。Dashboard の flex/100vh ベースを打ち消す。 */
+body.manual-page {
+    height: auto;
+    display: block;
+    line-height: 1.6;
+}
+
+body.manual-page .header {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+body.manual-page .header h1 {
+    margin: 0;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-primary);
+}
+
+body.manual-page .nav-links {
+    display: flex;
+    gap: 10px;
+}
+
+body.manual-page .nav-button {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+body.manual-page .nav-button:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+body.manual-page .container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+body.manual-page .section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body.manual-page h2 {
+    color: var(--accent);
+    margin-top: 0;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 10px;
+}
+
+body.manual-page h3 {
+    color: var(--text-primary);
+    margin-top: 25px;
+}
+
+body.manual-page ul {
+    padding-left: 20px;
+}
+
+body.manual-page li {
+    margin-bottom: 10px;
+}
+
+body.manual-page code {
+    background: var(--bg-primary);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
+
+body.manual-page .feature-box {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    background: var(--bg-primary);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+body.manual-page .feature-icon {
+    font-size: 24px;
+}
+
+body.manual-page .feature-desc h4 {
+    margin: 0 0 5px 0;
+    color: var(--accent);
+}
+
+body.manual-page .feature-desc p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+/* 「裏で何が起きているか」を補足する小さな技術メモ。
+   情緒的な本文の下に、控えめなアクセント枠で添える。 */
+body.manual-page .tech-note {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: var(--bg-card);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+}
+
+body.manual-page .tech-note strong {
+    color: var(--text-primary);
+}
+
+/* セクション冒頭の導入文。各章が何を説明するかを一言で示す。 */
+body.manual-page .section-lead {
+    margin-top: 0;
+    color: var(--text-secondary);
+}
+
+/* =====================================================================
+   スマホ最適化（横幅 700px 以下）
+   方針：PCの2カラム＋ドラッグ機構には一切触れず、ここでだけ上書きする。
+   - 本体は「チャットを全幅で1枚」。左右に割らないので細い縦帯にならない。
+   - 手帳（右パネル）は既存の折りたたみ機構をそのまま使い、
+     畳んだ状態＝チャットのみ／開いた状態＝全画面オーバーレイ にする。
+   - ヘッダーはアイコンのみの細い1段に圧縮（DOMは動かさない）。
+   ※ .main-layout を flex に変えることで、JSがインラインで書く
+     grid-template-columns は自動的に無効化される（!important 不要）。
+   ===================================================================== */
+@media (max-width: 700px) {
+    /* --- 本体：縦に積まず、チャットパネルだけを全幅で見せる --- */
+    .main-layout {
+        display: flex;
+        flex-direction: column;
+    }
+    /* 左のチャットパネルが画面いっぱいを占める */
+    .main-layout > .panel {
+        flex: 1 1 auto;
+        min-height: 0;
+    }
+    /* ドラッグ用の仕切り棒はタッチでは無意味なので消す */
+    .resizer.horizontal {
+        display: none;
+    }
+
+    /* --- 手帳：開いている間だけ全画面オーバーレイで前面に出す --- */
+    /* 畳んでいるとき（right-collapsed）は既存の共通ルールで display:none。
+       開いているときは grid のセルではなく画面全体を覆うシートにする。 */
+    .right-container {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        height: auto;            /* PC用の height:100% を打ち消す */
+        box-shadow: 0 0 24px rgba(0, 0, 0, 0.25);
+    }
+    /* 再展開つまみ（手帳アイコン）は折りたたみ時に出る既存挙動のまま。
+       スマホではこれが手帳を開く唯一の入口になる。 */
+    /* タブの横スクロール＋×の右端固定は幅依存なので、スマホ専用ではなく
+       グローバル側（.tab-bar のセクション）にまとめた。ここでは何もしない。 */
+
+    /* --- ヘッダー：アイコンのみの細い1段に圧縮 --- */
+    .header {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 8px 12px;
+    }
+    .header-logo {
+        height: 26px;
+    }
+    .header-status {
+        font-size: 11px;
+    }
+    .header-right {
+        gap: 8px;
+    }
+    /* トークン残量の数値・バーは情報密度が高すぎるのでスマホでは隠す */
+    .token-info,
+    .token-bar-container {
+        display: none;
+    }
+    /* ナビ（コンテキスト/設定/マニュアル/過去ログ）はアイコンだけにする。
+       font-size:0 で文字ノードだけ畳む。ただしアイコンの高さは通常 em 基準
+       （1.45em）なので、そのままだと font-size:0 で消える。実寸 px を与えて残す。 */
+    .nav-link {
+        font-size: 0;
+        padding: 6px 8px;
+    }
+    .nav-link .ui-icon {
+        height: 20px;
+        margin: 0;
+        vertical-align: middle;
+    }
+}

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="{{t:html_lang}}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{t:log_viewer_title}}</title>
+    <link rel="stylesheet" href="/static/theme-tokens.css?v=4">
+    <link rel="stylesheet" href="/static/dashboard.css?v=9">
+    <script src="/static/theme.js?v=4"></script>
+    <style>
+        body {
+            margin: 0;
+            background: var(--bg-primary, #1a1a1a);
+            color: var(--text-primary, #eee);
+            font-family: var(--font-sans, system-ui, sans-serif);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .viewer-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            background: var(--bg-secondary, #222);
+            border-bottom: 1px solid var(--border, #333);
+            flex-shrink: 0;
+        }
+        .viewer-header h1 {
+            font-size: 15px;
+            margin: 0;
+            font-weight: 600;
+        }
+        .viewer-header select {
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 13px;
+        }
+        .viewer-header select option {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+        .viewer-header .nav-link {
+            margin-left: auto;
+            font-size: 12px;
+            color: var(--text-muted, #999);
+            text-decoration: none;
+        }
+        .viewer-header .nav-link:hover {
+            color: var(--text-primary, #eee);
+        }
+        .viewer-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+        #chatMessages {
+            max-width: 900px;
+            margin: 0 auto;
+            /* ダッシュボードの .panel-content と同じ flex 縦並びにする。
+               これで .log-entry（ツールログ）の align-self:flex-start が効き、
+               背景が内容幅にぴったり収まる（全幅に伸びない）。 */
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .empty-state {
+            text-align: center;
+            color: var(--text-muted, #999);
+            padding: 60px 20px;
+            font-size: 13px;
+        }
+        /* 全ログ横断検索のUI */
+        #searchInput {
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 13px;
+            width: 200px;
+        }
+        #searchBtn {
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        #searchBtn:hover { background: var(--bg-secondary); }
+        /* 検索結果: 日付ごとにまとめ、時刻をチップ表示 */
+        .search-summary {
+            text-align: center;
+            color: var(--text-muted, #999);
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+        .search-group {
+            margin-bottom: 14px;
+        }
+        .search-group-date {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary, #eee);
+            margin-bottom: 6px;
+        }
+        .search-times {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .search-time {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            padding: 3px 9px;
+            border: 1px solid var(--border, #333);
+            border-radius: 12px;
+            background: var(--bg-secondary, #222);
+            color: var(--text-primary, #eee);
+            cursor: pointer;
+        }
+        .search-time:hover {
+            border-color: var(--accent, #6cf);
+        }
+        /* ロール区分のバッジ（どこに出てきたかの4パターン） */
+        .role-badge {
+            font-size: 11px;
+            padding: 1px 6px;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+        .role-user     { background: rgba(96, 165, 250, 0.22); color: #93c5fd; }
+        .role-assistant{ background: rgba(52, 211, 153, 0.22); color: #6ee7b7; }
+        .role-tool_call{ background: rgba(251, 191, 36, 0.22); color: #fcd34d; }
+        .role-tool     { background: rgba(167, 139, 250, 0.22); color: #c4b5fd; }
+        /* 検索結果ジャンプ時の一時ハイライト */
+        .search-highlight {
+            animation: search-flash 2s ease-out;
+            border-radius: 8px;
+        }
+        @keyframes search-flash {
+            0%   { box-shadow: 0 0 0 3px var(--accent, #6cf), 0 0 14px var(--accent, #6cf); }
+            100% { box-shadow: 0 0 0 0 transparent; }
+        }
+    </style>
+</head>
+<body>
+    <div class="viewer-header">
+        <h1>{{t:log_viewer_heading}}</h1>
+        <select id="dateSelect">
+            <option value="">{{t:log_viewer_select_date}}</option>
+        </select>
+        <select id="modeSelect" title="{{t:log_viewer_display_mode}}">
+            <option value="dashboard">{{t:log_viewer_mode_dashboard}}</option>
+            <option value="detail">{{t:log_viewer_mode_detail}}</option>
+        </select>
+        <!-- 全ログ横断検索: 日付未選択のときだけ表示する -->
+        <span id="searchBox" style="display:none;align-items:center;gap:6px;">
+            <input id="searchInput" type="text" placeholder="{{t:log_viewer_search_placeholder}}"
+                   autocomplete="off" />
+            <button id="searchBtn">{{t:log_viewer_search_button}}</button>
+        </span>
+        <span id="loadStatus" style="font-size:12px;color:var(--text-muted,#999);"></span>
+        <button id="themeToggle" title="{{t:log_viewer_theme_toggle}}"
+                style="margin-left:auto;background:none;border:1px solid var(--border,#333);border-radius:6px;
+                       padding:4px 10px;font-size:14px;cursor:pointer;color:inherit;">🌙</button>
+    </div>
+    <div class="viewer-body">
+        <div id="chatMessages">
+            <div class="empty-state">{{t:log_viewer_empty_state}}</div>
+        </div>
+        <div id="typingIndicator" style="display:none;"></div>
+    </div>
+    <script src="/static/log_viewer.js?v=12"></script>
+</body>
+</html>

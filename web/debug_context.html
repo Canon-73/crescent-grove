@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="{{t:html_lang}}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Context Debug</title>
+    <!-- 共通トークンを保険として読込（theme.js より前）。
+         ただし debug は dev ツール用途のため独自パレットを優先・固定する。 -->
+    <link rel="stylesheet" href="/static/theme-tokens.css?v=4">
+    <script src="/static/theme.js?v=4"></script>
+    <style>
+        /* debug 専用パレット（dark 固定）。共通トークンの light/moonlit は
+           html[data-theme=...] で特異度が高いため、同じ特異度の防御セレクタで
+           全テーマに対し debug パレット（特に --accent）を優先・固定する。 */
+        :root,
+        html[data-theme="light"],
+        html[data-theme="moonlit"],
+        html[data-theme="moonlit2"],
+        html[data-theme="journal"] {
+            --bg-debug: #000000;
+            --role-system: #334155;
+            --role-user: #0369a1;
+            --role-assistant: #581c87;
+            --role-tool: #065f46;
+            --role-tool-def: #1e293b;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --accent: #38bdf8;
+        }
+
+        body {
+            background-color: var(--bg-debug);
+            color: var(--text-main);
+            font-family: 'Inter', 'Meiryo', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* moonlit / moonlit2 / journal 防御ガード
+           （背景グラデ・星屑・月光グロー・紙テクスチャ・押し花を無効化） */
+        html[data-theme="moonlit"] body,
+        html[data-theme="moonlit2"] body,
+        html[data-theme="journal"] body {
+            background: var(--bg-debug);
+        }
+
+        html[data-theme="moonlit"] body::before,
+        html[data-theme="moonlit2"] body::before,
+        html[data-theme="moonlit2"] body::after,
+        html[data-theme="journal"] body::before,
+        html[data-theme="journal"] body::after {
+            content: none;
+            display: none;
+            animation: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: var(--accent);
+        }
+
+        .stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: #1e293b;
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid #334155;
+        }
+
+        .stat-item strong {
+            color: var(--accent);
+        }
+
+        .back-link {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-link:hover {
+            color: #f8fafc;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            margin: 25px 0 15px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .token-badge {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: var(--text-dim);
+            background: #1e293b;
+            border-radius: 8px;
+        }
+
+        .timestamp {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        #error-banner {
+            background-color: #991b1b;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        details {
+            margin-bottom: 10px;
+        }
+
+        summary {
+            cursor: pointer;
+            padding: 10px;
+            background: #1e293b;
+            border-radius: 5px;
+            font-weight: bold;
+            border: 1px solid #334155;
+        }
+
+        summary:hover {
+            background: #2d3e50;
+        }
+
+        .json-code {
+            padding: 10px;
+            background: #000;
+            color: #c9d1d9;
+            border-radius: 0 0 5px 5px;
+            font-family: 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            max-height: 300px;
+            overflow: auto;
+        }
+
+        /* ========== ターンナビ（操作バー＋ジャンプチップ） ========== */
+        /* 操作バー＋ジャンプチップを画面上部に固定 */
+        .sticky-head {
+            position: sticky;
+            top: 0;
+            z-index: 60;
+            background: var(--bg-debug);
+            padding: 8px 0 6px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .turn-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 0 0 8px;
+        }
+
+        .turn-controls input[type="search"] {
+            background: #0b1220;
+            border: 1px solid #334155;
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            min-width: 220px;
+        }
+
+        .ctrl-btn {
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            background: #1e293b;
+            color: #e6edf3;
+        }
+
+        .ctrl-btn:hover {
+            background: #2d3e50;
+        }
+
+        .view-tab {
+            font-weight: 600;
+        }
+
+        .view-tab.active {
+            background: #2b6cb0;
+            border-color: #2b6cb0;
+            color: #fff;
+        }
+
+        .ctrl-check {
+            font-size: 12px;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .ctrl-spacer { flex: 1 1 auto; }
+
+        .hit-label {
+            font-size: 12px;
+            color: #94a3b8;
+            min-width: 56px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .hit-label.invalid { color: #f87171; }
+
+        /* 検索ヒット */
+        mark.search-hit {
+            background: #facc15;
+            color: #000;
+            border-radius: 2px;
+            padding: 0 1px;
+        }
+
+        mark.search-hit.active-hit {
+            background: #fb923c;
+            outline: 2px solid #fdba74;
+        }
+
+        .jump-bar {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 6px 8px;
+            background: rgba(2, 6, 14, 0.92);
+            border: 1px solid #334155;
+            border-radius: 8px;
+        }
+
+        .jump-chip {
+            flex: 0 0 auto;
+            padding: 4px 10px;
+            border-radius: 14px;
+            font-size: 12px;
+            cursor: pointer;
+            border: 1px solid #334155;
+            background: #0f1b2d;
+            color: #cbd5e1;
+            white-space: nowrap;
+        }
+
+        .jump-chip:hover {
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        /* ページ最上部／最下部へのナビチップ（ターンチップと区別） */
+        .jump-chip.nav-chip {
+            background: #1e293b;
+            color: #e6edf3;
+            font-weight: 600;
+        }
+
+        .jump-chip .chip-tools {
+            color: #f59e0b;
+            margin-left: 5px;
+        }
+
+        /* チップのターン種別色（左ドット） */
+        .chip-user::before { content: '●'; color: #38bdf8; margin-right: 5px; }
+        .chip-moon::before { content: '●'; color: #c084fc; margin-right: 5px; }
+        .chip-task::before { content: '●'; color: #fbbf24; margin-right: 5px; }
+        .chip-city::before { content: '●'; color: #34d399; margin-right: 5px; }
+        .chip-layer0::before { content: '●'; color: #94a3b8; margin-right: 5px; }
+        .chip-system::before { content: '●'; color: #64748b; margin-right: 5px; }
+
+        /* ========== ターンカード ========== */
+        .turn-card {
+            border: 1px solid #334155;
+            border-left: 4px solid #475569;
+            border-radius: 8px;
+            margin-bottom: 14px;
+            overflow: hidden;
+            scroll-margin-top: 120px; /* sticky ヘッダー（検索＋ジャンプ）に隠れない */
+        }
+
+        .turn-card[data-ttype="user"]   { border-left-color: #0ea5e9; }
+        .turn-card[data-ttype="moon"]   { border-left-color: #a855f7; }
+        .turn-card[data-ttype="task"]   { border-left-color: #f59e0b; }
+        .turn-card[data-ttype="city"]   { border-left-color: #10b981; }
+        .turn-card[data-ttype="layer0"] { border-left-color: #64748b; }
+        .turn-card[data-ttype="system"] { border-left-color: #475569; }
+
+        .turn-summary {
+            list-style: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: #111c2e;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 0;
+        }
+
+        .turn-summary::-webkit-details-marker { display: none; }
+        .turn-summary:hover { background: #16243a; }
+
+        .turn-no {
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 1rem;
+        }
+
+        .turn-type {
+            padding: 2px 9px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            font-weight: bold;
+        }
+
+        .turn-time {
+            color: #cbd5e1;
+            font-size: 0.82rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .tt-user   { background: #0369a1; }
+        .tt-moon   { background: #6b21a8; }
+        .tt-task   { background: #b45309; }
+        .tt-city   { background: #047857; }
+        .tt-layer0 { background: #334155; }
+        .tt-system { background: #3f3f46; }
+
+        .turn-meta {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            display: flex;
+            gap: 12px;
+            margin-left: auto;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .turn-meta .tools-count { color: #f59e0b; }
+
+        .turn-body {
+            padding: 12px 14px;
+            background: #0a1424;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .layer0-btn {
+            padding: 3px 9px;
+            font-size: 12px;
+            cursor: pointer;
+            border: 1px solid #888;
+            border-radius: 4px;
+            background: #2b6cb0;
+            color: #fff;
+        }
+
+        .copy-btn {
+            padding: 3px 9px;
+            font-size: 12px;
+            cursor: pointer;
+            border: 1px solid #475569;
+            border-radius: 4px;
+            background: #334155;
+            color: #e6edf3;
+        }
+
+        .copy-btn:hover {
+            background: #475569;
+        }
+
+        /* ========== メッセージ（ターン内） ========== */
+        .msg {
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .msg-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 12px;
+            font-size: 0.78rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .msg.role-system .msg-head    { background: var(--role-system); }
+        .msg.role-user .msg-head      { background: var(--role-user); }
+        .msg.role-assistant .msg-head { background: var(--role-assistant); }
+        .msg.role-tool .msg-head      { background: var(--role-tool); }
+
+        .msg-head .meta { margin-left: auto; font-weight: normal; opacity: 0.85; text-transform: none; }
+
+        .msg-body {
+            padding: 10px 12px;
+            background: #131c2b;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .plain-text {
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: 'Inter', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', 'Noto Sans JP', sans-serif;
+            font-size: 0.95rem;
+            color: #e6edf3;
+            line-height: 1.8;
+        }
+
+        /* 生テキスト：LLMに渡る content をそのまま表示（タグも含め無加工）。
+           内部スクロール枠にすると検索ジャンプ(scrollIntoView)がページではなく
+           この枠内をスクロールしてしまうため、あえてページスクロールに一本化する。 */
+        .raw-content {
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: 'Inter', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', 'Noto Sans JP', sans-serif;
+            font-size: 0.95rem;
+            color: #e6edf3;
+            line-height: 1.8;
+            letter-spacing: 0.01em;
+        }
+
+        /* 既知タグのインライン色付け（生テキストは維持し、タグごと色を載せる） */
+        .raw-content [class^="tg-"] {
+            border-radius: 3px;
+            padding: 0 2px;
+            -webkit-box-decoration-break: clone;
+            box-decoration-break: clone;
+        }
+
+        .tg-user_message         { color: #7dd3fc; }
+        .tg-flashback            { color: #fda4af; background: rgba(251, 113, 133, 0.14); }
+        .tg-note_fragment        { color: #fcd34d; background: rgba(245, 158, 11, 0.12); }
+        .tg-self_memo            { color: #bef264; background: rgba(163, 230, 53, 0.12); }
+        .tg-moonbeat_instruction { color: #d8b4fe; }
+        .tg-task_notice          { color: #fde68a; }
+        .tg-city_event_notice    { color: #6ee7b7; }
+        .tg-system_notice        { color: #94a3b8; }
+        .tg-assistant_inner      { color: #a5b4fc; background: rgba(129, 140, 248, 0.14); }
+
+        /* ツールコール（目的2） */
+        .tool-call {
+            border: 1px dashed #475569;
+            border-radius: 5px;
+            padding: 8px 10px;
+            background: #0b0f1a;
+        }
+
+        .tool-call .tc-name {
+            color: #fbbf24;
+            font-family: 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .tool-call pre {
+            margin: 0;
+            font-family: 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.82rem;
+            color: #c9d1d9;
+            white-space: pre-wrap;
+            word-break: break-word;
+            line-height: 1.5;
+        }
+
+        /* ========== インライン編集 ========== */
+        .edit-btn {
+            margin-left: 8px;
+            padding: 2px 8px;
+            font-size: 0.72rem;
+            cursor: pointer;
+            border: 1px solid #475569;
+            border-radius: 4px;
+            background: #1e293b;
+            color: #cbd5e1;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .edit-btn:hover { background: #2d3e50; color: #fff; }
+        .edit-btn:disabled { opacity: 0.5; cursor: default; }
+
+        .edit-area {
+            width: 100%;
+            min-height: 120px;
+            box-sizing: border-box;
+            background: #0b1220;
+            border: 1px solid #38bdf8;
+            border-radius: 6px;
+            color: #e6edf3;
+            font-family: 'Inter', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', 'Noto Sans JP', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            padding: 8px 10px;
+            resize: vertical;
+        }
+
+        .edit-bar {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .edit-save, .edit-cancel {
+            padding: 5px 14px;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: 1px solid #475569;
+        }
+
+        .edit-save { background: #2b6cb0; color: #fff; border-color: #2b6cb0; }
+        .edit-save:hover { background: #2563eb; }
+        .edit-save:disabled { opacity: 0.5; cursor: default; }
+        .edit-cancel { background: #1e293b; color: #cbd5e1; }
+        .edit-cancel:hover { background: #2d3e50; color: #fff; }
+
+        /* ========== 検索置換コントロール ========== */
+        .replace-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 6px 0 0;
+        }
+
+        .replace-controls input[type="text"] {
+            background: #0b1220;
+            border: 1px solid #334155;
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            min-width: 180px;
+        }
+
+        .replace-controls .rng { font-size: 12px; color: #94a3b8; }
+
+        .replace-controls .rng-num {
+            width: 52px;
+            background: #0b1220;
+            border: 1px solid #334155;
+            color: var(--text-main);
+            padding: 6px 6px;
+            border-radius: 6px;
+            font-size: 13px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+
+        #replace-one-btn { background: #6d28d9; color: #fff; border-color: #6d28d9; }
+        #replace-one-btn:hover { background: #7c3aed; }
+        #replace-all-btn { background: #b45309; color: #fff; border-color: #b45309; }
+        #replace-all-btn:hover { background: #d97706; }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Context Debugger</h1>
+            <div class="stats">
+                <div class="stat-item">Total: <strong id="total-tokens">0</strong></div>
+                <div class="stat-item">Messages: <span id="msg-tokens">0</span></div>
+                <div class="stat-item">Tools: <span id="tool-tokens-stat">0</span></div>
+                <div class="stat-item">Turns: <span id="turn-count">0</span></div>
+                <div class="timestamp" id="last-update"></div>
+            </div>
+        </header>
+
+        <div id="error-banner"></div>
+
+        <section>
+            <div class="section-title">🛠️ Tool Definitions <span id="tools-badge" class="token-badge">0 tokens</span>
+            </div>
+            <details id="tools-details">
+                <summary>{{t:debug_tools_summary}}</summary>
+                <div id="tools-content" class="json-code"></div>
+            </details>
+        </section>
+
+        <section>
+            <div class="section-title">{{t:debug_loop_section_title}}</div>
+            <div style="margin:8px 0;">
+                <button id="detect-loops-btn" style="padding:6px 14px;font-size:13px;cursor:pointer;border:1px solid #888;border-radius:5px;background:#7c3aed;color:#fff;">{{t:debug_detect_loops}}</button>
+                <button id="compress-selected-btn" style="margin-left:8px;padding:6px 14px;font-size:13px;cursor:pointer;border:1px solid #888;border-radius:5px;background:#2b6cb0;color:#fff;display:none;">{{t:debug_compress_selected}}</button>
+                <span id="loop-hint" style="margin-left:10px;font-size:12px;color:#94a3b8;">{{t:debug_loop_hint}}</span>
+            </div>
+            <div id="loop-results"></div>
+        </section>
+
+        <section>
+            <div class="section-title">{{t:debug_message_history}}</div>
+            <div class="sticky-head">
+                <div class="turn-controls">
+                    <input type="search" id="turn-search" placeholder="{{t:debug_search_placeholder}}">
+                    <button class="ctrl-btn" id="search-prev" title="{{t:debug_prev_hit}}">▲</button>
+                    <button class="ctrl-btn" id="search-next" title="{{t:debug_next_hit}}">▼</button>
+                    <span class="hit-label" id="hit-label">{{t:debug_zero_hits}}</span>
+                    <label class="ctrl-check"><input type="checkbox" id="search-case"> Aa</label>
+                    <label class="ctrl-check"><input type="checkbox" id="search-regex"> .*</label>
+                    <label class="ctrl-check"><input type="checkbox" id="search-only"> {{t:debug_hits_only}}</label>
+                    <span class="ctrl-spacer"></span>
+                    <button class="ctrl-btn view-tab active" id="view-current" title="{{t:debug_view_current_title}}">{{t:debug_view_current}}</button>
+                    <button class="ctrl-btn view-tab" id="view-input" title="{{t:debug_view_input_title}}">{{t:debug_view_input}}</button>
+                    <span class="ctrl-spacer"></span>
+                    <button class="ctrl-btn" id="expand-all">{{t:debug_expand_all}}</button>
+                    <button class="ctrl-btn" id="collapse-all">{{t:debug_collapse_all}}</button>
+                    <span class="timestamp">j / k {{t:debug_jk_hint}}</span>
+                </div>
+                <div class="replace-controls">
+                    <input type="text" id="replace-input" placeholder="{{t:debug_replace_placeholder}}">
+                    <span class="rng">{{t:debug_range_label}}</span>
+                    <input type="number" id="range-start" class="rng-num" min="1" title="{{t:debug_range_start}}">
+                    <span class="rng">{{t:debug_range_separator}}</span>
+                    <input type="number" id="range-end" class="rng-num" min="1" title="{{t:debug_range_end}}">
+                    <button class="ctrl-btn" id="replace-one-btn" title="{{t:debug_replace_one_title}}">{{t:debug_replace_one}}</button>
+                    <button class="ctrl-btn" id="replace-all-btn">{{t:debug_replace_all}}</button>
+                    <span class="hit-label" id="replace-count">{{t:debug_range_zero_hits}}</span>
+                </div>
+                <div class="jump-bar" id="jump-bar"></div>
+            </div>
+            <div id="content-area">
+                <div class="empty-state">{{t:debug_loading}}</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 既知タグ（context.py が user content に注入する意味タグ）。インライン色付けに使う。
+        const TAG_NAMES = [
+            'user_message', 'flashback', 'note_fragment', 'self_memo',
+            'moonbeat_instruction', 'task_notice', 'city_event_notice',
+            'system_notice', 'assistant_inner',
+        ];
+
+        function escapeHtml(s) {
+            return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // エスケープ済みテキスト中の既知タグを <span class="tg-xxx"> で包む（ネスト対応・再帰）。
+        // タグ文字列（&lt;tag&gt;）自体は残すので「生テキストのまま色だけ載る」。
+        function wrapTags(esc) {
+            const re = new RegExp('&lt;(' + TAG_NAMES.join('|') + ')&gt;([\\s\\S]*?)&lt;\\/\\1&gt;', 'g');
+            return esc.replace(re, (full, name, inner) =>
+                `<span class="tg-${name}">&lt;${name}&gt;${wrapTags(inner)}&lt;/${name}&gt;</span>`);
+        }
+
+        function highlightTags(raw) {
+            return wrapTags(escapeHtml(raw));
+        }
+
+        // ターン先頭の [SYSTEM] ヘッダー直後の行（= 日時）を抜き出す。無ければ空。
+        function turnTime(content) {
+            const c = typeof content === 'string' ? content : '';
+            const m = c.match(/\[SYSTEM\]\s*\n([^\n]+)/);
+            return m ? m[1].trim() : '';
+        }
+
+        // ターン種別（先頭userの境界マーカーで判定。context.py の _TURN_BOUNDARY_MARKERS と対応）
+        function turnTypeOf(startMsg) {
+            const c = startMsg && startMsg.content ? String(startMsg.content) : '';
+            if (startMsg && startMsg.is_layer0) return { key: 'layer0', label: T.debug_turn_layer0, tt: 'tt-layer0', chip: 'chip-layer0' };
+            if (c.includes('<user_message>'))          return { key: 'user',  label: T.debug_turn_user,  tt: 'tt-user',  chip: 'chip-user' };
+            if (c.includes('<moonbeat_instruction>'))  return { key: 'moon',  label: 'Moonbeat',     tt: 'tt-moon',  chip: 'chip-moon' };
+            if (c.includes('<task_notice>'))           return { key: 'task',  label: T.debug_turn_scheduler, tt: 'tt-task',  chip: 'chip-task' };
+            if (c.includes('<city_event_notice>'))     return { key: 'city',  label: T.debug_turn_city, tt: 'tt-city',  chip: 'chip-city' };
+            return { key: 'system', label: T.debug_turn_system, tt: 'tt-system', chip: 'chip-system' };
+        }
+
+        // ===== ユーティリティ =====
+        function el(tag, cls, text) {
+            const e = document.createElement(tag);
+            if (cls) e.className = cls;
+            if (text != null) e.textContent = text;
+            return e;
+        }
+
+        // content を生のまま取り出す（デバッグ用途のため無加工。マルチモーダルはJSON化）
+        function rawContent(content) {
+            if (typeof content === 'string') return content;
+            if (content == null) return '';
+            try { return JSON.stringify(content, null, 2); } catch (e) { return String(content); }
+        }
+
+        // tool_call を整形（目的2：引数JSONを pretty-print）
+        function renderToolCalls(toolCalls, container) {
+            toolCalls.forEach(tc => {
+                const fn = tc.function || {};
+                const box = el('div', 'tool-call');
+                box.appendChild(el('div', 'tc-name searchable', '🛠 ' + (fn.name || '?')));
+                let args = fn.arguments || '';
+                try { args = JSON.stringify(JSON.parse(args), null, 2); } catch (e) { /* 生のまま */ }
+                box.appendChild(el('pre', 'searchable', args));
+                container.appendChild(box);
+            });
+        }
+
+        // 1メッセージを DOM 化
+        function renderMessage(msg, globalIdx) {
+            const wrap = el('div', 'msg role-' + msg.role);
+
+            // 本文は生テキストそのまま（タグも含め無加工）。既知タグだけインライン色付け。
+            const content = rawContent(msg.content);
+            const rc = el('div', 'raw-content searchable');
+            rc.innerHTML = content ? highlightTags(content) : '(empty content)';
+
+            // 編集・置換の対象は「履歴メッセージ かつ 文字列content」のみ。
+            // 入力ビュー（読み取り専用）では一切編集させない（ライブ履歴とインデックスが一致しないため）。
+            const editable = !readOnlyView && (msg.history_idx != null) && (typeof msg.content === 'string');
+            if (editable) rc.dataset.historyIdx = msg.history_idx;
+
+            const head = el('div', 'msg-head');
+            const roleSpan = el('span', null, msg.role + ' #' + (globalIdx + 1));
+            head.appendChild(roleSpan);
+            const meta = el('span', 'meta');
+            const bits = [msg.tokens + ' tok'];
+            if (msg.tool_call_id) bits.push('ID:' + msg.tool_call_id);
+            if (msg.history_idx != null) bits.push(T.debug_history_prefix + msg.history_idx);
+            meta.textContent = bits.join(' | ');
+            head.appendChild(meta);
+            if (editable) {
+                const editBtn = el('button', 'edit-btn', T.debug_edit_button);
+                editBtn.onclick = (e) => { e.preventDefault(); startEdit(rc, msg, editBtn); };
+                head.appendChild(editBtn);
+            }
+            wrap.appendChild(head);
+
+            const body = el('div', 'msg-body');
+            body.appendChild(rc);
+
+            // tool_calls（assistant の発行）
+            if (msg.tool_calls && msg.tool_calls.length) {
+                renderToolCalls(msg.tool_calls, body);
+            }
+
+            wrap.appendChild(body);
+            return wrap;
+        }
+
+        // ===== インライン編集 =====
+        // raw-content をテキストエリアに切り替え、保存で edit_message を送る。
+        // 成功時はサーバの _update_debug_context → 再描画で反映される（textareaは消える）。
+        function startEdit(rc, msg, editBtn) {
+            if (rc._editing) return;
+            rc._editing = true;
+            editBtn.disabled = true;
+
+            const original = (typeof msg.content === 'string') ? msg.content : '';
+            const prevHTML = rc.innerHTML;
+
+            const ta = el('textarea', 'edit-area');
+            ta.value = original;
+            const bar = el('div', 'edit-bar');
+            const save = el('button', 'edit-save', T.debug_save_button);
+            const cancel = el('button', 'edit-cancel', T.debug_cancel_button);
+            bar.appendChild(save);
+            bar.appendChild(cancel);
+
+            rc.innerHTML = '';
+            rc.appendChild(ta);
+            rc.appendChild(bar);
+            ta.focus();
+
+            const restore = () => { rc.innerHTML = prevHTML; rc._editing = false; editBtn.disabled = false; };
+            cancel.onclick = (e) => { e.preventDefault(); restore(); };
+            save.onclick = (e) => {
+                e.preventDefault();
+                const newContent = ta.value;
+                if (newContent === original) { restore(); return; }
+                if (!debugSocket || debugSocket.readyState !== WebSocket.OPEN) {
+                    showStatus(T.debug_ws_save_failed, false);
+                    return;
+                }
+                save.disabled = true;
+                cancel.disabled = true;
+                // 失敗時に再有効化できるよう保持（成功時は再描画でDOMごと消える）
+                pendingEdit = { save, cancel };
+                debugSocket.send(JSON.stringify({
+                    type: 'edit_message',
+                    history_idx: Number(rc.dataset.historyIdx),
+                    new_content: newContent,
+                    expected_content: original,
+                }));
+                showStatus(T.debug_save_requested, true);
+            };
+        }
+        let pendingEdit = null;  // 送信中のインライン編集の保存/キャンセルボタン
+
+        // messages を「システム前文 + ターン群」にグループ化
+        function groupTurns(messages) {
+            const pre = [];
+            const turns = [];
+            let cur = null;
+            messages.forEach((m, i) => {
+                if (m.is_turn_start) {
+                    cur = { msgs: [], startMsg: m, startGlobalIdx: i };
+                    turns.push(cur);
+                }
+                if (cur) cur.msgs.push({ m, i });
+                else pre.push({ m, i });
+            });
+            return { pre, turns };
+        }
+
+        // ===== ターン全体のクリップボードコピー =====
+        // ターン内の全メッセージ（role・本文・tool_calls）を可読テキスト化する。
+        function turnToText(msgs) {
+            return msgs.map(({ m }) => {
+                const head = '--- ' + m.role + (m.history_idx != null ? ' ' + T.debug_history_prefix + m.history_idx : '') + ' ---';
+                const parts = [head];
+                if (typeof m.content === 'string' && m.content) parts.push(m.content);
+                else if (m.content) parts.push(JSON.stringify(m.content, null, 2));
+                if (m.tool_calls && m.tool_calls.length) {
+                    m.tool_calls.forEach(tc => {
+                        const fn = (tc && tc.function) || {};
+                        parts.push('[tool_call] ' + (fn.name || '') + '(' + (fn.arguments || '') + ')');
+                    });
+                }
+                return parts.join('\n');
+            }).join('\n\n');
+        }
+
+        async function copyTurnToClipboard(msgs) {
+            const text = turnToText(msgs);
+            try {
+                await navigator.clipboard.writeText(text);
+                showStatus(T.debug_copied.replace('{n}', text.length), true);
+            } catch (err) {
+                // フォールバック: 一時 textarea + execCommand（クリップボードAPIが使えない環境用）
+                try {
+                    const ta = document.createElement('textarea');
+                    ta.value = text;
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    showStatus(T.debug_copied.replace('{n}', text.length), true);
+                } catch (e2) {
+                    showStatus(T.debug_copy_failed, false);
+                }
+            }
+        }
+
+        let firstRender = true;  // 初回描画（＝デバッグ画面を開いた直後）かどうか
+
+        // ===== ビュー切替（現在の履歴 / 直前の発言の入力） =====
+        let lastData = null;        // 直近に受信した配信payload（タブ切替時の再描画に使う）
+        let currentView = 'current'; // 'current'=最新（編集可） / 'input'=直前の入力（読み取り専用）
+        let readOnlyView = false;    // 入力ビュー中か（renderMessage / 各操作の抑止フラグ）
+
+        // 現在のタブに応じて再描画する。入力ビューは payload.input_context を読み取り専用で描く。
+        function renderActive() {
+            if (!lastData) return;
+            const note = document.getElementById('view-note');
+            if (currentView === 'input') {
+                readOnlyView = true;
+                const inp = lastData.input_context;
+                if (!inp || !inp.messages || !inp.messages.length) {
+                    document.getElementById('content-area').innerHTML =
+                        '<div class="empty-state">' + T.debug_no_input_snapshot + '</div>';
+                    document.getElementById('jump-bar').innerHTML = '';
+                    if (note) note.textContent = T.debug_input_view_note;
+                    return;
+                }
+                if (note) note.textContent = T.debug_input_view_note_full;
+                renderMessages(inp);
+            } else {
+                readOnlyView = false;
+                if (note) note.textContent = '';
+                renderMessages(lastData);
+            }
+        }
+
+        function setView(view) {
+            currentView = view;
+            document.getElementById('view-current').classList.toggle('active', view === 'current');
+            document.getElementById('view-input').classList.toggle('active', view === 'input');
+            renderActive();
+        }
+
+        function renderMessages(data) {
+            // 再描画前のスクロール状況を記録：初回、または既に最下部付近にいる場合は
+            // 描画後に最下部（最新ターン）へ追従する。途中を見ている時は動かさない。
+            const nearBottom = (window.innerHeight + window.scrollY)
+                >= (document.documentElement.scrollHeight - 200);
+            const shouldStickBottom = firstRender || nearBottom;
+
+            // 統計
+            document.getElementById('total-tokens').textContent = data.total_tokens.toLocaleString();
+            const msgSum = data.messages.reduce((s, m) => s + m.tokens, 0);
+            document.getElementById('msg-tokens').textContent = msgSum.toLocaleString();
+            if (data.tools_tokens) {
+                document.getElementById('tool-tokens-stat').textContent = data.tools_tokens.toLocaleString();
+                document.getElementById('tools-badge').textContent = data.tools_tokens.toLocaleString() + ' tokens';
+            }
+            if (data.tools) {
+                document.getElementById('tools-content').textContent = JSON.stringify(data.tools, null, 2);
+            }
+            if (data.timestamp) {
+                document.getElementById('last-update').textContent = T.debug_last_update + new Date(data.timestamp).toLocaleTimeString();
+            }
+
+            const container = document.getElementById('content-area');
+            const jumpBar = document.getElementById('jump-bar');
+            container.innerHTML = '';
+            jumpBar.innerHTML = '';
+
+            if (!data.messages || !data.messages.length) {
+                container.innerHTML = '<div class="empty-state">' + T.debug_no_messages + '</div>';
+                document.getElementById('turn-count').textContent = '0';
+                return;
+            }
+
+            const { pre, turns } = groupTurns(data.messages);
+            document.getElementById('turn-count').textContent = String(turns.length);
+
+            // ターン番号(1始まり) → history_idx 区間 のマップ（置換の範囲指定で使う）
+            turnRanges = turns.map(t => {
+                const idxs = t.msgs.map(x => x.m.history_idx).filter(v => v != null);
+                return idxs.length ? { firstIdx: Math.min(...idxs), lastIdx: Math.max(...idxs) } : null;
+            });
+            // 範囲入力の既定/クランプ（ユーザーが入れた有効値は尊重し、空・範囲外のみ補正）
+            (function syncRangeInputs() {
+                const maxTurn = turns.length || 1;
+                const rs = document.getElementById('range-start');
+                const reEnd = document.getElementById('range-end');
+                rs.max = maxTurn; reEnd.max = maxTurn;
+                const sv = parseInt(rs.value, 10);
+                const ev = parseInt(reEnd.value, 10);
+                if (!Number.isFinite(sv) || sv < 1 || sv > maxTurn) rs.value = 1;
+                if (!Number.isFinite(ev) || ev < 1 || ev > maxTurn) reEnd.value = maxTurn;
+            })();
+
+            // --- システム前文（ターン外の先頭メッセージ群）を1枚に畳む ---
+            if (pre.length) {
+                const preTok = pre.reduce((s, x) => s + x.m.tokens, 0);
+                const det = el('details', 'turn-card');
+                det.setAttribute('data-ttype', 'system');
+                const sum = el('summary', 'turn-summary');
+                sum.appendChild(el('span', 'turn-type tt-system', T.debug_system_preamble));
+                const sm = el('span', 'turn-meta');
+                sm.appendChild(el('span', null, pre.length + ' msgs'));
+                sm.appendChild(el('span', null, preTok.toLocaleString() + ' tok'));
+                sum.appendChild(sm);
+                det.appendChild(sum);
+                const bd = el('div', 'turn-body');
+                pre.forEach(x => bd.appendChild(renderMessage(x.m, x.i)));
+                det.appendChild(bd);
+                container.appendChild(det);
+            }
+
+            // --- ジャンプバー先頭: ページ最上部／最下部へ飛ぶナビチップ ---
+            const topChip = el('div', 'jump-chip nav-chip', T.debug_jump_top);
+            topChip.title = T.debug_jump_top_title;
+            topChip.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+            jumpBar.appendChild(topChip);
+            const botChip = el('div', 'jump-chip nav-chip', T.debug_jump_bottom);
+            botChip.title = T.debug_jump_bottom_title;
+            botChip.onclick = () => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+            jumpBar.appendChild(botChip);
+
+            // --- 各ターンカード ---
+            turns.forEach((t, ti) => {
+                const ttype = turnTypeOf(t.startMsg);
+                const turnTok = t.msgs.reduce((s, x) => s + x.m.tokens, 0);
+                const toolCount = t.msgs.reduce((s, x) => s + ((x.m.tool_calls && x.m.tool_calls.length) || 0), 0);
+                const turnNo = ti + 1;
+
+                const det = el('details', 'turn-card');
+                det.id = 'turn-' + turnNo;
+                det.setAttribute('data-ttype', ttype.key);
+                if (ti === turns.length - 1) det.open = true; // 最新ターンだけ展開
+
+                const sum = el('summary', 'turn-summary');
+                sum.appendChild(el('span', 'turn-no', T.debug_turn_prefix + turnNo));
+                sum.appendChild(el('span', 'turn-type ' + ttype.tt + ' searchable', ttype.label));
+                if (t.startMsg.is_layer0) sum.appendChild(el('span', 'turn-type tt-layer0', '🗜'));
+                // 折りたたみ時も見える日時（ターン先頭の [SYSTEM] ヘッダーから抽出）
+                const tTime = turnTime(t.startMsg.content);
+                if (tTime) sum.appendChild(el('span', 'turn-time searchable', tTime));
+
+                const sm = el('span', 'turn-meta');
+                sm.appendChild(el('span', null, t.msgs.length + ' msgs'));
+                sm.appendChild(el('span', null, turnTok.toLocaleString() + ' tok'));
+                if (toolCount) sm.appendChild(el('span', 'tools-count', '🛠 x' + toolCount));
+                if (t.startMsg.history_idx != null) sm.appendChild(el('span', null, T.debug_history_prefix + t.startMsg.history_idx));
+
+                // Layer0圧縮ボタン（未圧縮ターンのみ／入力ビューでは出さない）
+                if (!readOnlyView && t.startMsg.is_turn_start && !t.startMsg.is_layer0 && t.startMsg.history_idx != null) {
+                    const btn = el('button', 'layer0-btn', T.debug_layer0_compress);
+                    btn.onclick = (e) => { e.preventDefault(); requestLayer0Compress(t.startMsg.history_idx); };
+                    sm.appendChild(btn);
+                }
+
+                // コピーボタン: このターン全体をクリップボードへ（読み取り専用なので入力ビューでも出す）
+                const copyBtn = el('button', 'copy-btn', T.debug_copy_button);
+                copyBtn.title = T.debug_copy_turn_title;
+                copyBtn.onclick = (e) => { e.preventDefault(); e.stopPropagation(); copyTurnToClipboard(t.msgs); };
+                sm.appendChild(copyBtn);
+
+                sum.appendChild(sm);
+                det.appendChild(sum);
+
+                const bd = el('div', 'turn-body');
+                t.msgs.forEach(x => bd.appendChild(renderMessage(x.m, x.i)));
+                det.appendChild(bd);
+                container.appendChild(det);
+
+                // ジャンプチップ
+                const chip = el('div', 'jump-chip ' + ttype.chip);
+                chip.appendChild(document.createTextNode('#' + turnNo));
+                if (toolCount) {
+                    const tc = el('span', 'chip-tools', '🛠' + toolCount);
+                    chip.appendChild(tc);
+                }
+                chip.title = ttype.label + ' / ' + turnTok.toLocaleString() + ' tok';
+                chip.onclick = () => {
+                    det.open = true;
+                    det.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                };
+                jumpBar.appendChild(chip);
+            });
+
+            // 検索が入っていれば再適用
+            applySearch();
+
+            // 「この1件を置換」後の自動前進: 再描画でヒット集合が組み直された後、
+            // 置換前にいた位置（＝1つ詰まって次のヒットがそこに来る）へ進む。
+            if (pendingReplaceAdvance != null) {
+                const pos = pendingReplaceAdvance;
+                pendingReplaceAdvance = null;
+                if (searchHits.length) {
+                    searchPos = ((pos - 1) % searchHits.length + searchHits.length) % searchHits.length;
+                    gotoHit(1);
+                }
+            }
+
+            // 置換プレビュー件数を更新（件数が変わった可能性があるため）
+            schedulePreview();
+
+            // 初回 or 最下部追従時は、最新ターンが見える最下部までスクロール。
+            // レイアウト確定後に実行するため次フレームで行う。
+            if (shouldStickBottom) {
+                requestAnimationFrame(() => {
+                    window.scrollTo({ top: document.documentElement.scrollHeight });
+                });
+            }
+            firstRender = false;
+        }
+
+        // ===== 検索（ハイライト＋件数＋前後ジャンプ＋正規表現） =====
+        let searchHits = [];   // ヒットした <mark> を文書順に保持
+        let searchPos = -1;    // 現在ジャンプ位置
+        let turnRanges = [];   // ターン番号(1始まり) → {firstIdx, lastIdx}（置換の範囲指定用）
+        let pendingReplaceAdvance = null;  // 「この1件を置換」後に進む元の searchPos
+        let lastPreviewCount = 0;          // 直近の置換プレビュー件数（範囲一括の expected_count）
+
+        // クエリから RegExp を組み立てる（正規表現/大小区別トグルを反映）。無効ならnull。
+        function buildSearchRegex(q) {
+            const useRegex = document.getElementById('search-regex').checked;
+            const caseSens = document.getElementById('search-case').checked;
+            const flags = 'g' + (caseSens ? '' : 'i');
+            try {
+                const src = useRegex ? q : q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                return new RegExp(src, flags);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // 要素内のテキストノードを走査し、ヒットを <mark> で包む。戻り値=ヒット数。
+        // （タグ色付けの <span> 構造は壊さず、テキストノードだけ分割する）
+        function markMatches(root, regex) {
+            const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+            const nodes = [];
+            while (walker.nextNode()) nodes.push(walker.currentNode);
+            let count = 0;
+            nodes.forEach(node => {
+                const text = node.nodeValue;
+                regex.lastIndex = 0;
+                let m, last = 0;
+                const frag = document.createDocumentFragment();
+                let found = false;
+                while ((m = regex.exec(text)) !== null) {
+                    found = true;
+                    if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+                    const mark = document.createElement('mark');
+                    mark.className = 'search-hit';
+                    mark.textContent = m[0];
+                    frag.appendChild(mark);
+                    count++;
+                    last = m.index + m[0].length;
+                    if (m[0].length === 0) regex.lastIndex++; // 空マッチの無限ループ防止
+                }
+                if (found) {
+                    if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+                    node.parentNode.replaceChild(frag, node);
+                }
+            });
+            return count;
+        }
+
+        function updateHitLabel(total) {
+            const label = document.getElementById('hit-label');
+            if (total < 0) { label.textContent = T.debug_regex_error; label.classList.add('invalid'); return; }
+            label.classList.remove('invalid');
+            if (!total) { label.textContent = T.debug_zero_hits; return; }
+            label.textContent = (searchPos >= 0 ? (searchPos + 1) + ' / ' : '') + total + ' ' + T.debug_hits_unit;
+        }
+
+        function applySearch() {
+            const q = document.getElementById('turn-search').value;
+            const onlyHits = document.getElementById('search-only').checked;
+            const cards = document.querySelectorAll('#content-area .turn-card');
+
+            // 既存ハイライトをリセット（初回に各要素の元HTMLを退避しておく）
+            document.querySelectorAll('#content-area .searchable').forEach(elm => {
+                if (elm._orig == null) elm._orig = elm.innerHTML;
+                else elm.innerHTML = elm._orig;
+            });
+            searchHits = [];
+            searchPos = -1;
+
+            if (!q) {
+                cards.forEach(c => c.style.display = '');
+                updateHitLabel(0);
+                return;
+            }
+            const regex = buildSearchRegex(q);
+            if (!regex) { cards.forEach(c => c.style.display = ''); updateHitLabel(-1); return; }
+
+            let total = 0;
+            cards.forEach(card => {
+                let cardHits = 0;
+                card.querySelectorAll('.searchable').forEach(elm => { cardHits += markMatches(elm, regex); });
+                const hit = cardHits > 0;
+                card.style.display = (onlyHits && !hit) ? 'none' : '';
+                if (hit) card.open = true;
+                total += cardHits;
+            });
+            searchHits = Array.from(document.querySelectorAll('#content-area mark.search-hit'));
+            updateHitLabel(total);
+        }
+
+        // ヒット間ジャンプ（delta: +1 次 / -1 前）
+        function gotoHit(delta) {
+            if (!searchHits.length) return;
+            if (searchPos >= 0 && searchHits[searchPos]) searchHits[searchPos].classList.remove('active-hit');
+            searchPos = (searchPos + delta + searchHits.length) % searchHits.length;
+            const mark = searchHits[searchPos];
+            mark.classList.add('active-hit');
+            const card = mark.closest('.turn-card');
+            const wasClosed = card && !card.open;
+            if (card) card.open = true;
+            // details を開いた直後はレイアウトが確定しておらず scrollIntoView が無視されることが
+            // あるため、開いた場合は次フレームまで待ってからスクロールする。
+            const doScroll = () => mark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (wasClosed) requestAnimationFrame(() => requestAnimationFrame(doScroll));
+            else doScroll();
+            updateHitLabel(searchHits.length);
+        }
+
+        // ===== 検索置換 =====
+        // 範囲入力(ターン番号) → history_idx 区間 に変換。無効なら null。
+        function rangeToIdx() {
+            const max = turnRanges.length;
+            if (!max) return null;
+            let s = parseInt(document.getElementById('range-start').value, 10);
+            let e = parseInt(document.getElementById('range-end').value, 10);
+            if (!Number.isFinite(s)) s = 1;
+            if (!Number.isFinite(e)) e = max;
+            s = Math.max(1, Math.min(s, max));
+            e = Math.max(1, Math.min(e, max));
+            if (s > e) { const t = s; s = e; e = t; }
+            const a = turnRanges[s - 1], b = turnRanges[e - 1];
+            if (!a || !b) return null;
+            return { start_idx: a.firstIdx, end_idx: b.lastIdx };
+        }
+
+        // プレビュー（件数のみ）をデバウンス送信
+        let _previewTimer = null;
+        function schedulePreview() {
+            clearTimeout(_previewTimer);
+            _previewTimer = setTimeout(sendPreview, 200);
+        }
+        function sendPreview() {
+            const find = document.getElementById('turn-search').value;
+            const label = document.getElementById('replace-count');
+            if (!find) { lastPreviewCount = 0; label.textContent = T.debug_range_zero_hits; label.classList.remove('invalid'); return; }
+            const rng = rangeToIdx();
+            if (!rng || !debugSocket || debugSocket.readyState !== WebSocket.OPEN) return;
+            debugSocket.send(JSON.stringify({
+                type: 'replace_preview',
+                find,
+                replacement: '',
+                start_idx: rng.start_idx,
+                end_idx: rng.end_idx,
+                use_regex: document.getElementById('search-regex').checked,
+                case_sensitive: document.getElementById('search-case').checked,
+            }));
+        }
+
+        // 現在のアクティブヒット1件を置換 → 成功後は再描画で自動的に次のヒットへ
+        function replaceOne() {
+            if (readOnlyView) { showStatus(T.debug_readonly_warning, false); return; }
+            if (searchPos < 0 || !searchHits[searchPos]) {
+                showStatus(T.debug_select_hit, false);
+                return;
+            }
+            const mark = searchHits[searchPos];
+            const rc = mark.closest('.raw-content');
+            if (!rc || rc.dataset.historyIdx == null) {
+                showStatus(T.debug_cannot_replace_non_body, false);
+                return;
+            }
+            // この本文内で active mark が何番目の search-hit か（0始まり）= occurrence
+            const marksInRc = Array.from(rc.querySelectorAll('mark.search-hit'));
+            const occ = marksInRc.indexOf(mark);
+            if (occ < 0) { showStatus(T.debug_target_not_found, false); return; }
+            const find = document.getElementById('turn-search').value;
+            if (!find) return;
+            if (!debugSocket || debugSocket.readyState !== WebSocket.OPEN) { showStatus(T.debug_ws_disconnected, false); return; }
+            pendingReplaceAdvance = searchPos;
+            debugSocket.send(JSON.stringify({
+                type: 'replace_one',
+                history_idx: Number(rc.dataset.historyIdx),
+                occurrence: occ,
+                find,
+                replacement: document.getElementById('replace-input').value,
+                use_regex: document.getElementById('search-regex').checked,
+                case_sensitive: document.getElementById('search-case').checked,
+            }));
+            showStatus(T.debug_replace_one_requested, true);
+        }
+
+        // 範囲内すべてを一括置換（プレビュー件数を expected_count として再検証）
+        function replaceAll() {
+            if (readOnlyView) { showStatus(T.debug_readonly_warning, false); return; }
+            const find = document.getElementById('turn-search').value;
+            if (!find) { showStatus(T.debug_search_empty, false); return; }
+            const rng = rangeToIdx();
+            if (!rng) { showStatus(T.debug_range_invalid, false); return; }
+            if (!lastPreviewCount) { showStatus(T.debug_no_matches_in_range, false); return; }
+            const replacement = document.getElementById('replace-input').value;
+            if (!confirm(T.debug_replace_all_confirm.replace('{n}', lastPreviewCount).replace('{r}', replacement))) return;
+            if (!debugSocket || debugSocket.readyState !== WebSocket.OPEN) { showStatus(T.debug_ws_disconnected, false); return; }
+            debugSocket.send(JSON.stringify({
+                type: 'replace_apply',
+                find,
+                replacement,
+                start_idx: rng.start_idx,
+                end_idx: rng.end_idx,
+                expected_count: lastPreviewCount,
+                use_regex: document.getElementById('search-regex').checked,
+                case_sensitive: document.getElementById('search-case').checked,
+            }));
+            showStatus(T.debug_replace_requested, true);
+        }
+
+        document.getElementById('view-current').addEventListener('click', () => setView('current'));
+        document.getElementById('view-input').addEventListener('click', () => setView('input'));
+        document.getElementById('replace-one-btn').addEventListener('click', replaceOne);
+        document.getElementById('replace-all-btn').addEventListener('click', replaceAll);
+        document.getElementById('range-start').addEventListener('input', schedulePreview);
+        document.getElementById('range-end').addEventListener('input', schedulePreview);
+
+        // ===== 展開/折りたたみ操作 =====
+        document.getElementById('expand-all').addEventListener('click', () => {
+            document.querySelectorAll('#content-area .turn-card').forEach(c => c.open = true);
+        });
+        document.getElementById('collapse-all').addEventListener('click', () => {
+            document.querySelectorAll('#content-area .turn-card').forEach(c => c.open = false);
+        });
+        document.getElementById('turn-search').addEventListener('input', () => { applySearch(); schedulePreview(); });
+        document.getElementById('search-case').addEventListener('change', () => { applySearch(); schedulePreview(); });
+        document.getElementById('search-regex').addEventListener('change', () => { applySearch(); schedulePreview(); });
+        document.getElementById('search-only').addEventListener('change', applySearch);
+        document.getElementById('search-next').addEventListener('click', () => gotoHit(1));
+        document.getElementById('search-prev').addEventListener('click', () => gotoHit(-1));
+        // 検索ボックス内: Enterで次へ / Shift+Enterで前へ
+        document.getElementById('turn-search').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); gotoHit(e.shiftKey ? -1 : 1); }
+        });
+
+        // j / k で前後ターンへ
+        let focusTurn = 0;
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            const cards = Array.from(document.querySelectorAll('#content-area .turn-card[id]'))
+                .filter(c => c.style.display !== 'none');
+            if (!cards.length) return;
+            if (e.key === 'j') { focusTurn = Math.min(focusTurn + 1, cards.length - 1); }
+            else if (e.key === 'k') { focusTurn = Math.max(focusTurn - 1, 0); }
+            else return;
+            const c = cards[focusTurn];
+            c.open = true;
+            c.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        function showError(msg) {
+            const banner = document.getElementById('error-banner');
+            banner.textContent = msg;
+            banner.style.display = 'block';
+            document.getElementById('content-area').innerHTML =
+                '<div class="empty-state">' + T.debug_error_empty_state + '</div>';
+        }
+
+        // ===== WebSocket によるリアルタイム更新 =====
+        let debugSocket = null;
+
+        function setupWebSocket() {
+            const protocolPrefix = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocolPrefix}//${window.location.host}/ws/debug`;
+            const socket = new WebSocket(wsUrl);
+            debugSocket = socket;
+
+            socket.onmessage = function (event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'compress_result') {
+                        showStatus(data.message || (data.success ? T.debug_compressed : T.debug_compress_failed), data.success);
+                        if (data.success) setTimeout(detectLoops, 500);
+                        return;
+                    }
+                    if (data.type === 'loops_detected') {
+                        renderLoops(data.loops || [], data.message);
+                        return;
+                    }
+                    // 編集・置換（1件/範囲一括）の結果
+                    if (data.type === 'edit_result') {
+                        showStatus(data.message || (data.success ? T.debug_completed : T.debug_failed), data.success);
+                        if (!data.success && pendingEdit) {
+                            // インライン編集の保存失敗 → ボタンを再有効化（textareaは保持）
+                            pendingEdit.save.disabled = false;
+                            pendingEdit.cancel.disabled = false;
+                        }
+                        if (data.success || data.stale) pendingEdit = null;
+                        return;
+                    }
+                    // 置換プレビュー（件数のみ）
+                    if (data.type === 'replace_preview_result') {
+                        const label = document.getElementById('replace-count');
+                        if (data.success) {
+                            lastPreviewCount = data.count;
+                            label.textContent = T.debug_range_hits.replace('{n}', data.count);
+                            label.classList.remove('invalid');
+                        } else {
+                            lastPreviewCount = 0;
+                            label.textContent = data.message || T.debug_error_label;
+                            label.classList.add('invalid');
+                        }
+                        return;
+                    }
+                    if (data.error) {
+                        showError(data.error);
+                    } else if (data.messages) {
+                        // 配信payloadをキャッシュし、現在のタブ（最新 or 直前の入力）で描画する
+                        lastData = data;
+                        renderActive();
+                        document.getElementById('error-banner').style.display = 'none';
+                    }
+                } catch (err) {
+                    console.error('JSON parse error:', err);
+                }
+            };
+
+            socket.onclose = function () {
+                console.log('WebSocket closed. Retrying in 3 seconds...');
+                setTimeout(setupWebSocket, 3000);
+            };
+
+            socket.onerror = function (err) {
+                console.error('WebSocket error:', err);
+                showError(T.debug_ws_connection_failed);
+            };
+        }
+
+        // ターン（多ステップ）をLayer0に圧縮するリクエストを送る
+        function requestLayer0Compress(historyIdx) {
+            if (readOnlyView) { showStatus(T.debug_readonly_warning, false); return; }
+            if (!debugSocket || debugSocket.readyState !== WebSocket.OPEN) {
+                showStatus(T.debug_ws_send_failed, false);
+                return;
+            }
+            if (!confirm(T.debug_layer0_confirm.replace('{n}', historyIdx))) {
+                return;
+            }
+            debugSocket.send(JSON.stringify({ type: 'compress_layer0_at', history_idx: historyIdx }));
+            showStatus(T.debug_compress_requested, true);
+        }
+
+        // --- 強化ループ検知 ＆ 圧縮 ---
+        function detectLoops() {
+            if (!debugSocket || debugSocket.readyState !== WebSocket.OPEN) {
+                showStatus(T.debug_ws_disconnected, false);
+                return;
+            }
+            debugSocket.send(JSON.stringify({ type: 'detect_loops' }));
+        }
+
+        function renderLoops(loops, message) {
+            const box = document.getElementById('loop-results');
+            const compressBtn = document.getElementById('compress-selected-btn');
+            if (message) { box.innerHTML = `<div style="color:#94a3b8;font-size:13px;">${message}</div>`; compressBtn.style.display = 'none'; return; }
+            if (!loops.length) {
+                box.innerHTML = '<div style="color:#1f7a3d;font-size:13px;padding:6px 0;">' + T.debug_no_loops_found + '</div>';
+                compressBtn.style.display = 'none';
+                return;
+            }
+            let html = `<div style="font-size:13px;color:#cbd5e1;margin:6px 0;">${T.debug_loop_candidates.replace('{n}', loops.length)}</div>`;
+            html += '<table style="width:100%;border-collapse:collapse;font-size:13px;">';
+            html += '<tr style="color:#94a3b8;text-align:left;"><th></th><th>' + T.debug_history_prefix.replace('#', '') + '#</th><th>' + T.debug_loop_col_time + '</th><th>life_action</th><th>note_quill</th><th>' + T.debug_loop_col_tools + '</th></tr>';
+            for (const lp of loops) {
+                const severe = lp.severity >= 6;
+                html += `<tr style="border-top:1px solid #334155;">
+                    <td><input type="checkbox" class="loop-cb" data-idx="${lp.start_idx}" ${severe ? 'checked' : ''}></td>
+                    <td>${lp.start_idx}</td>
+                    <td>${lp.time}</td>
+                    <td style="color:${lp.life_action >= 3 ? '#f87171' : '#e6edf3'}">${lp.life_action}</td>
+                    <td style="color:${lp.note_quill >= 3 ? '#f87171' : '#e6edf3'}">${lp.note_quill}</td>
+                    <td>${lp.total_tools}</td>
+                </tr>`;
+            }
+            html += '</table>';
+            box.innerHTML = html;
+            compressBtn.style.display = 'inline-block';
+        }
+
+        function compressSelectedLoops() {
+            const checked = Array.from(document.querySelectorAll('.loop-cb:checked')).map(cb => parseInt(cb.dataset.idx, 10));
+            if (!checked.length) { showStatus(T.debug_no_turns_selected, false); return; }
+            if (!debugSocket || debugSocket.readyState !== WebSocket.OPEN) { showStatus(T.debug_ws_disconnected, false); return; }
+            if (!confirm(T.debug_compress_loops_confirm.replace('{n}', checked.length))) return;
+            debugSocket.send(JSON.stringify({ type: 'compress_layer0_at', history_indices: checked }));
+            showStatus(T.debug_compress_n_requested.replace('{n}', checked.length), true);
+        }
+
+        document.getElementById('detect-loops-btn').addEventListener('click', detectLoops);
+        document.getElementById('compress-selected-btn').addEventListener('click', compressSelectedLoops);
+
+        // 圧縮結果などの一時ステータス表示
+        function showStatus(message, success) {
+            let bar = document.getElementById('status-bar');
+            if (!bar) {
+                bar = document.createElement('div');
+                bar.id = 'status-bar';
+                bar.style.cssText = 'position:fixed;top:8px;right:8px;z-index:9999;padding:10px 14px;border-radius:6px;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,.2);';
+                document.body.appendChild(bar);
+            }
+            bar.style.background = success ? '#1f7a3d' : '#9b2c2c';
+            bar.style.color = '#fff';
+            bar.textContent = message;
+            bar.style.display = 'block';
+            clearTimeout(bar._t);
+            bar._t = setTimeout(() => { bar.style.display = 'none'; }, 5000);
+        }
+
+        setupWebSocket();
+    </script>
+</body>
+
+</html>

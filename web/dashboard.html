@@ -1,0 +1,130 @@
+<!-- web/dashboard.html -->
+<!DOCTYPE html>
+<html lang="{{t:html_lang}}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{t:dashboard_title}}</title>
+    <link rel="icon" href="/static/images/favicon.ico" sizes="16x16 32x32">
+    <link rel="apple-touch-icon" href="/static/images/favicon.png" sizes="180x180">
+    <!-- テーマ変数は全ページ共通トークンに集約（theme.js より前＝FOUC防止） -->
+    <link rel="stylesheet" href="/static/theme-tokens.css?v=6">
+    <link rel="stylesheet" href="/static/dashboard.css?v=47">
+    <!-- テーマは本文描画前に確定させる（FOUC防止）ため head で読み込む -->
+    <script src="/static/theme.js?v=6"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Klee+One:wght@400;600&family=Zen+Kurenaido&display=swap" rel="stylesheet">
+  
+</head>
+
+<body>
+    <!-- ヘッダー -->
+    <div class="header">
+        <img src="/static/images/crescentgrove_logo_s.png" alt="Crescent Grove" class="header-logo">
+        <div class="header-status" id="status">{{t:status_connecting}}</div>
+        <div class="header-right">
+            <div class="token-info" id="tokenInfo">- / -</div>
+            <div class="token-bar-container">
+                <div class="token-bar" id="tokenBar"></div>
+            </div>
+            <button class="header-button" id="themeToggle" title="{{t:theme_toggle}}"><img class="ui-icon ui-icon-only" src="/static/images/icons/moon.svg" alt=""></button>
+            <a href="/debug/context" class="nav-link"><img class="ui-icon" src="/static/images/icons/ladybug.svg" alt="">{{t:nav_context}}</a>
+            <a href="/settings/llm" class="nav-link"><img class="ui-icon" src="/static/images/icons/gear.svg" alt="">{{t:nav_settings}}</a>
+            <a href="/manual" class="nav-link"><img class="ui-icon" src="/static/images/icons/book-open.svg" alt="">{{t:nav_manual}}</a>
+            <a href="/logs" class="nav-link"><img class="ui-icon" src="/static/images/icons/scroll.svg" alt="">{{t:nav_logs}}</a>
+            <!-- 折りたたみ2段目の開閉トグル（右端） -->
+            <button class="header-button header-drawer-toggle" id="headerDrawerToggle"
+                title="{{t:drawer_toggle}}" aria-expanded="false"><img class="ui-icon ui-icon-only" src="/static/images/icons/play-blue.svg" alt=""></button>
+        </div>
+    </div>
+
+    <!-- ヘッダー2段目（折りたたみ：普段は隠す詳細操作） -->
+    <div class="header-drawer" id="headerDrawer">
+        <div class="header-drawer-inner">
+            <button class="header-button" id="moonbeatToggle" title="{{t:moonbeat_toggle_title}}" disabled><img class="ui-icon" src="/static/images/icons/moon.svg" alt="">…</button>
+            <button class="header-button" id="moonbeatFire" title="{{t:moonbeat_fire_title}}" disabled><img class="ui-icon" src="/static/images/icons/fire.svg" alt="">{{t:moonbeat_fire}}</button>
+            <button class="header-button" id="compressButton" disabled><img class="ui-icon" src="/static/images/icons/box.svg" alt="">{{t:compress}}</button>
+            <input type="number" id="compressCount" min="10" max="500" value="100" style="width:60px;padding:3px 6px;font-size:11px;border:1px solid var(--border-color);border-radius:4px;background:var(--bg-input);color:var(--text-color);">
+            <button class="header-button" id="resetLayout"
+                onclick="localStorage.removeItem('yuzuki_dashboard_layout_v2'); location.reload();"><img class="ui-icon" src="/static/images/icons/arrow-refresh.svg" alt="">{{t:layout_reset}}</button>
+            <!-- workspace をエクスプローラで開く（配置リセットと公式サイトの間） -->
+            <button class="header-button" id="openWorkspace" title="{{t:open_workspace_title}}"
+                onclick="openWorkspaceFolder()"><img class="ui-icon" src="/static/images/icons/folder.svg" alt="">{{t:open_workspace}}</button>
+            <!-- 公式サイト（一番右）: window.openによりLinerでは外部URLとしてOS標準ブラウザで開かれる -->
+            <button class="header-button" id="officialSite" title="{{t:official_site_title}}"
+                onclick="window.open('https://www.crescent-grove.net/', '_blank', 'noopener')"><img class="ui-icon" src="/static/images/icons/globe.svg" alt="">{{t:official_site}}</button>
+        </div>
+    </div>
+
+    <!-- 手帳パネルを再展開するためのつまみ（折りたたみ時のみ表示） -->
+    <button class="right-reopen-tab" id="rightReopen" title="{{t:notebook_open}}" aria-label="{{t:notebook_open}}" aria-hidden="true"><img class="ui-icon ui-icon-only" src="/static/images/icons/notebook.svg" alt=""></button>
+
+    <!-- メインレイアウト（左右2カラム） -->
+    <div class="main-layout" id="mainLayout" style="grid-template-columns: 1fr 6px 1fr;">
+        <!-- 左: チャット & ログ -->
+        <div class="panel">
+            <div class="panel-header"><img class="ui-icon" src="/static/images/icons/chat-bubble.svg" alt="">{{t:panel_chat_log}}</div>
+            <div class="panel-content" id="chatMessages">
+                <div class="typing-indicator" id="typingIndicator">{{t:agent_typing}}</div>
+            </div>
+            <div class="chat-input-area">
+                <!-- 添付プレビュー（画像サムネ＋テキストのファイル名チップを横並び） -->
+                <div class="attachment-preview-area" id="attachmentPreviewArea"></div>
+                <div class="chat-input-row">
+                    <input type="file" id="imageFileInput" multiple accept="image/png,image/jpeg,image/webp,image/heic,image/heif,text/*,.txt,.md,.markdown,.csv,.tsv,.json,.jsonl,.log,.yml,.yaml,.xml,.ini,.toml,.py,.js,.ts,.html,.css,.sh,.bat,.sql,.c,.cpp,.h,.java,.go,.rs,.rb,.php" style="display:none">
+                    <button class="attach-button" id="attachButton" disabled title="{{t:attach_title}}"><img class="ui-icon ui-icon-only" src="/static/images/icons/paperclip.svg" alt=""></button>
+                    <textarea id="messageInput" placeholder="{{t:message_placeholder}}" rows="1" disabled></textarea>
+                    <button class="send-button" id="sendButton" disabled><img class="ui-icon ui-icon-only" src="/static/images/icons/paper-plane.svg" alt=""></button>
+                    <button class="stop-button" id="stopButton" title="{{t:stop_response}}"><span class="stop-icon"></span></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- リサイザー (左右) -->
+        <div class="resizer horizontal" id="resizerH"></div>
+
+        <!-- 右: 記憶コンテナ (上下分割) -->
+        <div class="right-container" id="rightContainer">
+            <div class="panel" style="display: flex; flex-direction: column; height: 100%;">
+                <div class="tab-bar">
+                    <button class="tab-button active" data-tab="tab-vital"><img class="ui-icon" src="/static/images/icons/heartbeat.svg" alt="">{{t:tab_vital}}</button>
+                    <button class="tab-button" data-tab="tab-letter"><img class="ui-icon" src="/static/images/icons/mail-heart.svg" alt="">{{t:tab_letter}}</button>
+                    <button class="tab-button" data-tab="tab-notes"><img class="ui-icon" src="/static/images/icons/notebook.svg" alt="">{{t:tab_notes}}</button>
+                    <button class="tab-button" data-tab="tab-today"><img class="ui-icon" src="/static/images/icons/calendar.svg" alt="">{{t:tab_today}}</button>
+                    <button class="tab-button" data-tab="tab-prefs"><img class="ui-icon" src="/static/images/icons/heart.svg" alt="">{{t:tab_prefs}}</button>
+                    <button class="tab-button" data-tab="tab-schedule"><img class="ui-icon" src="/static/images/icons/alarm-clock.svg" alt="">{{t:tab_schedule}}</button>
+                    <button class="memory-refresh-button" id="memoryRefresh" style="margin-left: auto;"><img class="ui-icon ui-icon-only" src="/static/images/icons/arrow-refresh.svg" alt=""></button>
+                    <!-- 手帳パネルを閉じる（折りたたむ）トグル -->
+                    <button class="memory-collapse-button" id="memoryCollapse"
+                        title="{{t:notebook_close}}" aria-expanded="true" aria-label="{{t:notebook_close}}"><img class="ui-icon ui-icon-only" src="/static/images/icons/x-mark.svg" alt=""></button>
+                </div>
+                <div class="tab-content" id="tab-letter">
+                    <div class="panel-content" id="memoryLetters"></div>
+                </div>
+                <div class="tab-content" id="tab-notes">
+                    <div class="panel-content" id="memoryNotes"></div>
+                </div>
+                <div class="tab-content" id="tab-today">
+                    <div class="panel-content" id="memoryToday"></div>
+                </div>
+                <div class="tab-content" id="tab-prefs">
+                    <div class="panel-content" id="memoryPrefs"></div>
+                </div>
+                <div class="tab-content active" id="tab-vital">
+                    <div class="panel-content" id="memoryVital"></div>
+                </div>
+                <div class="tab-content" id="tab-schedule">
+                    <div class="panel-content" id="memorySchedule"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/chat_history.js?v=3"></script>
+    <script src="/static/dashboard.js?v=51"></script>
+</body>
+
+</html>

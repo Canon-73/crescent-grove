@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "stamina_mode": "token",
+  "daily_budget_usd": 0.5,
+  "daily_token_limit": 500000,
+  "stamina_input_weight": 5,
+  "input_softcap": 2500,
+  "stamina_output_weight": 1,
+  "stamina_cost_multiplier": 0.0002,
+  "stamina_max": 500,
+  "energy_max": 50,
+  "energy_recovery_per_minute": 1.2
+}

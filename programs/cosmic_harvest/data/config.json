@@ -1,0 +1,15 @@
+{
+    "stamina_max": 30,
+    "stamina_cost_per_action": 1,
+    "stamina_regen_per_hour": 5,
+    "stamina_free_commands": [
+        "status",
+        "help",
+        "encyclopedia",
+        "enc",
+        "save",
+        "load",
+        "shop_list",
+        "next_day"
+    ]
+}

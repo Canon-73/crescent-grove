@@ -1,0 +1,13 @@
+name: lunar_explorer
+description: "{{t:lunar_explorer_desc}}"
+version: "1.0"
+timeout: 120
+args:
+  - name: query
+    type: string
+    required: true
+    description: "{{t:lunar_explorer_arg_query}}"
+  - name: max_iterations
+    type: integer
+    required: false
+    description: "{{t:lunar_explorer_arg_max_iterations}}"

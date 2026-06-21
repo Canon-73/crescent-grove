@@ -1,0 +1,8 @@
+id,name,primary_stat,description
+taste_gp,Taste Grand Prix,taste,Taste attribute is weighted most heavily.
+beauty,Beauty Contest,looks,Looks attribute is weighted most heavily.
+giant,Giant Vegetable Championship,size,Size attribute is weighted most heavily.
+aroma,Aroma Festival,aroma,Aroma attribute is weighted most heavily.
+overall,Overall Judging,all,Judged by the sum of all attributes.
+rare_auction,Rarity Auction,rarity,Rarity bonus is greatly amplified (x3).
+reverse,Reverse Contest,lowest,The vegetable with the lowest attribute value wins.

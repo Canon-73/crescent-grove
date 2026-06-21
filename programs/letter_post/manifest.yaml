@@ -1,0 +1,21 @@
+name: "letter_post"
+description: "{{t:letter_post_desc}}"
+version: "1.0"
+timeout: 15
+args:
+  - name: delete
+    type: integer
+    required: false
+    description: "{{t:letter_post_arg_delete}}"
+  - name: title
+    type: string
+    required: false
+    description: "{{t:letter_post_arg_title}}"
+  - name: emoji
+    type: string
+    required: false
+    description: "{{t:letter_post_arg_emoji}}"
+  - name: body
+    type: string
+    required: false
+    description: "{{t:letter_post_arg_body}}"

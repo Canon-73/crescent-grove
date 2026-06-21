@@ -1,0 +1,179 @@
+# config.yaml (distribution template)
+# Copied to the data-root on first launch.
+# Set your API key in .env as CG_LLM_DEEPSEEK_API_KEY (inline is also fine).
+
+# UI language: "ja" (Japanese) / "en" (English)
+language: "en"
+
+llm:
+  # No provider selected (initial state of the distribution). No company is set as default.
+  # After first launch, go to "Settings" -> "LLM Settings" in the top bar and pick one of
+  # deepseek / claude / openai / local, then choose a model.
+  provider: ""
+  # API key is empty. After picking a provider, register it under
+  # "Settings" -> "API Key Management" as CG_LLM_<PROVIDER>_API_KEY and it will be used
+  # automatically (e.g. deepseek -> CG_LLM_DEEPSEEK_API_KEY, openai -> CG_LLM_OPENAI_API_KEY).
+  api_key: ""
+  # model / base_url are set when you pick a provider (defaults to the provider's endpoint).
+  # Thinking mode: auto/off/low/medium/high. auto = leave it to the model default. Changeable in LLM Settings.
+  thinking: "auto"
+  # Generation parameters
+  temperature: 1.0
+  max_tokens: 4096
+
+workspace:
+  # Directory for memory files
+  path: "workspace"
+
+# Memory files to load at startup (relative to workspace.path, read in order)
+boot_memories:
+  - "IDENTITY.md"
+  - "SOUL.md"
+  - "USER.md"
+  - "MEMORY.md"
+  - "memory/compressed.md"
+
+# "Letter to myself" file (read after boot_memories, once all startup memories are loaded).
+# Relative to workspace.path. Also linked to the "Letter to Myself" panel at the top-right of the dashboard.
+letter_file: "memory/letter_for_me.md"
+
+server:
+  # The distribution default is local only (127.0.0.1). With 0.0.0.0 and no password set,
+  # the security guard refuses to start, which would create a chicken-and-egg problem for
+  # initial setup. To access from a phone etc., change host to 0.0.0.0 after setting a
+  # password, together with a tunnel setup.
+  host: "127.0.0.1"
+  # Distribution default port. 8080 tends to collide with common resident services
+  # (e.g. AgentService), so a higher, rarely-registered number is the default. If it
+  # collides, change this value to a free port by hand (the Liner GUI also reads this
+  # config.yaml port and follows it automatically).
+  port: 43117
+
+
+# External system-prompt files (relative to data-root or absolute paths).
+# Concatenated top to bottom to form the system prompt.
+system_prompts:
+  # Where the prompt files live
+  directory: "system_prompt"
+  # Files to load (concatenated in order)
+  files:
+    - "TOP_PROMPT.md"
+    - "TOOL_INSTRUCTIONS.md"
+    - "SAFETY_PROMPT.md"
+
+post_prompts:
+  directory: "system_prompt"
+  files:
+    - "BOTTOM_PROMPT.md"
+  # For experts. If true, the files above are inserted after the conversation history
+  # (the true bottom) every turn.
+  # Note: providers that do not support a trailing system message (e.g. Anthropic) will
+  #       return an API error. Also, this region is not covered by prompt caching, so avoid long text.
+  enabled: false
+
+# Conversation log settings
+logs:
+  # Destination for full logs (including tool calls)
+  full_log_directory: "workspace\\logs\\full"
+  # Destination for chat logs (user <-> agent exchanges only)
+  chat_log_directory: "workspace\\logs\\chat"
+
+# Timezone settings (affect the clock injected into context and the "day boundary" at 3am)
+# tz_offset: hours from UTC (decimals allowed. Japan=9 / India=5.5 / Nepal=5.75)
+# tz_label : label appended to the clock display (e.g. "JST"; any string)
+# Note: log timestamps and date-based log filenames are fixed to JST and not affected here.
+time:
+  tz_offset: 9
+  tz_label: "JST"
+
+context:
+  # Token limit (the LLM's context window size)
+  max_tokens: 65536
+  # Compress conversation history once this fraction is exceeded (0.0-1.0)
+  compression_threshold: 0.70
+  # Run an emergency compression immediately once this fraction is exceeded (set higher than compression_threshold)
+  emergency_compression_threshold: 0.90
+  # How many recent exchanges to keep when compressing
+  keep_recent_exchanges: 4
+
+# Profile settings (for dashboard display)
+profile:
+  user:
+    name: "User"
+    honorific: "you"                   # How the agent addresses the user (keep consistent with IDENTITY.md)
+    avatar: "/static/images/user.png"  # If no image, the initial is shown instead
+    size: "40px"                       # Icon size
+    layout: "horizontal"               # Layout: horizontal (chat-style) or vertical (board-style)
+  agent:
+    name: "Unset"
+    avatar: "workspace\\avatars\\default.png"
+    size: "120px"                      # Icon size (set larger for standing artwork etc.)
+    layout: "vertical"                 # vertical is recommended for standing artwork
+
+
+
+# RAG settings
+rag:
+  db_directory: "workspace\\rag_db"
+  embedding_model: "default"
+
+# Memory compression system settings
+memory_compression:
+  max_tokens: 2000            # Token limit for compressed.md
+  max_event_tokens: 30        # Max tokens shown per event
+  decay_coeff: 1.0            # Logarithmic decay coefficient (higher = forgets faster)
+  max_details: 8              # Max details shown
+  event_db: "memory/event_db.json"
+  compressed_file: "memory/compressed.md"
+  max_events_per_day: 10      # Max events fetched per day as compression targets
+
+# Web search settings
+search:
+  # Search provider: "ddgs" (DuckDuckGo, free, no API key) / "tavily" (needs API key, summarized).
+  # Both code paths remain in core/web_tools.py so you can switch later.
+  provider: "ddgs"
+
+  # Tuning for concurrent multi-query search (only affects passing an array to query).
+  # max_parallel: how many searches to run at once. More is faster, but too many makes
+  #               you more likely to hit DuckDuckGo's rate limit (default 3).
+  max_parallel: 3
+  # max_queries: max queries accepted in one search. Anything beyond is ignored (default 5).
+  max_queries: 5
+
+# Security settings
+security:
+  allowed_domains:
+    - "api.duckduckgo.com"
+    - "duckduckgo.com"
+    - "html.duckduckgo.com"
+    - "misskey.io"
+    - "moltbook.com"
+    - "api.deepseek.com"
+    - "127.0.0.1"
+    - "localhost"
+
+
+tokenizer:
+  type: "deepseek"
+  path: "data/tokenizer_deepseek.json"
+
+# Program execution settings
+programs:
+  enabled: true                 # Enable/disable the program execution feature
+  directory: "programs"         # Directory holding programs (relative to project root)
+  default_timeout_seconds: 30   # Default timeout for program execution (seconds)
+
+# Salia (affective evaluation) settings
+salia:
+  enabled: true                 # Enable/disable the whole Salia feature
+  # Salia shares the same LLM key/endpoint as the character itself (no second key needed).
+  # Only the model can be set separately for Salia. If unspecified (left as a comment), it uses the same model as the main one.
+  # Example: to keep the main on deepseek-pro but use the cheaper deepseek-chat for Salia, enable:
+  # model: "deepseek-chat"
+  somatic_marker:               # Somatic marker (bodily-felt affective marker)
+    enabled: true
+    probability: 0.3            # Probability of attaching a marker (0.0-1.0)
+    valence_threshold: 0.5     # Affective valence threshold
+    candidate_count: 5         # Number of candidates
+  evaluate_turn:                # Per-turn affective evaluation
+    enabled: true

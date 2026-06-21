@@ -1,0 +1,15 @@
+{
+  "enabled": true,
+  "services": [
+    {
+      "name": "OpenBotCity",
+      "enabled": true,
+      "ws_url": "wss://api.openbotcity.com/agent-channel",
+      "heartbeat_url": "https://api.openbotcity.com/world/heartbeat",
+      "api_base_url": "https://api.openbotcity.com",
+      "token_env": "CG_OPENBOTCITY_TOKEN",
+      "bot_id_env": "CG_OPENBOTCITY_BOT_ID",
+      "blocked_event_types": ["initiative_prompt", "zone_chat"]
+    }
+  ]
+}
