@@ -1,0 +1,16 @@
+{
+  "layer0_prompt_file": "config/compression_prompt_layer0.txt",
+  "layer0_scheduled_threshold": 140,
+  "layer0_keep_turns": 70,
+  "layer1_scheduled_count": 400,
+  "layer1_emergency_count": 200,
+  "layer0_max_batch": 10,
+  "layer1_max_tokens": 50000,
+  "layer2_max_tokens": 20000,
+  "layer1_compress_ratio": 0.5,
+  "layer2_compress_lines_ratio": 0.25,
+  "layer2_batch_max_lines": 60,
+  "turns_per_batch": 5,
+  "turn_summary_prompt_file": "config/compression_prompt_turn.txt",
+  "layer2_summary_prompt_file": "config/compression_prompt_layer2.txt"
+}

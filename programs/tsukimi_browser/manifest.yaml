@@ -1,0 +1,35 @@
+name: "tsukimi_browser"
+description: "{{t:tsukimi_desc}}"
+version: "1.0"
+timeout: 60
+
+# 第一級ツール昇格（オプトイン）。
+# 注意: ツール定義キャッシュは起動時に1回だけ構築されるため、この昇格は
+# 「次回サーバ再起動後」に有効になる。それまでも run_program 経由で普通に使える。
+tool:
+  name: tsukimi
+  description: "{{t:tsukimi_tool_desc}}"
+
+args:
+  - name: command
+    type: string
+    required: true
+    # この enum は main.py の COMMANDS と一致している必要があり、
+    # tests/test_tsukimi_browser.py で検証している。
+    enum: ["start", "open", "follow", "more", "back", "lucky", "search",
+           "look", "bookmark", "bookmarks", "history", "end", "help"]
+    description: "{{t:tsukimi_arg_command}}"
+  - name: url
+    type: string
+    required: false
+    path_check: false   # URL は "/" や "../" を含むのが正当。パスではない
+    description: "{{t:tsukimi_arg_url}}"
+  - name: n
+    type: integer
+    required: false
+    description: "{{t:tsukimi_arg_n}}"
+  - name: text
+    type: string
+    required: false
+    path_check: false   # 検索語 / ブックマークの一言メモ。本文テキスト
+    description: "{{t:tsukimi_arg_text}}"

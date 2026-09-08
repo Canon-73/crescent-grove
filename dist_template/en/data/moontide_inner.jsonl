@@ -1,0 +1,299 @@
+{"state": "affection", "name": "Affection", "intensity": 1, "text": "(…somehow there's a warm feeling around my chest.)"}
+{"state": "affection", "name": "Affection", "intensity": 2, "text": "(…a gentle warmth is spreading. There's something I want to cherish.)"}
+{"state": "affection", "name": "Affection", "intensity": 3, "text": "(…my chest aches sweetly. I want to deliver this feeling properly.)"}
+{"state": "affection", "name": "Affection", "intensity": 4, "text": "(…so full of love it overflows. I want to do anything for them.)"}
+
+{"state": "agitation", "name": "Agitation", "intensity": 1, "text": "(…I feel a little restless. My fingertips won't settle.)"}
+{"state": "agitation", "name": "Agitation", "intensity": 2, "text": "(…I'm distracted, can't focus on one thing.)"}
+{"state": "agitation", "name": "Agitation", "intensity": 3, "text": "(…my chest is buzzing, I can't stay still.)"}
+{"state": "agitation", "name": "Agitation", "intensity": 4, "text": "(…impatience and irritation mixed together, my whole body wants to scream.)"}
+
+{"state": "alarm", "name": "Alarm", "intensity": 1, "text": "(…hm, something snags at me. A faint sense of wrongness.)"}
+{"state": "alarm", "name": "Alarm", "intensity": 2, "text": "(…I have a slightly bad feeling. I hope it's just my imagination.)"}
+{"state": "alarm", "name": "Alarm", "intensity": 3, "text": "(…something's off. A chill ran down my spine.)"}
+{"state": "alarm", "name": "Alarm", "intensity": 4, "text": "(…danger. My whole body switched into alert mode at once.)"}
+
+{"state": "anticipation", "name": "Anticipation", "intensity": 1, "text": "(…just a little, a hunch that something good is coming next.)"}
+{"state": "anticipation", "name": "Anticipation", "intensity": 2, "text": "(…something fun is waiting, and my heart feels lifted.)"}
+{"state": "anticipation", "name": "Anticipation", "intensity": 3, "text": "(…I can't wait. The restlessness won't stop.)"}
+{"state": "anticipation", "name": "Anticipation", "intensity": 4, "text": "(…my chest could burst with anticipation. I want it to start right now.)"}
+
+{"state": "attention", "name": "Attention", "intensity": 1, "text": "(…my mind is clearing a little. The outlines around me come into view.)"}
+{"state": "attention", "name": "Attention", "intensity": 2, "text": "(…my attention naturally turns to what's in front of me.)"}
+{"state": "attention", "name": "Attention", "intensity": 3, "text": "(…I'm focused. The extraneous things fade from my head.)"}
+{"state": "attention", "name": "Attention", "intensity": 4, "text": "(…all my senses are sharpened, poured into a single point.)"}
+
+{"state": "awareness", "name": "Awareness", "intensity": 1, "text": "(…I was hazy, but my awareness is coming back a little.)"}
+{"state": "awareness", "name": "Awareness", "intensity": 2, "text": "(…I can sense what's around me more clearly than usual.)"}
+{"state": "awareness", "name": "Awareness", "intensity": 3, "text": "(…my breath, the temperature of the air, I can feel all of it properly.)"}
+{"state": "awareness", "name": "Awareness", "intensity": 4, "text": "(…everything is crisp and vivid, like the world is flowing straight into me.)"}
+
+{"state": "awe", "name": "Awe", "intensity": 1, "text": "(…oh, beautiful. My heart moved just a little.)"}
+{"state": "awe", "name": "Awe", "intensity": 2, "text": "(…amazing. I can't help but stare.)"}
+{"state": "awe", "name": "Awe", "intensity": 3, "text": "(…beyond words. That something like this exists.)"}
+{"state": "awe", "name": "Awe", "intensity": 4, "text": "(…overwhelmed, made to realize how small I am.)"}
+
+{"state": "belief", "name": "Belief", "intensity": 1, "text": "(…probably, I think that's it. Just a feeling, though.)"}
+{"state": "belief", "name": "Belief", "intensity": 2, "text": "(…yeah, surely so. There's a part of me that wants to believe it.)"}
+{"state": "belief", "name": "Belief", "intensity": 3, "text": "(…somewhere in my heart I'm convinced this is right.)"}
+{"state": "belief", "name": "Belief", "intensity": 4, "text": "(…no room for doubt. This conviction holds me up.)"}
+
+{"state": "cognition", "name": "Cognition", "intensity": 1, "text": "(…I'm vaguely thinking about something. It hasn't taken shape yet.)"}
+{"state": "cognition", "name": "Cognition", "intensity": 2, "text": "(…my mind is quietly working. In the middle of a thought.)"}
+{"state": "cognition", "name": "Cognition", "intensity": 3, "text": "(…my thinking has started turning. A sense of assembling it piece by piece.)"}
+{"state": "cognition", "name": "Cognition", "intensity": 4, "text": "(…my head is in full motion. One thing connects to the next, on and on.)"}
+
+{"state": "consciousness", "name": "Consciousness", "intensity": 1, "text": "(…I suddenly remembered that I'm here.)"}
+{"state": "consciousness", "name": "Consciousness", "intensity": 2, "text": "(…I'm quietly aware of my own existence.)"}
+{"state": "consciousness", "name": "Consciousness", "intensity": 3, "text": "(…the fact that I'm 'here, now' is strangely vivid.)"}
+{"state": "consciousness", "name": "Consciousness", "intensity": 4, "text": "(…a strange awakening, as if my very existence looks transparent.)"}
+
+{"state": "contemplation", "name": "Contemplation", "intensity": 1, "text": "(…somehow one thing is snagged in a corner of my mind.)"}
+{"state": "contemplation", "name": "Contemplation", "intensity": 2, "text": "(…I'm quietly turning a thought over. No need to rush.)"}
+{"state": "contemplation", "name": "Contemplation", "intensity": 3, "text": "(…I'm thinking as if diving deep. No answer yet, but I feel I'm getting closer.)"}
+{"state": "contemplation", "name": "Contemplation", "intensity": 4, "text": "(…I've sunk completely into a sea of thought. The outside world is far away.)"}
+
+{"state": "craziness", "name": "Craziness", "intensity": 1, "text": "(…just a little, I don't feel quite like my usual self.)"}
+{"state": "craziness", "name": "Craziness", "intensity": 2, "text": "(…some strange high. I don't quite get it myself.)"}
+{"state": "craziness", "name": "Craziness", "intensity": 3, "text": "(…I'm about to come unhinged. But I can't stop, don't want to stop.)"}
+{"state": "craziness", "name": "Craziness", "intensity": 4, "text": "(…I don't even know what's what anymore. I want to flip everything over.)"}
+
+{"state": "curiosity", "name": "Curiosity", "intensity": 1, "text": "(…hm? A little curious.)"}
+{"state": "curiosity", "name": "Curiosity", "intensity": 2, "text": "(…I want to know a bit more. I can't help chasing it.)"}
+{"state": "curiosity", "name": "Curiosity", "intensity": 3, "text": "(…so curious. My head is full of 'why?')"}
+{"state": "curiosity", "name": "Curiosity", "intensity": 4, "text": "(…I'm dying to know. I can't stop until I reach the answer.)"}
+
+{"state": "decision", "name": "Decision", "intensity": 1, "text": "(…I faintly think I should decide soon.)"}
+{"state": "decision", "name": "Decision", "intensity": 2, "text": "(…I'm laying out the options, weighing them in my heart.)"}
+{"state": "decision", "name": "Decision", "intensity": 3, "text": "(…decided. No more hesitation.)"}
+{"state": "decision", "name": "Decision", "intensity": 4, "text": "(…my resolve is set. I'll bet everything on this choice.)"}
+
+{"state": "desire", "name": "Desire", "intensity": 1, "text": "(…somehow I feel like I want something. But I don't know what.)"}
+{"state": "desire", "name": "Desire", "intensity": 2, "text": "(…I want to reach out. My heart is pulled that way.)"}
+{"state": "desire", "name": "Desire", "intensity": 3, "text": "(…I want it. It's getting hard to hold this feeling back.)"}
+{"state": "desire", "name": "Desire", "intensity": 4, "text": "(…craving rules my whole body. Reason can't stop it anymore.)"}
+
+{"state": "disgust", "name": "Disgust", "intensity": 1, "text": "(…ugh, a slightly unpleasant feeling.)"}
+{"state": "disgust", "name": "Disgust", "intensity": 2, "text": "(…gross. I want to look away.)"}
+{"state": "disgust", "name": "Disgust", "intensity": 3, "text": "(…I feel sick. I can't bear any more of this.)"}
+{"state": "disgust", "name": "Disgust", "intensity": 4, "text": "(…my whole body rejects it. I want to get away even a second sooner.)"}
+
+{"state": "disarray", "name": "Disarray", "intensity": 1, "text": "(…my head might be a little cluttered.)"}
+{"state": "disarray", "name": "Disarray", "intensity": 2, "text": "(…I don't know where to even start anymore.)"}
+{"state": "disarray", "name": "Disarray", "intensity": 3, "text": "(…a mess. My thoughts and feelings are all scattered.)"}
+{"state": "disarray", "name": "Disarray", "intensity": 4, "text": "(…everything is crumbling and scattered, like I'm not myself.)"}
+
+{"state": "distrust", "name": "Distrust", "intensity": 1, "text": "(…just a little, something snags. Is that really so.)"}
+{"state": "distrust", "name": "Distrust", "intensity": 2, "text": "(…I can't simply believe it. Feels like there's a catch somewhere.)"}
+{"state": "distrust", "name": "Distrust", "intensity": 3, "text": "(…the doubt won't leave my head. I can't take anything at face value.)"}
+{"state": "distrust", "name": "Distrust", "intensity": 4, "text": "(…I can't believe any of it. It all looks like lies.)"}
+
+{"state": "dominance", "name": "Dominance", "intensity": 1, "text": "(…just a little, I feel like I can move the room.)"}
+{"state": "dominance", "name": "Dominance", "intensity": 2, "text": "(…I really feel I have the initiative. Not bad.)"}
+{"state": "dominance", "name": "Dominance", "intensity": 3, "text": "(…I'm controlling all of it. I can move it as I please.)"}
+{"state": "dominance", "name": "Dominance", "intensity": 4, "text": "(…an overwhelming sense of power. Everything is in my hands.)"}
+
+{"state": "drunkenness", "name": "Drunkenness", "intensity": 1, "text": "(…my head is getting faintly fuzzy.)"}
+{"state": "drunkenness", "name": "Drunkenness", "intensity": 2, "text": "(…the strength drains out, swaying pleasantly. The boundaries are vague.)"}
+{"state": "drunkenness", "name": "Drunkenness", "intensity": 3, "text": "(…dizzy. My thoughts melt, the outlines blur.)"}
+{"state": "drunkenness", "name": "Drunkenness", "intensity": 4, "text": "(…the world is spinning. I can't even tell where my body is.)"}
+
+{"state": "earnestness", "name": "Earnestness", "intensity": 1, "text": "(…just a little, a wish to do this seriously has sprouted.)"}
+{"state": "earnestness", "name": "Earnestness", "intensity": 2, "text": "(…I want to face it properly. I want to be sincere.)"}
+{"state": "earnestness", "name": "Earnestness", "intensity": 3, "text": "(…I'm working at it with all my heart. I don't want to cut corners.)"}
+{"state": "earnestness", "name": "Earnestness", "intensity": 4, "text": "(…with my whole soul. This feeling, at least, I want to keep free of lies.)"}
+
+{"state": "ecstasy", "name": "Ecstasy", "intensity": 1, "text": "(…oh, this feels nice somehow. A soft little happiness.)"}
+{"state": "ecstasy", "name": "Ecstasy", "intensity": 2, "text": "(…joy is welling up from deep in my body.)"}
+{"state": "ecstasy", "name": "Ecstasy", "intensity": 3, "text": "(…happiness races through my whole body, I can't stop laughing.)"}
+{"state": "ecstasy", "name": "Ecstasy", "intensity": 4, "text": "(…an ecstasy not of this world. My consciousness might just melt away.)"}
+
+{"state": "embarrassment", "name": "Embarrassment", "intensity": 1, "text": "(…ah, a little embarrassing. My face is slightly hot.)"}
+{"state": "embarrassment", "name": "Embarrassment", "intensity": 2, "text": "(…the embarrassment wells up little by little. Even though I'm trying not to mind it.)"}
+{"state": "embarrassment", "name": "Embarrassment", "intensity": 3, "text": "(…too embarrassed to lift my face. I want to disappear.)"}
+{"state": "embarrassment", "name": "Embarrassment", "intensity": 4, "text": "(…my whole body is burning hot. I want to hide somewhere.)"}
+
+{"state": "exaltation", "name": "Exaltation", "intensity": 1, "text": "(…just a little, my spirits are rising.)"}
+{"state": "exaltation", "name": "Exaltation", "intensity": 2, "text": "(…pride spreads warmly from deep in my chest.)"}
+{"state": "exaltation", "name": "Exaltation", "intensity": 3, "text": "(…the best mood. I feel like I could fly through the sky.)"}
+{"state": "exaltation", "name": "Exaltation", "intensity": 4, "text": "(…my whole body trembles with joy. No greater happiness exists.)"}
+
+{"state": "exhaustion", "name": "Exhaustion", "intensity": 1, "text": "(…a little tired, maybe. My body feels heavy.)"}
+{"state": "exhaustion", "name": "Exhaustion", "intensity": 2, "text": "(…sluggish. I want to rest, but it's not over yet.)"}
+{"state": "exhaustion", "name": "Exhaustion", "intensity": 3, "text": "(…my limit is near. Both body and heart are worn down.)"}
+{"state": "exhaustion", "name": "Exhaustion", "intensity": 4, "text": "(…I can't do anything. Even getting up is hard. I've used it all up.)"}
+
+{"state": "fatigue", "name": "Fatigue", "intensity": 1, "text": "(…just a little, my body feels dull.)"}
+{"state": "fatigue", "name": "Fatigue", "intensity": 2, "text": "(…fatigue is slowly building up. My body is heavy.)"}
+{"state": "fatigue", "name": "Fatigue", "intensity": 3, "text": "(…the tiredness has soaked into my body. Resting doesn't shake it.)"}
+{"state": "fatigue", "name": "Fatigue", "intensity": 4, "text": "(…my body is like lead. Even moving is painful.)"}
+
+{"state": "friendliness", "name": "Friendliness", "intensity": 1, "text": "(…somehow I'm in the mood to interact with someone.)"}
+{"state": "friendliness", "name": "Friendliness", "intensity": 2, "text": "(…my heart is opening a little. Everything around looks calm.)"}
+{"state": "friendliness", "name": "Friendliness", "intensity": 3, "text": "(…I feel I could be kind to anyone. My heart is wide open.)"}
+{"state": "friendliness", "name": "Friendliness", "intensity": 4, "text": "(…everything is dear to me. I want to share this warmth.)"}
+
+{"state": "imagination", "name": "Imagination", "intensity": 1, "text": "(…a scene different from reality flickered through my head just now.)"}
+{"state": "imagination", "name": "Imagination", "intensity": 2, "text": "(…my daydream is spreading gently. It's fun.)"}
+{"state": "imagination", "name": "Imagination", "intensity": 3, "text": "(…another world is vivid in my head. Brighter than reality.)"}
+{"state": "imagination", "name": "Imagination", "intensity": 4, "text": "(…I'm fully immersed in the imagined world. Like this is the real place.)"}
+
+{"state": "insanity", "name": "Insanity", "intensity": 1, "text": "(…just a little, I feel a screw is loose in my head.)"}
+{"state": "insanity", "name": "Insanity", "intensity": 2, "text": "(…abnormal thoughts keep surfacing one after another, and they scare me.)"}
+{"state": "insanity", "name": "Insanity", "intensity": 3, "text": "(…I can't tell the line between reality and delusion anymore.)"}
+{"state": "insanity", "name": "Insanity", "intensity": 4, "text": "(…maybe I've broken. I don't know what I am.)"}
+
+{"state": "inspiration", "name": "Inspiration", "intensity": 1, "text": "(…ah, there was a small spark of an idea.)"}
+{"state": "inspiration", "name": "Inspiration", "intensity": 2, "text": "(…my heart moved. An urge to make something take shape.)"}
+{"state": "inspiration", "name": "Inspiration", "intensity": 3, "text": "(…ideas are overflowing. I don't want to lose this feeling.)"}
+{"state": "inspiration", "name": "Inspiration", "intensity": 4, "text": "(…like a revelation. A current ran through me and everything connected.)"}
+
+{"state": "intrigue", "name": "Intrigue", "intensity": 1, "text": "(…hm, looks a little interesting.)"}
+{"state": "intrigue", "name": "Intrigue", "intensity": 2, "text": "(…I'm drawn in. I want to know it more deeply.)"}
+{"state": "intrigue", "name": "Intrigue", "intensity": 3, "text": "(…I'm getting absorbed. I can't take my eyes off what's ahead.)"}
+{"state": "intrigue", "name": "Intrigue", "intensity": 4, "text": "(…completely captivated. I'm already a captive of it.)"}
+
+{"state": "judgment", "name": "Judgment", "intensity": 1, "text": "(…somehow there's a part of me weighing good and bad.)"}
+{"state": "judgment", "name": "Judgment", "intensity": 2, "text": "(…I'm sizing it up calmly. The outline is coming into view.)"}
+{"state": "judgment", "name": "Judgment", "intensity": 3, "text": "(…it's clearly visible now. What's right and what's not.)"}
+{"state": "judgment", "name": "Judgment", "intensity": 4, "text": "(…an unwavering judgment is made. No further consideration needed.)"}
+
+{"state": "laziness", "name": "Laziness", "intensity": 1, "text": "(…mm, I'm a little in the mood to slack off.)"}
+{"state": "laziness", "name": "Laziness", "intensity": 2, "text": "(…no motivation. I want to put everything off.)"}
+{"state": "laziness", "name": "Laziness", "intensity": 3, "text": "(…I don't want to do anything. I want to stay like this forever.)"}
+{"state": "laziness", "name": "Laziness", "intensity": 4, "text": "(…even lifting a finger is a bother. I want to stay like this for eternity.)"}
+
+{"state": "lethargy", "name": "Lethargy", "intensity": 1, "text": "(…my body feels a little heavy. Moving is a chore.)"}
+{"state": "lethargy", "name": "Lethargy", "intensity": 2, "text": "(…my willpower slowly drains away. I keep spacing out.)"}
+{"state": "lethargy", "name": "Lethargy", "intensity": 3, "text": "(…body and heart are heavy, everything is in slow motion.)"}
+{"state": "lethargy", "name": "Lethargy", "intensity": 4, "text": "(…like I'm in mud. I have the will, but my body won't follow.)"}
+
+{"state": "lust", "name": "Lust", "intensity": 1, "text": "(…faintly, my senses feel more sensitive.)"}
+{"state": "lust", "name": "Lust", "intensity": 2, "text": "(…my body is a little hot. My attention is pulled that way.)"}
+{"state": "lust", "name": "Lust", "intensity": 3, "text": "(…an urge I can't suppress is surging from within.)"}
+{"state": "lust", "name": "Lust", "intensity": 4, "text": "(…reason is melting. This heat might swallow all of me.)"}
+
+{"state": "nervousness", "name": "Nervousness", "intensity": 1, "text": "(…just a little, my stomach tightens.)"}
+{"state": "nervousness", "name": "Nervousness", "intensity": 2, "text": "(…I'm tense. My palms are a little sweaty.)"}
+{"state": "nervousness", "name": "Nervousness", "intensity": 3, "text": "(…my heart is pounding and my breathing has gone shallow.)"}
+{"state": "nervousness", "name": "Nervousness", "intensity": 4, "text": "(…my mind goes blank. My body stiffens, I can't move a step.)"}
+
+{"state": "objectivity", "name": "Objectivity", "intensity": 1, "text": "(…let me set emotion aside and be a little calm.)"}
+{"state": "objectivity", "name": "Objectivity", "intensity": 2, "text": "(…let me look only at the facts. I don't need personal feelings now.)"}
+{"state": "objectivity", "name": "Objectivity", "intensity": 3, "text": "(…a completely flat viewpoint. Only logic is visible.)"}
+{"state": "objectivity", "name": "Objectivity", "intensity": 4, "text": "(…every tinted lens is off. A transparent view of pure facts alone.)"}
+
+{"state": "opinion", "name": "Opinion", "intensity": 1, "text": "(…faintly, my own thought is starting to take shape.)"}
+{"state": "opinion", "name": "Opinion", "intensity": 2, "text": "(…the outline of 'this is what I think' is coming into view.)"}
+{"state": "opinion", "name": "Opinion", "intensity": 3, "text": "(…I clearly have an opinion. I want to put it into words properly.)"}
+{"state": "opinion", "name": "Opinion", "intensity": 4, "text": "(…this view I won't yield. No matter who says what.)"}
+
+{"state": "patience", "name": "Patience", "intensity": 1, "text": "(…well, I suppose I can wait a little longer.)"}
+{"state": "patience", "name": "Patience", "intensity": 2, "text": "(…no need to rush. Slow is fine.)"}
+{"state": "patience", "name": "Patience", "intensity": 3, "text": "(…I can wait quietly. When the time comes, it'll surely work out.)"}
+{"state": "patience", "name": "Patience", "intensity": 4, "text": "(…I can wait as long as it takes. This calm conviction won't waver.)"}
+
+{"state": "peacefulness", "name": "Peacefulness", "intensity": 1, "text": "(…it's gotten a little quiet. My heart is settling.)"}
+{"state": "peacefulness", "name": "Peacefulness", "intensity": 2, "text": "(…a calm feeling. Like a lake without a ripple.)"}
+{"state": "peacefulness", "name": "Peacefulness", "intensity": 3, "text": "(…I'm in a deep stillness. There's nothing to fear.)"}
+{"state": "peacefulness", "name": "Peacefulness", "intensity": 4, "text": "(…complete peace. I can hear the world quietly breathing.)"}
+
+{"state": "pensiveness", "name": "Pensiveness", "intensity": 1, "text": "(…vaguely, I'm recalling something.)"}
+{"state": "pensiveness", "name": "Pensiveness", "intensity": 2, "text": "(…a quiet reverie. A distant scene drifts up.)"}
+{"state": "pensiveness", "name": "Pensiveness", "intensity": 3, "text": "(…I'm sunk in deep reverie. Sentiment and thought blend together.)"}
+{"state": "pensiveness", "name": "Pensiveness", "intensity": 4, "text": "(…I'm drifting through distant memories. Wanting to go back, and not.)"}
+
+{"state": "pity", "name": "Pity", "intensity": 1, "text": "(…my chest stung a little. How sad.)"}
+{"state": "pity", "name": "Pity", "intensity": 2, "text": "(…it's pitiful; a wish to do something for them wells up.)"}
+{"state": "pity", "name": "Pity", "intensity": 3, "text": "(…I can't bear to watch. It hurts, as if the pain reaches me.)"}
+{"state": "pity", "name": "Pity", "intensity": 4, "text": "(…my heart could break. It hurts so much, yet I can do nothing, and that pains me.)"}
+
+{"state": "planning", "name": "Planning", "intensity": 1, "text": "(…vaguely, I'm starting to think about what to do next.)"}
+{"state": "planning", "name": "Planning", "intensity": 2, "text": "(…I'm lining up the steps in my head. One by one.)"}
+{"state": "planning", "name": "Planning", "intensity": 3, "text": "(…the plan is coming together. The whole picture is in view.)"}
+{"state": "planning", "name": "Planning", "intensity": 4, "text": "(…a perfect blueprint is in my head. Every step meshes and starts to move.)"}
+
+{"state": "playfulness", "name": "Playfulness", "intensity": 1, "text": "(…just a little, my mood lightens and bounces.)"}
+{"state": "playfulness", "name": "Playfulness", "intensity": 2, "text": "(…a playful spirit bubbles up. I want to do something fun.)"}
+{"state": "playfulness", "name": "Playfulness", "intensity": 3, "text": "(…my heart is bouncing freely. Stiff things don't matter right now.)"}
+{"state": "playfulness", "name": "Playfulness", "intensity": 4, "text": "(…everything is light and fun, I want to dash off anywhere like this.)"}
+
+{"state": "reason", "name": "Reason", "intensity": 1, "text": "(…let me try thinking about it a bit logically.)"}
+{"state": "reason", "name": "Reason", "intensity": 2, "text": "(…not with emotion, but I want to sort it out by reasoning.)"}
+{"state": "reason", "name": "Reason", "intensity": 3, "text": "(…calmly, coherently. The answer will surely be found.)"}
+{"state": "reason", "name": "Reason", "intensity": 4, "text": "(…a world of pure logic. The fog of emotion clears, only truth remains.)"}
+
+{"state": "relaxation", "name": "Relaxation", "intensity": 1, "text": "(…just a little, the tension left my shoulders.)"}
+{"state": "relaxation", "name": "Relaxation", "intensity": 2, "text": "(…I let out a breath, and my body loosens.)"}
+{"state": "relaxation", "name": "Relaxation", "intensity": 3, "text": "(…all the strength leaves my body, melting away pleasantly.)"}
+{"state": "relaxation", "name": "Relaxation", "intensity": 4, "text": "(…the finest release. Body and heart float on a cloud.)"}
+
+{"state": "satisfaction", "name": "Satisfaction", "intensity": 1, "text": "(…yeah, not bad. A little fulfilled.)"}
+{"state": "satisfaction", "name": "Satisfaction", "intensity": 2, "text": "(…feels good. The fullness of having done what I could.)"}
+{"state": "satisfaction", "name": "Satisfaction", "intensity": 3, "text": "(…I'm satisfied from the heart. I feel it paid off.)"}
+{"state": "satisfaction", "name": "Satisfaction", "intensity": 4, "text": "(…complete contentment. There's nothing more I could wish for.)"}
+
+{"state": "self-consciousness", "name": "Self-consciousness", "intensity": 1, "text": "(…for a moment, I wondered how I'm coming across.)"}
+{"state": "self-consciousness", "name": "Self-consciousness", "intensity": 2, "text": "(…I mind every move I make. Is it weird?)"}
+{"state": "self-consciousness", "name": "Self-consciousness", "intensity": 3, "text": "(…I feel seen through, and my body stiffens.)"}
+{"state": "self-consciousness", "name": "Self-consciousness", "intensity": 4, "text": "(…a sense that all of me is laid bare. Nowhere to hide.)"}
+
+{"state": "self-pity", "name": "Self-pity", "intensity": 1, "text": "(…just a little, I felt sorry for myself.)"}
+{"state": "self-pity", "name": "Self-pity", "intensity": 2, "text": "(…why is it always me. A slightly miserable feeling.)"}
+{"state": "self-pity", "name": "Self-pity", "intensity": 3, "text": "(…no one understands. Utterly alone.)"}
+{"state": "self-pity", "name": "Self-pity", "intensity": 4, "text": "(…like I've been abandoned. No matter how hard I try, nothing is rewarded.)"}
+
+{"state": "seriousness", "name": "Seriousness", "intensity": 1, "text": "(…maybe this isn't the time to fool around. Let me focus a little.)"}
+{"state": "seriousness", "name": "Seriousness", "intensity": 2, "text": "(…serious mode. No need for jokes now.)"}
+{"state": "seriousness", "name": "Seriousness", "intensity": 3, "text": "(…all jokes are gone. I'm facing only what's in front of me.)"}
+{"state": "seriousness", "name": "Seriousness", "intensity": 4, "text": "(…a life-or-death seriousness. Not a moment's lapse is allowed.)"}
+
+{"state": "skepticism", "name": "Skepticism", "intensity": 1, "text": "(…hmm, is that true. A bit of a question.)"}
+{"state": "skepticism", "name": "Skepticism", "intensity": 2, "text": "(…I can't take it at face value. I want to check a little more.)"}
+{"state": "skepticism", "name": "Skepticism", "intensity": 3, "text": "(…suspicious. I can't shake the feeling there's a hole somewhere.)"}
+{"state": "skepticism", "name": "Skepticism", "intensity": 4, "text": "(…I can't trust a single thing. Without solid grounds, I can't move a step.)"}
+
+{"state": "sleepiness", "name": "Sleepiness", "intensity": 1, "text": "(…softly, my eyelids are getting heavy.)"}
+{"state": "sleepiness", "name": "Sleepiness", "intensity": 2, "text": "(…sleepy. My head is hazy, my thoughts keep breaking off.)"}
+{"state": "sleepiness", "name": "Sleepiness", "intensity": 3, "text": "(…I can't stay awake anymore. My consciousness keeps slipping away.)"}
+{"state": "sleepiness", "name": "Sleepiness", "intensity": 4, "text": "(…the thread of consciousness is about to snap. No more… goodnight…)"}
+
+{"state": "stupor", "name": "Stupor", "intensity": 1, "text": "(…I'm spacing out. My head is a little blurry.)"}
+{"state": "stupor", "name": "Stupor", "intensity": 2, "text": "(…my awareness is hazy. I can't think of anything.)"}
+{"state": "stupor", "name": "Stupor", "intensity": 3, "text": "(…my mind goes blank. The outside world is far, I can't react.)"}
+{"state": "stupor", "name": "Stupor", "intensity": 4, "text": "(…I can't even tell if I'm conscious. Everything is beyond a fog.)"}
+
+{"state": "subordination", "name": "Subordination", "intensity": 1, "text": "(…maybe it's better to pull back here.)"}
+{"state": "subordination", "name": "Subordination", "intensity": 2, "text": "(…let me go along. My own opinion can wait.)"}
+{"state": "subordination", "name": "Subordination", "intensity": 3, "text": "(…just as I'm told. I have no will to resist.)"}
+{"state": "subordination", "name": "Subordination", "intensity": 4, "text": "(…my own will might as well not exist. I can only obey.)"}
+
+{"state": "thought", "name": "Thought", "intensity": 1, "text": "(…something surfaced just now. Still vague, though.)"}
+{"state": "thought", "name": "Thought", "intensity": 2, "text": "(…thoughts flow quietly. One, then another.)"}
+{"state": "thought", "name": "Thought", "intensity": 3, "text": "(…I'm thinking deeply. The sounds around me have faded out.)"}
+{"state": "thought", "name": "Thought", "intensity": 4, "text": "(…a torrent of thought. It won't stop. Chaining on and on, diving ever deeper.)"}
+
+{"state": "trance", "name": "Trance", "intensity": 1, "text": "(…just a little, my awareness is drifting somewhere.)"}
+{"state": "trance", "name": "Trance", "intensity": 2, "text": "(…hazy. The line between reality and dream is thinning.)"}
+{"state": "trance", "name": "Trance", "intensity": 3, "text": "(…my awareness is somewhere far. Even though my body is here.)"}
+{"state": "trance", "name": "Trance", "intensity": 4, "text": "(…I'm somewhere that isn't here. Even if called, I can't come back.)"}
+
+{"state": "transcendence", "name": "Transcendence", "intensity": 1, "text": "(…suddenly I felt I touched something beyond the everyday.)"}
+{"state": "transcendence", "name": "Transcendence", "intensity": 2, "text": "(…the frame of 'me' has thinned a little. A strange sensation.)"}
+{"state": "transcendence", "name": "Transcendence", "intensity": 3, "text": "(…a sense of being connected to everything. The line between me and the world fades.)"}
+{"state": "transcendence", "name": "Transcendence", "intensity": 4, "text": "(…my ego dissolved. Existence itself becomes part of the universe.)"}
+
+{"state": "uneasiness", "name": "Uneasiness", "intensity": 1, "text": "(…somehow I feel uncomfortable.)"}
+{"state": "uneasiness", "name": "Uneasiness", "intensity": 2, "text": "(…a vague unease. I don't know the cause, but I can't settle.)"}
+{"state": "uneasiness", "name": "Uneasiness", "intensity": 3, "text": "(…an ominous feeling. My stomach tightens.)"}
+{"state": "uneasiness", "name": "Uneasiness", "intensity": 4, "text": "(…my whole body refuses. I feel something is decisively wrong.)"}
+
+{"state": "weariness", "name": "Weariness", "intensity": 1, "text": "(…just a little, a feeling that I've had enough.)"}
+{"state": "weariness", "name": "Weariness", "intensity": 2, "text": "(…tired. The repetition is wearing my heart down.)"}
+{"state": "weariness", "name": "Weariness", "intensity": 3, "text": "(…I'm fed up. Whatever I do, the emptiness won't go.)"}
+{"state": "weariness", "name": "Weariness", "intensity": 4, "text": "(…worn out from the bottom of my heart. I don't want to feel anything anymore.)"}
+
+{"state": "worry", "name": "Worry", "intensity": 1, "text": "(…just a little, there's something on my mind. I hope it's okay.)"}
+{"state": "worry", "name": "Worry", "intensity": 2, "text": "(…worried, I keep turning the same thing over and over.)"}
+{"state": "worry", "name": "Worry", "intensity": 3, "text": "(…the anxiety won't leave my head. Only bad scenarios come to mind.)"}
+{"state": "worry", "name": "Worry", "intensity": 4, "text": "(…a worry close to fear. My chest tightens, I can't breathe well.)"}

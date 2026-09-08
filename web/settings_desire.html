@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="{{t:html_lang}}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{t:desire_title}}</title>
+    <link rel="icon" href="/static/images/favicon.ico" sizes="16x16 32x32">
+    <link rel="apple-touch-icon" href="/static/images/favicon.png" sizes="180x180">
+    <link rel="stylesheet" href="/static/theme-tokens.css?v=4">
+    <link rel="stylesheet" href="/static/dashboard.css?v=9">
+    <link rel="stylesheet" href="/static/settings_form.css?v=1">
+    <script src="/static/theme.js?v=4"></script>
+</head>
+
+<body>
+    <div class="header">
+        <h1>⚙️ {{t:settings_heading}}</h1>
+        <div class="nav-links">
+            <button id="themeToggle" class="nav-button">☀️/🌙</button>
+        </div>
+    </div>
+
+    <div class="settings-container">
+        <!-- ナビゲーション（settings_nav.js が縦サイドバーを描画） -->
+        <div id="settingsNav"></div>
+
+        <div class="alert-error" id="errorMessage"></div>
+        <div class="alert-success" id="successMessage"></div>
+
+        <div class="settings-panel">
+            <div class="settings-header">{{t:desire_section_header}}</div>
+            <div class="settings-content">
+                <!-- システムON/OFF（最上部マスタートグル） -->
+                <div class="master-toggle">
+                    <label class="switch">
+                        <input type="checkbox" id="desireEnabled">
+                        <span class="slider"></span>
+                    </label>
+                    <div class="master-toggle-text">
+                        <strong>{{t:desire_label_enabled}}</strong>
+                        <small class="small-note">{{t:desire_help_enabled}}</small>
+                    </div>
+                </div>
+
+                <div class="freeform-banner">
+                    {{t:desire_freeform_banner}}
+                </div>
+
+                <div class="form-group">
+                    <textarea id="jsonEditor" class="form-control json-editor" spellcheck="false"></textarea>
+                </div>
+
+                <div style="display:flex; gap:8px;">
+                    <button type="button" class="btn-primary" onclick="saveConfig()">{{t:settings_save_button}}</button>
+                    <button type="button" class="btn-secondary" onclick="formatJson()">{{t:desire_btn_format}}</button>
+                    <button type="button" class="btn-secondary" onclick="loadConfig()">{{t:desire_btn_reload}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadConfig() {
+            try {
+                const res = await fetch('/api/settings/desire');
+                if (!res.ok) throw new Error(T.settings_load_error);
+                const data = await res.json();
+                document.getElementById('desireEnabled').checked = data.enabled !== false;
+                document.getElementById('jsonEditor').value = JSON.stringify(data, null, 2);
+                hideError(); hideSuccess();
+            } catch (e) { showError(e.message); }
+        }
+
+        function formatJson() {
+            const ed = document.getElementById('jsonEditor');
+            try {
+                ed.value = JSON.stringify(JSON.parse(ed.value), null, 2);
+                hideError();
+            } catch (e) {
+                showError(T.desire_json_syntax_error + e.message);
+            }
+        }
+
+        async function saveConfig() {
+            hideError(); hideSuccess();
+            const raw = document.getElementById('jsonEditor').value;
+            let parsed;
+            try {
+                parsed = JSON.parse(raw);
+            } catch (e) {
+                showError(T.desire_json_save_error + e.message);
+                return;
+            }
+            // マスタートグルの値を JSON の enabled に反映（トグルを正とする）。
+            parsed.enabled = document.getElementById('desireEnabled').checked;
+            document.getElementById('jsonEditor').value = JSON.stringify(parsed, null, 2);
+            try {
+                const res = await fetch('/api/settings/desire', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(parsed)
+                });
+                if (!res.ok) {
+                    const d = await res.json().catch(() => ({}));
+                    throw new Error(d.detail || T.settings_save_error);
+                }
+                showSuccess(T.desire_save_success);
+            } catch (e) { showError(e.message); }
+        }
+
+        function showError(msg) {
+            hideSuccess();
+            const el = document.getElementById('errorMessage');
+            el.innerText = msg; el.style.display = 'block';
+        }
+        function showSuccess(msg) {
+            hideError();
+            const el = document.getElementById('successMessage');
+            el.innerText = msg; el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+        function hideError() { document.getElementById('errorMessage').style.display = 'none'; }
+        function hideSuccess() { document.getElementById('successMessage').style.display = 'none'; }
+
+        document.addEventListener('DOMContentLoaded', loadConfig);
+    </script>
+    <script src="/static/settings_nav.js?v=1"></script>
+</body>
+
+</html>

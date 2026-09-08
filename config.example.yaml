@@ -1,0 +1,158 @@
+# config.example.yaml
+# このファイルを config.yaml にコピーして編集してください。
+# APIキーは .env の CG_LLM_DEEPSEEK_API_KEY に設定してください（直書きも可）。
+
+llm:
+  # プロバイダー: "deepseek" / "claude" / "openai" / "local"
+  provider: "deepseek"
+  model: "deepseek-v4-flash"
+  # APIキーは .env の CG_LLM_DEEPSEEK_API_KEY で設定する
+  api_key: "${CG_LLM_DEEPSEEK_API_KEY}"
+  # APIエンドポイント（ローカルLLM用にカスタマイズ可能）
+  base_url: "https://api.deepseek.com/v1"
+  # 生成パラメータ
+  temperature: 1.0
+  max_tokens: 4096
+  # チャット応答のリアルタイムストリーミング（問題が出たら false で従来の一括表示に戻せる）
+  streaming: true
+
+workspace:
+  # 記憶ファイルのディレクトリ
+  path: "workspace"
+
+# 起動時に読み込む記憶ファイル（workspace.path からの相対パス、順序通りに読む）
+boot_memories:
+  - "IDENTITY.md"
+  - "SOUL.md"
+  - "USER.md"
+  - "MEMORY.md"
+  - "memory/compressed.md"
+
+# 自分への手紙ファイル（boot_memoriesの後、すべての起動記憶読み込み完了後に読む）
+# workspace.path からの相対パス。ダッシュボード右上の「自分への手紙」欄にも連動される
+letter_file: "memory/letter_for_me.md"
+
+server:
+  # 配布既定はローカルのみ（127.0.0.1）。0.0.0.0 + パスワード未設定だと
+  # セキュリティガードで起動が拒否され、初回設定できない鶏卵問題になるため。
+  # スマホ等から外部アクセスする場合は、パスワード設定後にトンネル設定と合わせて
+  # host を 0.0.0.0 に変更する。
+  host: "127.0.0.1"
+  # 配布既定ポート。8080 は一般的な常駐サービス（例 AgentService 等）と競合しやすいため、
+  # 登録の希薄な高めの番号を既定とする。競合する場合はこの値を空きポートへ手で変更すれば
+  # よい（Liner GUI もこの config.yaml の port を読んで自動追従する）。
+  port: 43117
+  # WebSocket接続を許可する追加Origin（Tailscale等のリモートアクセス用）。
+  # localhost / 127.0.0.1 / host:port のOriginは常に許可されるため、通常は設定不要。
+  # 例:
+  # extra_allowed_origins:
+  #   - "http://100.x.x.x:8080"
+
+
+# システムプロンプトの外部ファイル（data-root からの相対パス or 絶対パス）
+# 上から順に結合されてシステムプロンプトになる
+system_prompts:
+  # プロンプトファイルの格納場所
+  directory: "system_prompt"
+  # 読み込むファイル（順序通りに結合される）
+  files:
+    - "TOP_PROMPT.md"
+    - "TOOL_INSTRUCTIONS.md"
+    - "SAFETY_PROMPT.md"
+
+post_prompts:
+  directory: "system_prompt"
+  files:
+    - "BOTTOM_PROMPT.md"
+  # エキスパート向け。true にすると上記ファイルを会話履歴の後（真・最下部）に毎ターン挿入する。
+  # 注意: 末尾systemに非対応のプロバイダー（Anthropic等）ではAPIエラーになる。
+  #       またこの領域はプロンプトキャッシュ対象外のため長文は避けること。
+  enabled: false
+
+# 会話ログ設定
+logs:
+  # 全ログ（ツール呼び出し含む）の保存先
+  full_log_directory: "workspace\\logs\\full"
+  # 会話ログ（ユーザー↔エージェントのやりとりのみ）の保存先
+  chat_log_directory: "workspace\\logs\\chat"
+
+context:
+  # トークン上限（LLMのコンテキストウィンドウサイズ）
+  max_tokens: 65536
+  # この割合を超えたら会話履歴を圧縮する（0.0〜1.0）
+  compression_threshold: 0.70
+  # この割合を超えたら緊急圧縮を即座に実行する（compression_threshold より高めに設定）
+  emergency_compression_threshold: 0.90
+  # 圧縮時に直近何往復を残すか
+  keep_recent_exchanges: 4
+
+# プロファイル設定（ダッシュボード表示用）
+profile:
+  user:
+    name: "User"
+    honorific: "ユーザーさん"          # エージェントがユーザーを呼ぶ呼称（IDENTITY.md と整合）
+    avatar: "/static/images/user.png"  # 画像がない場合は頭文字が表示されます
+    size: "40px"                       # アイコンサイズ
+    layout: "horizontal"               # レイアウト: horizontal(横並び・チャット風) or vertical(縦並び・掲示板風)
+  agent:
+    name: "未設定"
+    avatar: "workspace\\avatars\\default.png"
+    size: "120px"                      # アイコンサイズ（立ち絵など大きくしたい場合に指定）
+    layout: "vertical"                 # 立ち絵の場合はvertical推奨
+
+
+
+# RAG設定
+rag:
+  db_directory: "workspace\\rag_db"
+  embedding_model: "default"
+
+# 記憶圧縮システム設定
+memory_compression:
+  max_tokens: 2000            # compressed.mdのトークン上限
+  max_event_tokens: 30        # 1イベントの表示時最大トークン
+  decay_coeff: 1.0            # 対数減衰の係数（大きいほど速く忘れる）
+  max_details: 8              # 表示時のdetail上限
+  event_db: "memory/event_db.json"
+  compressed_file: "memory/compressed.md"
+  max_events_per_day: 10      # 1日あたりに圧縮対象として取得する最大イベント数
+
+# Web検索設定
+search:
+  # 検索プロバイダー: "ddgs"（DuckDuckGo・無料・APIキー不要）/ "tavily"（要APIキー・要約付き）
+  # のちのち切り替えられるよう、どちらのコードも core/web_tools.py に残してある。
+  provider: "ddgs"
+
+# セキュリティ設定
+security:
+  allowed_domains:
+    - "api.duckduckgo.com"
+    - "duckduckgo.com"
+    - "html.duckduckgo.com"
+    - "misskey.io"
+    - "moltbook.com"
+    - "api.deepseek.com"
+    - "127.0.0.1"
+    - "localhost"
+
+
+tokenizer:
+  type: "deepseek"
+  path: "data/tokenizer_deepseek.json"
+
+# サテライトプログラム実行機能の設定
+programs:
+  enabled: true                 # サテライト実行機能の有効/無効
+  directory: "programs"         # サテライトを格納するディレクトリ（プロジェクトルートからの相対）
+  default_timeout_seconds: 30   # サテライト実行のデフォルトタイムアウト（秒）
+
+# Salia（情動評価）設定
+salia:
+  enabled: true                 # Salia 機能全体の有効/無効
+  somatic_marker:               # ソマティックマーカー（身体感覚的な情動マーカー）
+    enabled: true
+    probability: 0.3            # マーカーを付与する確率（0.0〜1.0）
+    valence_threshold: 0.5     # 情動価の閾値
+    candidate_count: 5         # 候補の数
+  evaluate_turn:                # ターンごとの情動評価
+    enabled: true

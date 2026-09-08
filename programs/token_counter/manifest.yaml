@@ -1,0 +1,8 @@
+name: "token_counter"
+description: "{{t:token_counter_desc}}"
+timeout: 15
+args:
+  - name: file
+    type: string
+    required: true
+    description: "{{t:token_counter_arg_file}}"

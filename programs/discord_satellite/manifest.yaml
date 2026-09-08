@@ -1,0 +1,63 @@
+name: "discord_satellite"
+description: "{{t:dsat_desc}}"
+timeout: 120
+args:
+  - name: "command"
+    type: "string"
+    description: "{{t:dsat_arg_command}}"
+    required: false
+  - name: "channel"
+    type: "string"
+    description: "{{t:dsat_arg_channel}}"
+    required: false
+    path_check: false
+  - name: "message"
+    type: "string"
+    description: "{{t:dsat_arg_message}}"
+    required: false
+    path_check: false
+  - name: "message_id"
+    type: "string"
+    description: "{{t:dsat_arg_message_id}}"
+    required: false
+    path_check: false
+  - name: "emoji"
+    type: "string"
+    description: "{{t:dsat_arg_emoji}}"
+    required: false
+    path_check: false
+  - name: "limit"
+    type: "integer"
+    description: "{{t:dsat_arg_limit}}"
+    required: false
+  - name: "peek"
+    type: "boolean"
+    description: "{{t:dsat_arg_peek}}"
+    required: false
+  - name: "raw"
+    type: "boolean"
+    description: "{{t:dsat_arg_raw}}"
+    required: false
+  - name: "watch"
+    type: "boolean"
+    description: "{{t:dsat_arg_watch}}"
+    required: false
+  - name: "refresh"
+    type: "boolean"
+    description: "{{t:dsat_arg_refresh}}"
+    required: false
+  - name: "keywords"
+    type: "string"
+    description: "{{t:dsat_arg_keywords}}"
+    required: false
+    path_check: false
+  - name: "guild_id"
+    type: "string"
+    description: "{{t:dsat_arg_guild_id}}"
+    required: false
+    path_check: false
+  - name: "before"
+    type: "string"
+    description: "{{t:dsat_arg_before}}"
+    required: false
+    path_check: false

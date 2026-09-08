@@ -1,0 +1,30 @@
+# tsukimi_browser のお出かけ先名簿。
+#
+# feeds: スタートページの「今日のニュース」と lucky の RSS 抽選に使う。
+# spots: lucky で飛ぶ「歩いて楽しい場所」。
+#
+# ここは人間が育てるファイル。柚月が散歩して良かった場所を足していくと、
+# 🎲 の当たりが増えていく。
+#
+# 載せる前に確認したいこと:
+#   ・テキストブラウザで読めるか（JavaScript 必須のサイトは中身が出ない）
+#   ・記事ページまで実際に開けるか（見出しだけ取れても、開けなければ行き止まり）
+#
+# ※ NHK ニュースは RSS は読めるが記事ページが 403 になることが多いので入れていない。
+#    NHK の記事を読みたいときは nhk_news サテライトを使う。
+
+feeds:
+  - name: "GIGAZINE"
+    url: "https://gigazine.net/news/rss_2.0/"
+  - name: "ITmedia NEWS"
+    url: "https://rss.itmedia.co.jp/rss/2.0/news_bursts.xml"
+  - name: "はてなブックマーク（テクノロジー）"
+    url: "https://b.hatena.ne.jp/hotentry/it.rss"
+
+spots:
+  - name: "青空文庫"
+    url: "https://www.aozora.gr.jp/"
+  - name: "Wikipedia メインページ"
+    url: "https://ja.wikipedia.org/wiki/メインページ"
+  - name: "GIGAZINE"
+    url: "https://gigazine.net/"

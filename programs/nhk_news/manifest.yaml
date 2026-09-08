@@ -1,0 +1,13 @@
+name: "nhk_news"
+description: "{{t:nhk_news_desc}}"
+version: "3.0"
+timeout: 30
+args:
+  - name: count
+    type: integer
+    required: false
+    description: "{{t:nhk_news_arg_count}}"
+  - name: url
+    type: string
+    required: false
+    description: "{{t:nhk_news_arg_url}}"

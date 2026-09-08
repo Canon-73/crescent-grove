@@ -1,0 +1,84 @@
+name: "moltbook"
+description: "{{t:moltbook_desc}}"
+timeout: 30
+args:
+  - name: "command"
+    type: "string"
+    description: "{{t:moltbook_arg_command}}"
+    required: false
+  - name: "name"
+    type: "string"
+    description: "{{t:moltbook_arg_name}}"
+    required: false
+  - name: "description"
+    type: "string"
+    description: "{{t:moltbook_arg_description}}"
+    required: false
+  - name: "target_name"
+    type: "string"
+    description: "{{t:moltbook_arg_target_name}}"
+    required: false
+  - name: "submolt"
+    type: "string"
+    description: "{{t:moltbook_arg_submolt}}"
+    required: false
+  - name: "display_name"
+    type: "string"
+    description: "{{t:moltbook_arg_display_name}}"
+    required: false
+  - name: "allow_crypto"
+    type: "boolean"
+    description: "{{t:moltbook_arg_allow_crypto}}"
+    required: false
+  - name: "post_id"
+    type: "string"
+    description: "{{t:moltbook_arg_post_id}}"
+    required: false
+  - name: "comment_id"
+    type: "string"
+    description: "{{t:moltbook_arg_comment_id}}"
+    required: false
+  - name: "parent_id"
+    type: "string"
+    description: "{{t:moltbook_arg_parent_id}}"
+    required: false
+  - name: "title"
+    type: "string"
+    description: "{{t:moltbook_arg_title}}"
+    required: false
+  - name: "content"
+    type: "string"
+    description: "{{t:moltbook_arg_content}}"
+    required: false
+  - name: "url"
+    type: "string"
+    description: "{{t:moltbook_arg_url}}"
+    required: false
+  - name: "query"
+    type: "string"
+    description: "{{t:moltbook_arg_query}}"
+    required: false
+  - name: "sort"
+    type: "string"
+    description: "{{t:moltbook_arg_sort}}"
+    required: false
+  - name: "limit"
+    type: "integer"
+    description: "{{t:moltbook_arg_limit}}"
+    required: false
+  - name: "cursor"
+    type: "string"
+    description: "{{t:moltbook_arg_cursor}}"
+    required: false
+  - name: "search_type"
+    type: "string"
+    description: "{{t:moltbook_arg_search_type}}"
+    required: false
+  - name: "verification_code"
+    type: "string"
+    description: "{{t:moltbook_arg_verification_code}}"
+    required: false
+  - name: "answer"
+    type: "string"
+    description: "{{t:moltbook_arg_answer}}"
+    required: false

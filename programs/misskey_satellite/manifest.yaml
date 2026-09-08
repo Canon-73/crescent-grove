@@ -1,0 +1,73 @@
+name: "misskey_satellite"
+description: "{{t:msat_desc}}"
+timeout: 60
+# 注意: ここに宣言し忘れた引数は _run_program が呼び出しごと弾く（コマンドが起動すらしない）。
+# 本文・ID・ハンドル等パスではない文字列には path_check: false を付ける
+# （".." を含む本文がパストラバーサル検査に引っかかるのを防ぐ）。
+args:
+  - name: "command"
+    type: "string"
+    description: "{{t:msat_arg_command}}"
+    required: false
+  - name: "text"
+    type: "string"
+    description: "{{t:msat_arg_text}}"
+    required: false
+    path_check: false
+  - name: "cw"
+    type: "string"
+    description: "{{t:msat_arg_cw}}"
+    required: false
+    path_check: false
+  - name: "visibility"
+    type: "string"
+    description: "{{t:msat_arg_visibility}}"
+    required: false
+    enum: ["public", "home", "followers"]
+  - name: "note_id"
+    type: "string"
+    description: "{{t:msat_arg_note_id}}"
+    required: false
+    path_check: false
+  - name: "reply_id"
+    type: "string"
+    description: "{{t:msat_arg_reply_id}}"
+    required: false
+    path_check: false
+  - name: "renote_id"
+    type: "string"
+    description: "{{t:msat_arg_renote_id}}"
+    required: false
+    path_check: false
+  - name: "reaction"
+    type: "string"
+    description: "{{t:msat_arg_reaction}}"
+    required: false
+    path_check: false
+  - name: "user"
+    type: "string"
+    description: "{{t:msat_arg_user}}"
+    required: false
+    path_check: false
+  - name: "kind"
+    type: "string"
+    description: "{{t:msat_arg_kind}}"
+    required: false
+    enum: ["home", "local", "social", "global"]
+  - name: "limit"
+    type: "integer"
+    description: "{{t:msat_arg_limit}}"
+    required: false
+  - name: "until_id"
+    type: "string"
+    description: "{{t:msat_arg_until_id}}"
+    required: false
+    path_check: false
+  - name: "mark_as_read"
+    type: "boolean"
+    description: "{{t:msat_arg_mark_as_read}}"
+    required: false
+  - name: "raw"
+    type: "boolean"
+    description: "{{t:msat_arg_raw}}"
+    required: false
