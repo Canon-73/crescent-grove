@@ -1,0 +1,33 @@
+attribute,min,max,prefix,priority
+size,-100,-51,atom-sized,1
+size,-50,-26,tiny,1
+size,-25,-1,small,1
+size,0,24,plain,1
+size,25,49,large,1
+size,50,69,giant,1
+size,70,89,planetary-class,1
+size,90,100,stellar-class,1
+taste,-100,-51,instantly lethal,2
+taste,-50,-26,bad-tasting,2
+taste,-25,-1,bland,2
+taste,0,24,plain,2
+taste,25,49,tasty,2
+taste,50,69,superb,2
+taste,70,89,civilization-ending,2
+taste,90,100,truth-of-the-universe,2
+aroma,-100,-51,nausea-inducing,3
+aroma,-50,-26,smelly,3
+aroma,-25,-1,faintly scented,3
+aroma,0,24,plain,3
+aroma,25,49,nicely fragrant,3
+aroma,50,69,aroma-radiating,3
+aroma,70,89,galaxy-drifting-scent,3
+aroma,90,100,spacetime-transcending,3
+looks,-100,-51,hideous,4
+looks,-50,-26,ungainly,4
+looks,-25,-1,plain-looking,4
+looks,0,24,plain,4
+looks,25,49,pretty,4
+looks,50,69,beautiful,4
+looks,70,89,unviewable,4
+looks,90,100,living-artwork,4

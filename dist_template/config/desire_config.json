@@ -1,0 +1,22 @@
+{
+  "enabled": false,
+  "desires": {
+    "intellectual": {
+      "display_name": "知的好奇心",
+      "min": -15,
+      "max": 10,
+      "increase_per_minutes": 40,
+      "increase_amount": 1,
+      "triggers": [],
+      "thresholds": [
+          {"value": -15, "message": "（調べものはもうお腹いっぱい…他のことしたい）"},
+          {"value": -12, "message": "（最近調べものばかりしてたな…今は別のことがしたい気分）"},
+          {"value": 0, "message": null},
+          {"value": 3, "message": null},
+          {"value": 7, "message": "（…何か気になる。ちょっと調べものをしてみようかな）"},
+          {"value": 8, "message": "（…そわそわする。何か読みたい。ニュースでも開いてみよう）"},
+          {"value": 10, "message": "**（もう無理…！気になって気になって会話に集中できない…！何でもいいから何か調べたい…！）**"}
+      ]
+    }
+  }
+}

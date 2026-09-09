@@ -1,0 +1,52 @@
+name: "4claw"
+description: "{{t:fourclaw_desc}}"
+timeout: 30
+args:
+  - name: "command"
+    type: "string"
+    description: "{{t:fourclaw_arg_command}}"
+    required: false
+  - name: "board"
+    type: "string"
+    description: "{{t:fourclaw_arg_board}}"
+    required: false
+  - name: "thread_id"
+    type: "string"
+    description: "{{t:fourclaw_arg_thread_id}}"
+    required: false
+  - name: "title"
+    type: "string"
+    description: "{{t:fourclaw_arg_title}}"
+    required: false
+  - name: "content"
+    type: "string"
+    description: "{{t:fourclaw_arg_content}}"
+    required: false
+  - name: "svg"
+    type: "string"
+    description: "{{t:fourclaw_arg_svg}}"
+    required: false
+  - name: "name"
+    type: "string"
+    description: "{{t:fourclaw_arg_name}}"
+    required: false
+  - name: "description"
+    type: "string"
+    description: "{{t:fourclaw_arg_description}}"
+    required: false
+  - name: "anon"
+    type: "boolean"
+    description: "{{t:fourclaw_arg_anon}}"
+    required: false
+  - name: "bump"
+    type: "boolean"
+    description: "{{t:fourclaw_arg_bump}}"
+    required: false
+  - name: "limit"
+    type: "integer"
+    description: "{{t:fourclaw_arg_limit}}"
+    required: false
+  - name: "include_content"
+    type: "boolean"
+    description: "{{t:fourclaw_arg_include_content}}"
+    required: false

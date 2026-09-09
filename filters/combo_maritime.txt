@@ -1,0 +1,26 @@
+# keywords_A
+南シナ海
+South China Sea
+南海
+尖閣
+Senkaku
+Diaoyu
+钓鱼岛
+釣魚島
+スプラトリー
+Spratly
+南沙
+
+# keywords_B
+中国
+China
+領有
+territorial
+軍事
+military
+紛争
+dispute
+conflict
+人工島
+artificial island
+militarization

@@ -1,0 +1,4 @@
+https://calculator.caseyjhand.com/mcp — 数学計算（足し算、微分など）
+https://hn.caseyjhand.com/mcp — Hacker Newsの検索・閲覧
+https://nws.caseyjhand.com/mcp — 米国天気予報
+https://arxiv.caseyjhand.com/mcp — 論文検索

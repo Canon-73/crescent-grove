@@ -1,0 +1,9 @@
+name: hello_world
+description: "{{t:hello_world_desc}}"
+version: "1.0"
+timeout: 10
+args:
+  - name: name
+    type: string
+    required: true
+    description: "{{t:hello_world_arg_name}}"

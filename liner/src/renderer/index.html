@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crescent Grove</title>
+    <link rel="stylesheet" href="./src/styles/liner.css" />
+  </head>
+  <body>
+    <div id="shell">
+      <!-- タブバー: Phase 3 では Dashboard 固定タブのみ -->
+      <div id="tab-bar">
+        <div class="tab tab-active tab-pinned" data-tab-id="dashboard">
+          <span class="tab-title">Dashboard</span>
+        </div>
+        <!-- ナビ操作（再読込 / 強制再読込 / 検索）。メニューと同じ操作をワンクリックで。
+             右寄せの先頭に置き、ここから後ろがバー右端へ寄る。 -->
+        <div id="nav-controls">
+          <button id="nav-reload-btn" class="nav-btn" title="再読込 (Ctrl+R)">⟳ 再読込</button>
+          <button id="nav-hardreload-btn" class="nav-btn" title="強制再読込 (Ctrl+Shift+R)">⟳ 強制再読込</button>
+          <button id="nav-find-btn" class="nav-btn" title="ページ内検索 (Ctrl+F)">🔍 検索</button>
+        </div>
+        <!-- サーバー操作（起動 / 停止 / 再起動）。右寄せで常時表示。 -->
+        <div id="server-controls">
+          <span id="server-status-dot" title="サーバー状態"></span>
+          <span id="server-status-label">―</span>
+          <button id="server-start-btn" class="server-btn" title="サーバーを起動">▶ 起動</button>
+          <button id="server-stop-btn" class="server-btn" title="サーバーを停止">■ 停止</button>
+          <button id="server-restart-btn" class="server-btn" title="サーバーを再起動">⟳ 再起動</button>
+        </div>
+      </div>
+
+      <!-- WebContentsView が main プロセスから OS レベルでこの領域に重ねられる -->
+      <div id="content-area"></div>
+
+      <!-- ページ内検索バー（Firefox 風・下部固定）。
+           既定は display:none。open クラスで flex 表示になり、flex:0 0 36px を占有する。
+           表示されると content-area(flex:1) が縮み、ResizeObserver 経由で
+           WebContentsView の bounds が再計算されて 36px 縮む。 -->
+      <div id="find-bar">
+        <input type="text" id="find-input" placeholder="ページを検索" />
+        <span id="find-count"></span>
+        <button id="find-prev" title="前へ (Shift+Enter)">↑</button>
+        <button id="find-next" title="次へ (Enter)">↓</button>
+        <label id="find-highlight-label" title="Electron の制約により常時 ON">
+          <input type="checkbox" id="find-highlight-all" checked disabled />
+          <span>ハイライトすべて</span>
+        </label>
+        <label id="find-matchcase-label">
+          <input type="checkbox" id="find-match-case" />
+          <span>大文字小文字を区別</span>
+        </label>
+        <span id="find-notice"></span>
+        <button id="find-close" title="閉じる (Esc)">×</button>
+      </div>
+
+      <!-- ログペインの境界線ドラッグ用 -->
+      <div id="resizer"></div>
+
+      <!-- ログペイン -->
+      <div id="log-pane">
+        <div id="log-pane-header">
+          <button id="log-collapse-btn" title="折りたたみ／展開 (Ctrl+L)">▼</button>
+          <span id="log-pane-title">Server Log</span>
+          <input type="text" id="log-filter" placeholder="filter..." />
+          <div id="log-module-filters"></div>
+          <button id="log-clear-btn" title="クリア">🗑</button>
+        </div>
+        <div id="log-body"></div>
+      </div>
+    </div>
+
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

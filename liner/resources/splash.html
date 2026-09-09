@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Crescent Grove</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: #1a1a1a;
+        color: #e0e0e0;
+        font-family: Consolas, 'BIZ UDGothic', 'Yu Gothic', sans-serif;
+        overflow: hidden;
+      }
+      .wrap {
+        position: relative;
+        height: 100vh;
+        user-select: none;
+        overflow: hidden;
+      }
+      /* 起動ログ: 仕切りなく全面に流す背景レイヤ。中央ロゴの後ろを下から上へ流れる。 */
+      .log-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end; /* 新しい行を下端に積む */
+        padding: 24px 28px;
+        box-sizing: border-box;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      .log-line {
+        font-family: Consolas, monospace;
+        font-size: 12px;
+        line-height: 1.7;
+        color: #3a3a3a; /* ロゴを邪魔しない控えめな輝度 */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .log-line.err {
+        color: #5a3636;
+      }
+      /* 中央のロゴ・スピナー・status（従来どおり中心固定） */
+      .center {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+      }
+      .title {
+        font-family: 'Segoe UI', 'Yu Gothic UI', system-ui, sans-serif;
+        font-size: 52px;
+        font-weight: 200;
+        letter-spacing: 0.22em;
+        /* 右側の字間ぶんだけ中央がずれて見えるのを補正 */
+        text-indent: 0.22em;
+        color: #d7b3f0;
+        text-shadow: 0 0 24px rgba(199, 146, 234, 0.35);
+      }
+      .subtitle {
+        font-family: 'Segoe UI', 'Yu Gothic UI', system-ui, sans-serif;
+        font-size: 13px;
+        font-weight: 300;
+        letter-spacing: 0.12em;
+        color: #8a8a8a;
+      }
+      .status {
+        margin-top: 24px;
+        font-size: 13px;
+        color: #8fbcbb;
+        font-family: Consolas, monospace;
+        min-height: 1.2em;
+      }
+      .spinner {
+        width: 28px;
+        height: 28px;
+        border: 3px solid #333;
+        border-top-color: #c792ea;
+        border-radius: 50%;
+        animation: spin 0.9s linear infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <!-- 起動ログを背景として全面に流す（仕切りなし・フェードなし） -->
+      <div class="log-bg" id="log-bg"></div>
+      <div class="center">
+        <div class="title">Crescent Grove</div>
+        <div class="subtitle">起動中...</div>
+        <div class="spinner"></div>
+        <div class="status" id="status">初期化中...</div>
+      </div>
+    </div>
+    <script>
+      // preload で公開された splashAPI を購読（高レベルの進捗 status）
+      if (window.splashAPI && typeof window.splashAPI.onStatus === 'function') {
+        window.splashAPI.onStatus((text) => {
+          const el = document.getElementById('status')
+          if (el) el.textContent = text
+        })
+      }
+
+      // 起動ログを背景に流す。全行は起動後に Shell UI 下部のログペインで確認できる。
+      // splash は Shell UI と同じ preload を使うため linerAPI.onLogLine が使える。
+      ;(function setupSplashLog() {
+        const bg = document.getElementById('log-bg')
+        if (!bg || !window.linerAPI || typeof window.linerAPI.onLogLine !== 'function') return
+        const MAX_LINES = 22
+
+        function appendLine(entry) {
+          // entry: { body, raw, level, ... }。body 優先、無ければ raw。
+          const text = (entry && (entry.body || entry.raw)) || ''
+          if (!text) return
+          const div = document.createElement('div')
+          div.className = 'log-line' + (entry && entry.level === 'error' ? ' err' : '')
+          div.textContent = text
+          bg.appendChild(div)
+          // 画面に収まる範囲だけ保持して、下から上へ流れて見せる
+          while (bg.childElementCount > MAX_LINES) {
+            bg.removeChild(bg.firstElementChild)
+          }
+        }
+
+        window.linerAPI.onLogLine(appendLine)
+      })()
+    </script>
+  </body>
+</html>

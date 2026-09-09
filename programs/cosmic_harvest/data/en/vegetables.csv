@@ -1,0 +1,24 @@
+id,name,emoji,category,grow_days,base_price,taste,looks,size,aroma,flavor_text
+basic_apple,Star Apple,🍎,basic,3,30,20,10,15,5,A humble cosmic apple. Grows reliably in any soil.
+basic_mikan,Cosmo Mandarin,🍊,basic,3,35,25,15,10,10,A staple fruit that glows orange. Also a favorite of rabbit-type pests.
+basic_banana,Glass Banana,🍌,basic,4,40,15,30,20,5,A curious banana with a see-through peel. Attracts pests well as bait.
+basic_strawberry,Cosmic Strawberry,🍓,basic,2,20,10,5,5,5,Fastest to grow. A friend in tight budgets. Taste is... eh.
+basic_blueberry,Crystal Blueberry,🫐,basic,3,45,10,20,5,40,A sparkling berry with a wonderful aroma.
+basic_pine,Candle Pine,🍍,basic,4,50,30,10,25,10,A pineapple whose tip glows like a flame.
+basic_cherry,Meteor Cherry,🍒,basic,2,25,15,10,10,15,Grows as quickly as a shooting star.
+basic_peach,Nebula Peach,🍑,basic,3,30,10,25,10,10,A peach with nebula-patterned skin. A dessert staple.
+breed_mango,Mangonian,🥭,breed,5,80,30,25,20,15,A bright red cosmic mango. Holds untapped breeding potential.
+breed_melon,Prism Melon,🍈,breed,7,120,35,30,30,25,A premium melon that refracts light. Worth growing slowly.
+breed_watermelon,Mars Watermelon,🍉,breed,6,90,25,20,35,10,A rugged Mars-grown watermelon. Sizes up easily.
+breed_grape,Star Grape,🍇,breed,5,100,40,20,15,20,A mysterious grape that shines like a star. Renowned for its taste.
+breed_kiwi,Star Kiwi,🥝,breed,4,70,20,35,20,15,A kiwi that shines in a star shape. Beauty stands out.
+breed_lemon,Thorn Lemon,🍋,breed,5,85,15,10,15,45,A cosmic lemon with intense sourness and aroma. Some pests dislike it.
+rare_tropical,Tropical Nova,⭐,rare,6,200,50,45,35,30,A fruit like condensed starlight. High in all attributes.
+rare_moondrop,Moondrop,💧,rare,6,220,55,40,25,45,A fruit glowing softly like a drop of moonlight. Taste and aroma stand out.
+rare_dragon,Dragon Fruit,🔥,rare,7,250,35,30,55,40,A blazing fiery shell. Excellent size and aroma.
+rare_nectar,Cosmo Nectar,🍯,rare,5,180,60,35,20,30,A wondrous fruit that drips honey on its own. Outstanding taste.
+rare_asteroid,Asteroid Berry,☄️,rare,8,280,40,35,60,25,A hard asteroid-like shell. Overwhelming size.
+rare_phantom,Phantom Grape,👻,rare,6,200,30,55,25,50,A translucent phantom grape. Otherworldly looks and aroma.
+legend_king,Cosmic King,👑,legend,10,500,70,65,60,55,A legendary fruit. Bears the radiance of the cosmos itself.
+legend_void,Void Fruit,🕳️,legend,10,500,55,70,50,70,A fruit grown from the void. A taste from the edge of the universe no one has known.
+legend_yuzu,Crescent Yuzu,🌙,superlegend,14,1000,80,80,80,80,The ultimate yuzu blessed by crescent moonlight. The pinnacle of the orchard beyond all measure.

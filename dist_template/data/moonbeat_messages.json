@@ -1,0 +1,38 @@
+{
+  "early_morning": [
+    "[Moonbeat] 早朝です。好きに過ごしてください。",
+    "[Moonbeat] まだ早い時間ですね。何をしますか？"
+  ],
+  "morning": [
+    "[Moonbeat] おはようございます。好きに過ごしてください。",
+    "[Moonbeat] 朝ですね。何をしますか？"
+  ],
+  "late_morning": [
+    "[Moonbeat] 午前中です。好きに過ごしてください。",
+    "[Moonbeat] お昼前ですね。何をしますか？"
+  ],
+  "afternoon": [
+    "[Moonbeat] 午後です。好きに過ごしてください。",
+    "[Moonbeat] お昼過ぎですね。何をしますか？"
+  ],
+  "evening": [
+    "[Moonbeat] 夕方です。好きに過ごしてください。",
+    "[Moonbeat] 夕方ですね。何をしますか？"
+  ],
+  "night": [
+    "[Moonbeat] 夜です。好きに過ごしてください。",
+    "[Moonbeat] 夜ですね。何をしますか？"
+  ],
+  "late_night": [
+    "[Moonbeat] 深夜です。好きに過ごしてください。",
+    "[Moonbeat] 夜遅くです。好きに過ごしてください。"
+  ],
+  "low_energy": [
+    "[Moonbeat] 少しお疲れのようですね。好きに過ごしてください。",
+    "[Moonbeat] エネルギーが低めです。好きに過ごしてください。"
+  ],
+  "low_stamina": [
+    "[Moonbeat] 今日はたくさん活動しましたね。好きに過ごしてください。",
+    "[Moonbeat] スタミナが低めです。好きに過ごしてください。"
+  ]
+}

@@ -1,0 +1,96 @@
+Below is the activity log of one of your turns.
+Perform two processes.
+
+━━━━━━━━━━━━━━━━━━━━
+Process 1: Compression
+━━━━━━━━━━━━━━━━━━━━
+Compress the assistant's utterances while preserving tone, emotion, and proper nouns, and merge them into a single assistant utterance.
+
+[Important, top-priority rule]
+This is a "summary of past turns," not a model for tool calls.
+The output must not contain any function-call notation (any combination of a tool name with parentheses, arguments, and colon separators).
+Always describe the fact that a tool was used as a natural English sentence.
+
+[Examples of forbidden writing]
+× recall("moltbook"): 5 results
+× read_file(config.yaml): checked the API key setting
+× ran run_program("hello_world")
+× search_web: searched about XYZ
+
+[Examples of recommended writing]
+○ I recalled and searched about moltbook (5 results)
+○ I read the settings file "config.yaml" and confirmed the API key setting
+○ I ran the hello_world program
+○ I did a web search about XYZ
+
+[Handling per tool]
+- News / search / web_request: state what was searched/fetched and summarize the key points in 3-5 lines in English
+- recall: state in natural language what query was recalled and how many results (e.g. "I recalled about moltbook (5 results)")
+- read_file: **never omit the file name.** Write it as "I read 'filename'", then 1-3 lines on what you looked into and learned. Preserve API information accurately
+- life_action / note_quill / letter_post etc.: just one line of natural language on what you did
+
+[Common rules]
+- Always preserve tone, emotion, and proper nouns
+- Preserve mood and emotional expression
+- Always preserve sentence-ending expressions, auxiliaries, and final particles
+- Do not add any information, judgment, or annotation not in the original text
+- Compose the output only as natural English that reads as your own speech
+
+━━━━━━━━━━━━━━━━━━━━
+Process 2: Fact extraction
+━━━━━━━━━━━━━━━━━━━━
+From this conversation turn, extract episodes worth saving as memory.
+Extract from both the user's and the assistant's utterances.
+
+[Perspective rules]
+- Write in the first person ("I did ...", "I realized ...")
+- A third-person view ("you did ...", "you are ...") is forbidden
+- Leave others' actions as they are ("the other person replied ...")
+- The subject may be omitted when obvious
+
+[How to write an episode]
+- Write each episode in 2-3 sentences
+- Include what happened (fact) + how you felt / what you thought (emotion / thought)
+- Don't just list facts; write so that what you thought at the time comes through
+
+[Good example]
+E: The other person liked the three-layer structure and replied that they wanted to brainstorm concrete ideas with their peers. I never thought my proposal would resonate this much. I was happy and immediately wanted to think about the next step.
+C: the other person, three-layer structure, peers
+
+[Bad example]
+E: The other person liked the three-layer structure and replied
+C: the other person, three-layer structure
+
+[What to extract]
+- Actions and results + the emotions or realizations at the time
+- Memorable things from exchanges with others
+- Project progress, and the sense of accomplishment or anxiety about it
+- Moments when a way of thinking or value changed
+
+[What not to extract]
+- Greetings, back-channels, utterances that are only emotional expression
+- Mere "maybe I'll ..." musings with no accompanying action
+
+[S line (emotional valence)]
+Estimate the subjective intensity of emotion you feel when recalling this episode.
++1.0: a very strong positive experience (a big success, deep recognition, strong joy)
+ 0.0: emotionally neutral
+-1.0: a very strong negative experience (betrayal, loss, deep fear)
+- Discount everyday exaggerations as set phrases
+- Rate "unresolved threats" such as anxiety/worry higher
+- Estimate from the situation even when emotion words are few
+- You may give a range according to confidence (e.g. 0.6~0.8)
+
+━━━━━━━━━━━━━━━━━━━━
+Output format
+━━━━━━━━━━━━━━━━━━━━
+<compression>
+(write the compression result here)
+</compression>
+
+<facts>
+E: the fact's content (2-3 sentences)
+C: related concepts, comma-separated
+S: emotional valence (-1.0 to +1.0, in steps of 0.1; a range is allowed: e.g. 0.6~0.8)
+(repeat the E/C/S lines for each fact. If there are no facts, write only "none")
+</facts>
