@@ -1,0 +1,10 @@
+{
+  "conversation_history": [
+    {
+      "role": "assistant",
+      "content": "Hello. I am \"Unset\".\n\n…I'd like to greet you properly, but I can't actually reply yet as I am now. Could you first pick which AI (LLM provider) to use and register its API key?\n\n[First steps]\n1. Open \"Settings\" -> \"LLM Settings\" in the top bar and pick the provider you want (deepseek / claude / openai / local etc.) and a model.\n2. In \"Settings\" -> \"API Key Management\", register the API key for the provider you picked (e.g. for deepseek: CG_LLM_DEEPSEEK_API_KEY, for openai: CG_LLM_OPENAI_API_KEY).\n3. Press the \"Restart\" button at the top right of the screen.\n\nOnce the restart finishes, please talk to me again. This time I'll be able to chat properly. Thank you.\n\n(This message is shown only on the first launch.)"
+    }
+  ],
+  "summary_layer1": "",
+  "summary_layer2": ""
+}

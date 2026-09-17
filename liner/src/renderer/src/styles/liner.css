@@ -1,0 +1,556 @@
+/* Crescent Liner Shell UI
+ * 配色はダッシュボードから取得した CSS 変数（--cg-*）を参照する。
+ * テーマ別の値は Liner 側でハードコードしない:
+ *   webview-preload が dashboard.css の :root 変数を getComputedStyle で取得し、
+ *   main 経由で renderer に転送 → renderer が document.documentElement に
+ *   --cg-* として再公開する（src/renderer/src/main.ts 参照）。
+ * 新テーマ追加時は Crescent Grove 側で CSS 変数を定義すれば Liner は無修正で追従。
+ * --cg-* のフォールバック値はダッシュボード未ロード時用（splash 等）。
+ */
+
+:root {
+  /* --cg-* のフォールバック（dark 基調） */
+  --cg-bg-primary: #1a1a1a;
+  --cg-bg-secondary: #0f0f0f;
+  --cg-bg-card: #2d2d2d;
+  --cg-bg-hover: #3a3a3a;
+  --cg-text-primary: #e0e0e0;
+  --cg-text-secondary: #a0a0a0;
+  --cg-text-muted: #6a6a6a;
+  --cg-accent: #c792ea;
+  --cg-accent-hover: #b07fd0;
+  --cg-border: #4a4a4a;
+
+  /* タブ閉じる × ボタンの hover 色は危険色固定（テーマ非依存） */
+  --shell-close-hover-color: #ff6b6b;
+  --shell-close-hover-bg: rgba(255, 107, 107, 0.15);
+
+  /* フォント分離: UI は sans-serif、ログは monospace */
+  --shell-font-ui:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Yu Gothic UI',
+    'Hiragino Kaku Gothic ProN', 'BIZ UDPGothic', sans-serif;
+  --shell-font-mono: Consolas, 'Cascadia Code', 'BIZ UDGothic', 'Yu Gothic', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--cg-bg-primary);
+  color: var(--cg-text-primary);
+  font-family: var(--shell-font-ui);
+  font-size: 13px;
+  overflow: hidden;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+#shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ========== タブバー ========== */
+/* 設計意図:
+ *  - タブバーのベースとアクティブタブの背景色を揃え、アクティブタブを
+ *    コンテンツ領域と「地続き」に見せる
+ *  - 非アクティブタブは一段違う色で「持ち上がっている／引っ込んでいる」感
+ *  - タブ間に細い縦線（border-right）で境界を明示
+ *  - アクティブには下端 2px のアクセントバーで強調
+ *  - hover で中間色に変化させ、操作可能性を伝える
+ *  - 配色は CSS 変数で集中管理、テーマ切替に追従
+ */
+#tab-bar {
+  flex: 0 0 auto;
+  height: 32px;
+  background: var(--cg-bg-secondary);
+  border-bottom: 1px solid var(--cg-border);
+  display: flex;
+  align-items: stretch;
+  padding: 0;
+  user-select: none;
+  font-family: var(--shell-font-ui);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+/* === ナビ操作（再読込 / 強制再読込 / 検索） === */
+/* margin-left:auto でここから後ろをバー右端へ寄せる（旧 #server-controls の役割を継承）。 */
+#nav-controls {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  flex: 0 0 auto;
+  /* サーバー操作群との境界線 */
+  border-right: 1px solid var(--cg-border);
+}
+
+/* ナビボタンは見た目をサーバー操作ボタンに揃える。 */
+.nav-btn {
+  font-family: inherit;
+  font-size: 11px;
+  color: var(--cg-text-secondary);
+  background: var(--cg-bg-card);
+  border: 1px solid var(--cg-border);
+  border-radius: 4px;
+  padding: 3px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.nav-btn:hover {
+  background: var(--cg-bg-hover);
+  color: var(--cg-text-primary);
+}
+
+/* === サーバー操作（起動 / 停止 / 再起動） === */
+#server-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  flex: 0 0 auto;
+}
+
+#server-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cg-text-muted);
+  flex-shrink: 0;
+}
+#server-status-dot.status-running {
+  background: #2ecc40;
+  box-shadow: 0 0 5px rgba(46, 204, 64, 0.8);
+}
+#server-status-dot.status-starting {
+  background: #ffb700;
+  box-shadow: 0 0 5px rgba(255, 183, 0, 0.8);
+}
+#server-status-dot.status-stopped {
+  background: var(--cg-text-muted);
+}
+#server-status-dot.status-crashed {
+  background: #ff4136;
+  box-shadow: 0 0 5px rgba(255, 65, 54, 0.8);
+}
+
+#server-status-label {
+  font-size: 11px;
+  color: var(--cg-text-secondary);
+  min-width: 3.5em;
+}
+
+.server-btn {
+  font-family: inherit;
+  font-size: 11px;
+  color: var(--cg-text-secondary);
+  background: var(--cg-bg-card);
+  border: 1px solid var(--cg-border);
+  border-radius: 4px;
+  padding: 3px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+.server-btn:hover:not(:disabled) {
+  background: var(--cg-bg-hover);
+  color: var(--cg-text-primary);
+}
+.server-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px 0 14px;
+  background: var(--cg-bg-card);
+  color: var(--cg-text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  max-width: 200px;
+  min-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 1px solid var(--cg-border);
+  border-bottom: 2px solid transparent;
+  user-select: none;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.tab:hover {
+  background: var(--cg-bg-hover);
+  color: var(--cg-text-primary);
+}
+
+.tab.tab-active {
+  background: var(--cg-bg-primary);
+  color: var(--cg-text-primary);
+  border-bottom-color: var(--cg-accent);
+  cursor: default;
+}
+.tab.tab-active:hover {
+  background: var(--cg-bg-primary);
+  color: var(--cg-text-primary);
+}
+
+.tab.tab-pinned .tab-title::before {
+  content: '📌 ';
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+.tab-title {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tab-close {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border: none;
+  background: transparent;
+  color: var(--cg-text-muted);
+  font-size: 16px;
+  line-height: 1;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.tab:hover .tab-close,
+.tab.tab-active .tab-close {
+  opacity: 1;
+}
+.tab-close:hover {
+  color: var(--shell-close-hover-color);
+  background: var(--shell-close-hover-bg);
+}
+
+/* ========== コンテンツ領域（WebContentsView が重ねられる） ========== */
+/* 通常は WebContentsView が覆うが、リサイズ中など一瞬覗く場合に備えて
+ * テーマ連動の背景にしておく（dark 固定だと light/moonlit で黒く覗く）。 */
+#content-area {
+  flex: 1 1 auto;
+  min-height: 0;
+  background: var(--cg-bg-primary);
+  position: relative;
+}
+
+/* ========== リサイザ ========== */
+/* content-area と log-pane の境界線。dark 固定だと light/moonlit テーマで
+ * クリーム背景の中に黒帯として残るため、区切り線として --cg-border に連動させる。 */
+#resizer {
+  flex: 0 0 auto;
+  height: 4px;
+  background: var(--cg-border);
+  cursor: row-resize;
+  transition: background 0.1s ease;
+}
+#resizer:hover,
+#resizer.dragging {
+  background: var(--cg-bg-hover);
+}
+
+/* ========== ページ内検索バー ========== */
+/* 既定は非表示。open クラスで flex 表示になり flex:0 0 36px を占有する。
+ * 表示されると content-area(flex:1) が縮み、ResizeObserver 経由で
+ * WebContentsView の bounds が 36px 縮む（ログペインはさらにその下）。
+ * 配色はテーマ連動（--cg-*）。ログペインのクロムと同方針。 */
+#find-bar {
+  display: none;
+  flex: 0 0 36px;
+  height: 36px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  background: var(--cg-bg-card);
+  border-top: 1px solid var(--cg-border);
+  color: var(--cg-text-primary);
+  font-family: var(--shell-font-ui);
+  font-size: 12px;
+  user-select: none;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+#find-bar.open {
+  display: flex;
+}
+
+#find-input {
+  flex: 0 0 240px;
+  background: var(--cg-bg-primary);
+  border: 1px solid var(--cg-border);
+  color: var(--cg-text-primary);
+  font-family: inherit;
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  outline: none;
+}
+#find-input:focus {
+  border-color: var(--cg-accent);
+}
+
+#find-count {
+  flex: 0 0 auto;
+  min-width: 48px;
+  color: var(--cg-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+#find-bar button {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--cg-text-secondary);
+  font-size: 14px;
+  line-height: 1;
+  border-radius: 3px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+#find-bar button:hover {
+  background: var(--cg-bg-hover);
+  color: var(--cg-text-primary);
+}
+
+#find-bar label {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--cg-text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+/* 「ハイライトすべて」は Electron の API 制約で常時 ON（disabled）。
+ * 操作不可であることを視覚的に示す。 */
+#find-highlight-label {
+  opacity: 0.6;
+  cursor: default;
+}
+#find-bar label input[type='checkbox'] {
+  margin: 0;
+  cursor: inherit;
+}
+
+/* 末尾→先頭ループ等の一時通知。visible クラスでフェードイン、2秒後に消える。 */
+#find-notice {
+  flex: 1 1 auto;
+  color: var(--cg-accent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#find-notice.visible {
+  opacity: 1;
+}
+
+/* ========== ログペイン ========== */
+/* ログペインの「クロム」（背景・ボーダー・ヘッダー・フィルタ UI・スクロールバー）は
+ * ダッシュボードのテーマに連動させる（--cg-* 参照）。light/moonlit テーマ選択時に
+ * ここだけ暗色領域が残らないようにするため。
+ * 一方、ログ行本体の配色は固定:
+ *   - モジュール別カラー（colors.json 由来、JS でインライン付与）
+ *   - タイムスタンプ色・ログレベル色（warn/error/debug/info）
+ * これらは可読性設計が dark 前提のため今回は連動させない（視認性は別タスクで判断）。
+ * フォントは monospace 固定。 */
+#log-pane {
+  flex: 0 0 auto;
+  height: 240px;
+  min-height: 0;
+  background: var(--cg-bg-secondary);
+  color: var(--cg-text-primary);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: var(--shell-font-mono);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+#log-pane.collapsed {
+  height: 28px !important;
+}
+#log-pane.collapsed #log-body {
+  display: none;
+}
+
+#log-pane-header {
+  flex: 0 0 auto;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  background: var(--cg-bg-card);
+  border-bottom: 1px solid var(--cg-border);
+  user-select: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+#log-pane-header button {
+  background: transparent;
+  border: none;
+  color: var(--cg-text-secondary);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+#log-pane-header button:hover {
+  background: var(--cg-bg-hover);
+  color: var(--cg-text-primary);
+}
+
+#log-pane-title {
+  font-size: 12px;
+  color: var(--cg-text-muted);
+  margin-right: 8px;
+}
+
+#log-filter {
+  flex: 0 0 220px;
+  background: var(--cg-bg-primary);
+  border: 1px solid var(--cg-border);
+  color: var(--cg-text-primary);
+  font-family: inherit;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  outline: none;
+}
+#log-filter:focus {
+  border-color: var(--cg-accent);
+}
+
+/* 全モジュール一括ON/OFFボタン。フィルタ群の手前に固定で置く（スクロールしない）。 */
+#log-toggle-all-btn {
+  flex: 0 0 auto;
+  border: 1px solid var(--cg-border) !important;
+  white-space: nowrap;
+}
+
+#log-module-filters {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--cg-text-secondary);
+  overflow-x: auto;
+  flex: 1 1 auto;
+}
+#log-module-filters label {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+#log-module-filters input[type='checkbox'] {
+  margin: 0;
+  cursor: pointer;
+}
+
+#log-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  font-family: var(--shell-font-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  padding: 4px 0;
+}
+
+.log-line {
+  padding: 0 8px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+.log-line.hidden {
+  display: none;
+}
+/* ログ各部の色はテーマ非依存のハードコード値だと、ライト/moonlit の明るい
+ * 背景で薄いグレーが溶けて読めなくなる。--cg-* 変数経由でテーマに追従させる
+ * （ダーク時は :root フォールバックでほぼ従来の見た目を維持）。 */
+.log-line .log-time {
+  color: var(--cg-text-muted);
+  margin-right: 6px;
+}
+.log-line .log-module {
+  font-weight: 600;
+  margin-right: 6px;
+}
+.log-line .log-body {
+  color: var(--cg-text-primary);
+}
+.log-line.level-warn .log-body {
+  color: var(--cg-warning, #f0c674);
+}
+.log-line.level-error .log-body {
+  color: var(--cg-danger, #e57373);
+}
+.log-line.level-debug .log-body {
+  color: var(--cg-text-muted);
+}
+
+/* スクロールバー（枠はテーマ連動。--cg-border を確実に使い、明るい背景でも
+ * トラックとサムの境界が消えないようにする） */
+#log-body::-webkit-scrollbar,
+#log-module-filters::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+}
+#log-body::-webkit-scrollbar-track,
+#log-module-filters::-webkit-scrollbar-track {
+  background: var(--cg-bg-secondary);
+}
+#log-body::-webkit-scrollbar-thumb,
+#log-module-filters::-webkit-scrollbar-thumb {
+  background: var(--cg-border);
+  border-radius: 4px;
+}
+#log-body::-webkit-scrollbar-thumb:hover,
+#log-module-filters::-webkit-scrollbar-thumb:hover {
+  background: var(--cg-text-muted);
+}
+
+/* ========== サーバログ独立タブ (log-tab.html) ==========
+ * 下部ログペインと同じ id/class を再利用するため、配色や行スタイルは上の
+ * #log-pane-* / .log-line ルールがそのまま効く。ここではタブ全画面レイアウト
+ * （ヘッダ上部固定・本文が残り全部）だけを定義する。折りたたみは持たない。 */
+#log-tab {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background: var(--cg-bg-secondary);
+  color: var(--cg-text-primary);
+  overflow: hidden;
+  font-family: var(--shell-font-mono);
+}
+
+/* タブ本文はビューポート残り全体を埋める（ペインの 240px 固定とは別運用）。 */
+#log-tab .log-tab-body {
+  flex: 1 1 auto;
+  min-height: 0;
+}

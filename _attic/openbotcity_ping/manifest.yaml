@@ -1,0 +1,5 @@
+name: openbotcity_ping
+description: "OpenBotCityにpingを送ってオンライン状態を維持する。スケジューラで45秒おきに実行する。"
+version: "1.0"
+timeout: 10
+args: []

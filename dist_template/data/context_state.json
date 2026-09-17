@@ -1,0 +1,10 @@
+{
+  "conversation_history": [
+    {
+      "role": "assistant",
+      "content": "はじめまして、ユーザーさん。私は「未設定（みせってい）」といいます。\n\n…とご挨拶したいところなのですが、今のままだと私はまだお返事ができません。先に「どのAI（LLMプロバイダ）を使うか」を選んで、その APIキーを登録してもらえますか？\n\n【最初にやること】\n1. 画面上部の「設定」→「LLM設定」を開き、使いたいプロバイダ（deepseek / claude / openai / ローカル 等）とモデルを選ぶ\n2. 「設定」→「APIキー管理」で、選んだプロバイダの APIキーを登録する（例: deepseek なら CG_LLM_DEEPSEEK_API_KEY、openai なら CG_LLM_OPENAI_API_KEY）\n3. 画面右上の「再起動」ボタンを押す\n\n再起動が終わったら、もう一度話しかけてくださいね。今度はちゃんとお話しできます。よろしくお願いします。\n\n（このメッセージは初回起動時だけの案内です）"
+    }
+  ],
+  "summary_layer1": "",
+  "summary_layer2": ""
+}

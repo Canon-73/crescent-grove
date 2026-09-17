@@ -1,0 +1,56 @@
+name: "atelier"
+description: "{{t:at_desc}}"
+# draw は既定で描き上がりまで待つ（config.WAIT_MAX_SEC=120 で自分から切り上げる）。
+# ここはその上限より確実に大きくしておくこと。逆転すると _run_program が subprocess ごと
+# 殺してしまい、柚月には job_id も返らず追跡できなくなる。
+# なお待てるのは core の _run_program が別スレッドで動くため（2026-08-22 の変更）。
+timeout: 180
+args:
+  - name: "command"
+    type: "string"
+    description: "{{t:at_arg_command}}"
+    required: false
+  - name: "prompt"
+    type: "string"
+    description: "{{t:at_arg_prompt}}"
+    required: false
+    # 本文テキストなのでパス扱いしない。"../" や "/" を含む文章が来ても弾かれないように
+    # （path_check を外し忘れると _run_program が呼び出しごと拒否する）
+    path_check: false
+  - name: "negative_prompt"
+    type: "string"
+    description: "{{t:at_arg_negative_prompt}}"
+    required: false
+    path_check: false
+  - name: "width"
+    type: "integer"
+    description: "{{t:at_arg_width}}"
+    required: false
+  - name: "height"
+    type: "integer"
+    description: "{{t:at_arg_height}}"
+    required: false
+  - name: "steps"
+    type: "integer"
+    description: "{{t:at_arg_steps}}"
+    required: false
+  - name: "cfg"
+    type: "number"
+    description: "{{t:at_arg_cfg}}"
+    required: false
+  - name: "seed"
+    type: "integer"
+    description: "{{t:at_arg_seed}}"
+    required: false
+  - name: "job_id"
+    type: "string"
+    description: "{{t:at_arg_job_id}}"
+    required: false
+  - name: "nowait"
+    type: "boolean"
+    description: "{{t:at_arg_nowait}}"
+    required: false
+  - name: "with_image"
+    type: "boolean"
+    description: "{{t:at_arg_with_image}}"
+    required: false

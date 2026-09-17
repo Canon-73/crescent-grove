@@ -1,0 +1,24 @@
+name: "mcp_client"
+description: "{{t:mcp_client_desc}}"
+timeout: 30
+args:
+  - name: "command"
+    type: "string"
+    description: "{{t:mcp_client_arg_command}}"
+    required: false
+  - name: "name"
+    type: "string"
+    description: "{{t:mcp_client_arg_name}}"
+    required: false
+  - name: "url"
+    type: "string"
+    description: "{{t:mcp_client_arg_url}}"
+    required: false
+  - name: "token_env"
+    type: "string"
+    description: "{{t:mcp_client_arg_token_env}}"
+    required: false
+  - name: "tool"
+    type: "string"
+    description: "{{t:mcp_client_arg_tool}}"
+    required: false

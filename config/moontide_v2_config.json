@@ -1,0 +1,22 @@
+{
+  "enabled": true,
+  "alpha": 0.0,
+  "speed": 0.05,
+  "beta": 1.0,
+  "radius_coeff": 0.3,
+  "bonus_ratio": 0.3,
+  "decay_strength": 0.15,
+  "stable_point": 0.1,
+  "noise_scale": 0.01,
+  "spawn_bias": 0.0,
+  "spawn_base_rate": 0.3,
+  "death_base_rate": 0.08,
+  "death_threshold": 0.2,
+  "mass_cap": 1.0,
+  "morning_particles": 3,
+  "pull_back_strength": 0.2,
+  "pull_back_max_dist": 0.3,
+  "drift_chance": 0.05,
+  "min_bias_mass": 0.2,
+  "excluded_landmarks": ["dominance", "fatigue", "exhaustion", "lethargy", "sleepiness", "lust", "drunkenness", "insanity"]
+}

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="{{t:html_lang}}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{t:sysprompt_title}}</title>
+    <link rel="icon" href="/static/images/favicon.ico" sizes="16x16 32x32">
+    <link rel="apple-touch-icon" href="/static/images/favicon.png" sizes="180x180">
+    <link rel="stylesheet" href="/static/theme-tokens.css?v=6">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/dashboard.css?v=18">
+    <link rel="stylesheet" href="/static/settings_form.css?v=2">
+    <script src="/static/theme.js?v=6"></script>
+    <style>
+        /* スロット切替タブ */
+        .sp-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+        .sp-tab {
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 7px 13px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+        }
+        .sp-tab.active {
+            background: var(--accent, #7c9cb5);
+            border-color: var(--accent, #7c9cb5);
+            color: #fff;
+            font-weight: 600;
+        }
+        .sp-tab .sp-dirty {
+            color: var(--danger, #e57373);
+            font-weight: 700;
+            margin-left: 4px;
+        }
+        .sp-desc {
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        /* settings_form.css の textarea.form-control{min-height:60px} に詳細度で勝つため
+           要素付きセレクタ（textarea.sp-editor）にする。クラスのみだと潰されて窓が小さくなる。 */
+        textarea.sp-editor {
+            width: 100%;
+            min-height: 480px;
+            font-family: ui-monospace, "Consolas", "Courier New", monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        .sp-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .sp-filename {
+            color: var(--text-muted);
+            font-size: 0.8em;
+            font-family: ui-monospace, "Consolas", monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>⚙️ {{t:settings_heading}}</h1>
+        <div class="nav-links">
+            <button id="themeToggle" class="nav-button">☀️/🌙</button>
+        </div>
+    </div>
+
+    <div class="settings-container">
+        <!-- ナビゲーション（settings_nav.js が縦サイドバーを描画） -->
+        <div id="settingsNav"></div>
+
+        <div class="alert-error" id="errorMessage"></div>
+        <div class="alert-success" id="successMessage"></div>
+
+        <div class="settings-panel">
+            <div class="settings-header">{{t:sysprompt_section_header}}</div>
+            <div class="settings-content">
+                <div style="background:#fdecea; color:#c62828; border:1px solid #c62828; border-radius:6px; padding:12px; margin-bottom:16px; font-size:0.85em; line-height:1.6;">
+                    {{t:sysprompt_warning}}
+                </div>
+
+                <!-- スロット切替タブ（settings_api.py の SYSTEM_PROMPT_SLOTS と対応） -->
+                <div class="sp-tabs" id="spTabs"></div>
+
+                <div class="sp-desc" id="spDesc"></div>
+
+                <textarea class="form-control sp-editor" id="spEditor" spellcheck="false"
+                    placeholder="{{t:sysprompt_placeholder_empty}}"></textarea>
+
+                <div class="sp-toolbar">
+                    <button type="button" class="btn-primary" onclick="saveActive()">{{t:sysprompt_btn_save}}</button>
+                    <button type="button" class="btn-secondary" onclick="revertActive()">{{t:sysprompt_btn_revert}}</button>
+                    <span class="sp-filename" id="spFilename"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // スロットごとの状態。slots[i] = {id, file, label, desc, content（保存済み）, draft（編集中）}
+        let slots = [];
+        let activeIndex = 0;
+
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+        }
+
+        function isDirty(s) {
+            return s && s.draft !== s.content;
+        }
+
+        function renderTabs() {
+            const c = document.getElementById('spTabs');
+            c.innerHTML = '';
+            slots.forEach((s, i) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'sp-tab' + (i === activeIndex ? ' active' : '');
+                btn.innerHTML = escapeHtml(s.label) + (isDirty(s) ? '<span class="sp-dirty" title="' + (T.sysprompt_dirty_marker || '') + '">●</span>' : '');
+                btn.onclick = () => switchTo(i);
+                c.appendChild(btn);
+            });
+        }
+
+        function renderActive() {
+            const s = slots[activeIndex];
+            if (!s) return;
+            document.getElementById('spDesc').textContent = s.desc || '';
+            document.getElementById('spFilename').textContent = 'system_prompt/' + s.file;
+            const editor = document.getElementById('spEditor');
+            editor.value = s.draft;
+        }
+
+        // 編集中の内容を現在スロットの draft に退避してからタブ切替する（切替で編集が消えないように）
+        function stashDraft() {
+            const s = slots[activeIndex];
+            if (s) s.draft = document.getElementById('spEditor').value;
+        }
+
+        function switchTo(i) {
+            stashDraft();
+            activeIndex = i;
+            renderTabs();
+            renderActive();
+        }
+
+        function revertActive() {
+            const s = slots[activeIndex];
+            if (!s) return;
+            s.draft = s.content;
+            renderActive();
+            renderTabs();
+        }
+
+        async function loadConfig() {
+            try {
+                const res = await fetch('/api/settings/system-prompts');
+                if (!res.ok) throw new Error(T.settings_load_error);
+                const data = await res.json();
+                slots = (data.slots || []).map(s => ({ ...s, draft: s.content }));
+                activeIndex = 0;
+                renderTabs();
+                renderActive();
+            } catch (e) { showError(e.message); }
+        }
+
+        async function saveActive() {
+            hideError();
+            stashDraft();
+            const s = slots[activeIndex];
+            if (!s) return;
+            try {
+                const res = await fetch('/api/settings/system-prompts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: s.id, content: s.draft })
+                });
+                if (!res.ok) {
+                    let detail = T.sysprompt_save_failed;
+                    try { const j = await res.json(); if (j.detail) detail = j.detail; } catch (e) { }
+                    throw new Error(detail);
+                }
+                // 保存成功 → 保存済み値を更新（dirty 解除）
+                s.content = s.draft;
+                renderTabs();
+                showSuccess(T.sysprompt_save_success_prefix + s.label + T.sysprompt_save_success_suffix);
+            } catch (e) { showError(e.message); }
+        }
+
+        function showError(msg) {
+            hideSuccess();
+            const el = document.getElementById('errorMessage');
+            el.innerText = msg; el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 6000);
+        }
+        function showSuccess(msg) {
+            hideError();
+            const el = document.getElementById('successMessage');
+            el.innerText = msg; el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+        function hideError() { document.getElementById('errorMessage').style.display = 'none'; }
+        function hideSuccess() { document.getElementById('successMessage').style.display = 'none'; }
+
+        // 編集のたびにタブの未保存マーカーを更新する
+        document.getElementById('spEditor').addEventListener('input', () => {
+            stashDraft();
+            renderTabs();
+        });
+
+        // 未保存のまま離脱しようとしたら警告する
+        window.addEventListener('beforeunload', (e) => {
+            stashDraft();
+            if (slots.some(isDirty)) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', loadConfig);
+    </script>
+    <script src="/static/settings_nav.js?v=3"></script>
+</body>
+
+</html>

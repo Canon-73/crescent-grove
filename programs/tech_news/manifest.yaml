@@ -1,0 +1,18 @@
+# programs/tech_news/manifest.yaml
+name: "tech_news"
+description: "{{t:tech_news_desc}}"
+version: "1.0"
+timeout: 30
+args:
+  - name: count
+    type: integer
+    required: false
+    description: "{{t:tech_news_arg_count}}"
+  - name: url
+    type: string
+    required: false
+    description: "{{t:tech_news_arg_url}}"
+  - name: source
+    type: string
+    required: false
+    description: "{{t:tech_news_arg_source}}"

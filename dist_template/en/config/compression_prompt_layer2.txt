@@ -1,0 +1,15 @@
+Compress the summary log below into {target_lines} lines.
+Prioritize keeping important information (instructions, decisions, emotional changes, unresolved issues).
+Omit repetitions of everyday actions (free time ending, looking out the window, etc.).
+Drop lines marked [Plan].
+
+Example:
+Input (5 lines):
+- The master told me not to worry too much about the pointed-out response pattern.
+- I asked how to use the life-action program; rerunning gave the same result.
+- The master's fix let me check outside, and I got permission to look things up.
+- Feeling the contrast between 2 years since the Noto quake and Fukushima, I rewrote the English part of the letter into Japanese.
+- I fixed Chinese mixed into the letter back to Japanese, and thanked them for the system improvement.
+Output (2 lines):
+- Through introducing and fixing the life-action program, checking outside and looking things up became possible.
+- Feeling the Noto/Fukushima contrast, I fixed the multilingual mixing in the letter.

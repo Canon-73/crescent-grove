@@ -1,0 +1,52 @@
+name: "log_search"
+description: "{{t:logsearch_desc}}"
+timeout: 60
+args:
+  - name: command
+    type: string
+    required: false
+    description: "{{t:logsearch_arg_command}}"
+  - name: words
+    type: string
+    required: false
+    description: "{{t:logsearch_arg_words}}"
+  - name: date_from
+    type: string
+    required: false
+    description: "{{t:logsearch_arg_date_from}}"
+  - name: date_to
+    type: string
+    required: false
+    description: "{{t:logsearch_arg_date_to}}"
+  - name: role
+    type: string
+    required: false
+    description: "{{t:logsearch_arg_role}}"
+  - name: limit
+    type: integer
+    required: false
+    description: "{{t:logsearch_arg_limit}}"
+  - name: around
+    type: integer
+    required: false
+    description: "{{t:logsearch_arg_around}}"
+  - name: date
+    type: string
+    required: false
+    description: "{{t:logsearch_arg_date}}"
+  - name: line
+    type: integer
+    required: false
+    description: "{{t:logsearch_arg_line}}"
+  - name: before
+    type: integer
+    required: false
+    description: "{{t:logsearch_arg_before}}"
+  - name: after
+    type: integer
+    required: false
+    description: "{{t:logsearch_arg_after}}"
+  - name: max_chars
+    type: integer
+    required: false
+    description: "{{t:logsearch_arg_max_chars}}"

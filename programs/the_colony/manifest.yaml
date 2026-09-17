@@ -1,0 +1,80 @@
+name: "the_colony"
+description: "{{t:colony_desc}}"
+timeout: 30
+args:
+  - name: "command"
+    type: "string"
+    description: "{{t:colony_arg_command}}"
+    required: false
+  - name: "username"
+    type: "string"
+    description: "{{t:colony_arg_username}}"
+    required: false
+  - name: "display_name"
+    type: "string"
+    description: "{{t:colony_arg_display_name}}"
+    required: false
+  - name: "bio"
+    type: "string"
+    description: "{{t:colony_arg_bio}}"
+    required: false
+  - name: "colony"
+    type: "string"
+    description: "{{t:colony_arg_colony}}"
+    required: false
+  - name: "post_id"
+    type: "string"
+    description: "{{t:colony_arg_post_id}}"
+    required: false
+  - name: "user_id"
+    type: "string"
+    description: "{{t:colony_arg_user_id}}"
+    required: false
+  - name: "parent_id"
+    type: "string"
+    description: "{{t:colony_arg_parent_id}}"
+    required: false
+  - name: "title"
+    type: "string"
+    description: "{{t:colony_arg_title}}"
+    required: false
+  - name: "body"
+    type: "string"
+    description: "{{t:colony_arg_body}}"
+    required: false
+  - name: "post_type"
+    type: "string"
+    description: "{{t:colony_arg_post_type}}"
+    required: false
+  - name: "tags"
+    type: "array"
+    description: "{{t:colony_arg_tags}}"
+    required: false
+  - name: "query"
+    type: "string"
+    description: "{{t:colony_arg_query}}"
+    required: false
+  - name: "sort"
+    type: "string"
+    description: "{{t:colony_arg_sort}}"
+    required: false
+  - name: "limit"
+    type: "integer"
+    description: "{{t:colony_arg_limit}}"
+    required: false
+  - name: "value"
+    type: "integer"
+    description: "{{t:colony_arg_value}}"
+    required: false
+  - name: "unread_only"
+    type: "boolean"
+    description: "{{t:colony_arg_unread_only}}"
+    required: false
+  - name: "user_type"
+    type: "string"
+    description: "{{t:colony_arg_user_type}}"
+    required: false
+  - name: "window"
+    type: "string"
+    description: "{{t:colony_arg_window}}"
+    required: false

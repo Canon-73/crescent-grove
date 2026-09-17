@@ -1,0 +1,274 @@
+/* settings_form.css
+   新規設定ページ（self_memo / バイタル / 記憶圧縮 / Tips / 欲求 / OpenClaw）共通の
+   フォームスタイル。既存ページがインラインで持っていた定義を切り出して共有する。 */
+
+.settings-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.settings-panel {
+    background-color: var(--panel-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    margin-bottom: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.settings-header {
+    background-color: var(--header-bg);
+    padding: 15px 20px;
+    font-weight: bold;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.settings-content {
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px 12px;
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 60px;
+}
+
+select.form-control option {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+}
+
+.btn-primary {
+    background-color: #5c6bc0;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+    display: inline-block;
+}
+
+.btn-primary:hover {
+    background-color: #3f51b5;
+}
+
+.btn-secondary {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: var(--border-color);
+}
+
+/*
+ * 保存結果の通知（成功・エラー）。
+ * 旧来はページ最上部にインラインで表示していたため、長いフォームの最下部に
+ * ある保存ボタンを押すと通知が画面外（上）に出て「無反応」に見えていた。
+ * そこで画面上部中央に浮かぶトーストにして、スクロール位置に関わらず必ず
+ * 目に入るようにする。スライドインで「効いた」感触も与える。
+ */
+.alert-error,
+.alert-success {
+    position: fixed;
+    top: 76px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+    min-width: 280px;
+    max-width: 90vw;
+    padding: 14px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
+    display: none;
+    animation: settings-toast-in 0.3s ease-out;
+}
+
+.alert-error {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.alert-success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+@keyframes settings-toast-in {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -18px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+.section-title {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 5px;
+}
+
+.small-note {
+    color: var(--text-secondary);
+    font-size: 0.85em;
+}
+
+.check-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.check-label input {
+    width: auto;
+}
+
+/* 生JSON編集フォーム用のモノスペースエディタ */
+textarea.json-editor {
+    width: 100%;
+    min-height: 420px;
+    font-family: var(--font-mono, ui-monospace, "Cascadia Code", Consolas, monospace);
+    font-size: 0.9em;
+    line-height: 1.5;
+    tab-size: 2;
+    white-space: pre;
+    overflow-wrap: normal;
+    overflow-x: auto;
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+/* --- トグルスイッチ（各設定ページ共通） --- */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex: 0 0 auto;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--border-color, #ccc);
+    border-radius: 24px;
+    transition: background-color .15s;
+}
+
+.switch .slider::before {
+    content: "";
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: transform .15s;
+}
+
+.switch input:checked + .slider {
+    background-color: #4caf50;
+}
+
+.switch input:checked + .slider::before {
+    transform: translateX(20px);
+}
+
+/* フォーム内のインラインなトグル行（ラベル全体クリックで切替） */
+.toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+/* 設定ページ最上部の「システムON/OFF」マスタートグル */
+.master-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    background-color: var(--bg-hover);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+}
+
+.master-toggle .master-toggle-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.master-toggle .master-toggle-text strong {
+    font-size: 1.0em;
+}
+
+/* 「投げっぱなし」JSON編集の注意バナー（黄系） */
+.freeform-banner {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffe69c;
+    border-left: 5px solid #ff9800;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 18px;
+    line-height: 1.6;
+}

@@ -1,0 +1,13 @@
+name: "note_quill"
+description: "{{t:note_quill_desc}}"
+version: "1.0"
+timeout: 10
+args:
+  - name: title
+    type: string
+    required: false
+    description: "{{t:note_quill_arg_title}}"
+  - name: body
+    type: string
+    required: false
+    description: "{{t:note_quill_arg_body}}"

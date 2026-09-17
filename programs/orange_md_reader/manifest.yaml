@@ -1,0 +1,20 @@
+name: "orange_md_reader"
+description: "{{t:orange_md_desc}}"
+timeout: 15
+args:
+  - name: command
+    type: string
+    required: false
+    description: "{{t:orange_md_arg_command}}"
+  - name: file
+    type: string
+    required: false
+    description: "{{t:orange_md_arg_file}}"
+  - name: start
+    type: string
+    required: false
+    description: "{{t:orange_md_arg_start}}"
+  - name: end
+    type: string
+    required: false
+    description: "{{t:orange_md_arg_end}}"

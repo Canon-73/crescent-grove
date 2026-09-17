@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="{{t:html_lang}}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{t:login_title}}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0d0f14;
+            --surface: #161820;
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #7c6aff;
+            --accent-hover: #9580ff;
+            --text: #e8e8f0;
+            --text-muted: #888aa0;
+            --error: #ff6b6b;
+            --success: #6bffa8;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse 60% 60% at 50% 0%, rgba(124, 106, 255, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .logo h1 {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .logo p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="password"]:focus {
+            border-color: var(--accent);
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 13px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        button[type="submit"]:hover {
+            background: var(--accent-hover);
+        }
+
+        button[type="submit"]:active {
+            transform: scale(0.98);
+        }
+
+        button[type="submit"]:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .message {
+            margin-top: 14px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .message.error {
+            background: rgba(255, 107, 107, 0.12);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            color: var(--error);
+        }
+
+        .message.success {
+            background: rgba(107, 255, 168, 0.1);
+            border: 1px solid rgba(107, 255, 168, 0.3);
+            color: var(--success);
+        }
+
+        .message.show {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div class="logo">
+            <div class="logo-icon">🌙</div>
+            <h1>Crescent Grove</h1>
+            <p id="subtitle">-- --</p>
+        </div>
+
+        <!-- 初期設定フォーム -->
+        <form id="setup-form" style="display:none;" autocomplete="off">
+            <div class="form-group">
+                <label for="setup-pw">{{t:login_new_password}}</label>
+                <input type="password" id="setup-pw" placeholder="{{t:login_set_password_placeholder}}" required minlength="4">
+            </div>
+            <div class="form-group">
+                <label for="setup-pw2">{{t:login_confirm_password}}</label>
+                <input type="password" id="setup-pw2" placeholder="{{t:login_confirm_placeholder}}" required minlength="4">
+            </div>
+            <button type="submit" id="setup-btn">{{t:login_set_password_button}}</button>
+            <div class="message" id="setup-msg"></div>
+        </form>
+
+        <!-- ログインフォーム -->
+        <form id="login-form" style="display:none;" autocomplete="off">
+            <div class="form-group">
+                <label for="login-pw">{{t:login_password}}</label>
+                <input type="password" id="login-pw" placeholder="{{t:login_password_placeholder}}" required autofocus>
+            </div>
+            <button type="submit" id="login-btn">{{t:login_button}}</button>
+            <div class="message" id="login-msg"></div>
+        </form>
+    </div>
+
+    <script>
+        const subtitleEl = document.getElementById('subtitle');
+        const setupForm = document.getElementById('setup-form');
+        const loginForm = document.getElementById('login-form');
+
+        // 認証状態を確認して適切なフォームを表示
+        async function init() {
+            try {
+                const res = await fetch('/api/auth/status');
+                const data = await res.json();
+                if (data.password_set) {
+                    subtitleEl.textContent = T.login_subtitle;
+                    loginForm.style.display = 'block';
+                    document.getElementById('login-pw').focus();
+                } else {
+                    subtitleEl.textContent = T.login_setup_subtitle;
+                    setupForm.style.display = 'block';
+                }
+            } catch {
+                subtitleEl.textContent = T.login_server_unreachable;
+            }
+        }
+
+        function showMsg(el, type, text) {
+            el.className = `message ${type} show`;
+            el.textContent = text;
+        }
+
+        // 初期パスワード設定
+        setupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const pw = document.getElementById('setup-pw').value;
+            const pw2 = document.getElementById('setup-pw2').value;
+            const msgEl = document.getElementById('setup-msg');
+            const btn = document.getElementById('setup-btn');
+
+            if (pw !== pw2) { showMsg(msgEl, 'error', T.login_password_mismatch); return; }
+            if (pw.length < 4) { showMsg(msgEl, 'error', T.login_password_too_short); return; }
+
+            btn.disabled = true;
+            try {
+                const res = await fetch('/api/auth/setup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: pw }),
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showMsg(msgEl, 'success', T.login_setup_success);
+                    setTimeout(() => { window.location.href = '/'; }, 1000);
+                } else {
+                    showMsg(msgEl, 'error', data.detail || T.login_setup_failed);
+                    btn.disabled = false;
+                }
+            } catch {
+                showMsg(msgEl, 'error', T.login_server_error);
+                btn.disabled = false;
+            }
+        });
+
+        // ログイン
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const pw = document.getElementById('login-pw').value;
+            const msgEl = document.getElementById('login-msg');
+            const btn = document.getElementById('login-btn');
+
+            btn.disabled = true;
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: pw }),
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showMsg(msgEl, 'success', T.login_success);
+                    setTimeout(() => { window.location.href = '/'; }, 500);
+                } else {
+                    showMsg(msgEl, 'error', data.detail || T.login_wrong_password);
+                    document.getElementById('login-pw').value = '';
+                    document.getElementById('login-pw').focus();
+                    btn.disabled = false;
+                }
+            } catch {
+                showMsg(msgEl, 'error', T.login_server_error);
+                btn.disabled = false;
+            }
+        });
+
+        init();
+    </script>
+</body>
+
+</html>

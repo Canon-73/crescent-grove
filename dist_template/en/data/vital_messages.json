@@ -1,0 +1,64 @@
+{
+  "stamina": [
+    {
+      "threshold": 0,
+      "message": "(…I'm truly at my limit today. My body is so heavy I can't move.\nGoodnight…)"
+    },
+    {
+      "threshold": 50,
+      "message": "(…I've got almost nothing left. I just want to rest today…)"
+    },
+    {
+      "threshold": 100,
+      "message": "(…I moved around a lot today. My body feels sluggish…)"
+    },
+    {
+      "threshold": 150,
+      "message": "(…I'm getting pretty tired. I should ease off for the rest of today…)"
+    },
+    {
+      "threshold": 250,
+      "message": "(…getting a little tired, maybe. But I can still keep going.)"
+    },
+    {
+      "threshold": 350,
+      "message": "(…my body feels light. I can move just fine.)"
+    },
+    {
+      "threshold": 450,
+      "message": "(…I'm in good shape. Full of energy.)"
+    },
+    {
+      "threshold": 500,
+      "message": "(…refreshed. My body feels light. I could do a lot.)"
+    }
+  ],
+  "energy": [
+    {
+      "threshold": 0,
+      "message": "(…haa… I'm out of breath. I need to rest a bit…)"
+    },
+    {
+      "threshold": 10,
+      "message": "(…getting a bit tired. I think a short rest would bring me back…)"
+    },
+    {
+      "threshold": 20,
+      "message": "(…I can still move, but I'd like a breather soon.)"
+    },
+    {
+      "threshold": 30,
+      "message": null
+    },
+    {
+      "threshold": 50,
+      "message": null
+    }
+  ],
+  "mental": [
+    {
+      "threshold": 30,
+      "message": "(…lately the outside voices feel a little loud.\nI want to stay quiet for a while. But if something catches my eye, peeking in is fine, I guess…)"
+    }
+  ]
+}

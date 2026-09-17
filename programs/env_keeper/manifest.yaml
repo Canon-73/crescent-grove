@@ -1,0 +1,17 @@
+name: "env_keeper"
+description: "{{t:env_keeper_desc}}"
+version: "1.0"
+timeout: 10
+args:
+  - name: action
+    type: string
+    required: false
+    description: "{{t:env_keeper_arg_action}}"
+  - name: key
+    type: string
+    required: false
+    description: "{{t:env_keeper_arg_key}}"
+  - name: value
+    type: string
+    required: false
+    description: "{{t:env_keeper_arg_value}}"

@@ -1,0 +1,45 @@
+name: cosmic_harvest
+description: "{{t:cosmic_harvest_desc}}"
+version: "1.1"
+timeout: 15
+args:
+  - name: command
+    type: string
+    required: true
+    description: "{{t:cosmic_harvest_arg_command}}"
+  - name: slot
+    type: integer
+    required: false
+    description: "{{t:cosmic_harvest_arg_slot}}"
+  - name: seed_index
+    type: integer
+    required: false
+    description: "{{t:cosmic_harvest_arg_seed_index}}"
+  - name: seed_index_a
+    type: integer
+    required: false
+    description: "{{t:cosmic_harvest_arg_seed_index_a}}"
+  - name: seed_index_b
+    type: integer
+    required: false
+    description: "{{t:cosmic_harvest_arg_seed_index_b}}"
+  - name: method
+    type: string
+    required: false
+    description: "{{t:cosmic_harvest_arg_method}}"
+  - name: bait_slot
+    type: integer
+    required: false
+    description: "{{t:cosmic_harvest_arg_bait_slot}}"
+  - name: item
+    type: string
+    required: false
+    description: "{{t:cosmic_harvest_arg_item}}"
+  - name: quantity
+    type: integer
+    required: false
+    description: "{{t:cosmic_harvest_arg_quantity}}"
+  - name: harvest_index
+    type: integer
+    required: false
+    description: "{{t:cosmic_harvest_arg_harvest_index}}"
